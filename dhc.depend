@@ -1,0 +1,246 @@
+# depslib dependency file v1.0
+1370717779 source:c:\users\jackie\documents\github\dhc\main.cpp
+	"lexer/lexer.hpp"
+	<iostream>
+	<fstream>
+
+1370708207 source:c:\users\jackie\documents\github\dhc\lexer.cpp
+	"lexer.hpp"
+	"char_pattern.hpp"
+	"choice_pattern.hpp"
+	"compound_pattern.hpp"
+	"exclude_pattern.hpp"
+	"repetition_pattern.hpp"
+	"string_pattern.hpp"
+	<iostream>
+
+1370195979 c:\users\jackie\documents\github\dhc\lexer.hpp
+	"scanner.hpp"
+	"lexer_match.hpp"
+	<memory>
+
+1369768289 c:\users\jackie\documents\github\dhc\token.hpp
+	<string>
+
+1370427518 source:c:\users\jackie\documents\github\dhc\char_pattern.cpp
+	"char_pattern.hpp"
+	<stdexcept>
+	<sstream>
+
+1370416227 c:\users\jackie\documents\github\dhc\char_pattern.hpp
+	"lexer_pattern.hpp"
+	"char_match.hpp"
+
+1370417130 c:\users\jackie\documents\github\dhc\lexer_pattern.hpp
+	"lexer_match.hpp"
+	"scanner.hpp"
+	<memory>
+
+1370709170 c:\users\jackie\documents\github\dhc\scanner.hpp
+	<string>
+	<stack>
+
+1370420978 source:c:\users\jackie\documents\github\dhc\choice_pattern.cpp
+	"choice_pattern.hpp"
+	<sstream>
+
+1370508266 c:\users\jackie\documents\github\dhc\choice_pattern.hpp
+	"lexer_pattern.hpp"
+	<initializer_list>
+	<memory>
+	<vector>
+
+1370621208 source:c:\users\jackie\documents\github\dhc\compound_pattern.cpp
+	"compound_pattern.hpp"
+	<sstream>
+
+1370509093 c:\users\jackie\documents\github\dhc\compound_pattern.hpp
+	"lexer_pattern.hpp"
+	"char_pattern.hpp"
+	"sequence_match.hpp"
+	<memory>
+	<vector>
+
+1370416722 source:c:\users\jackie\documents\github\dhc\repetition_pattern.cpp
+	"repetition_pattern.hpp"
+	<sstream>
+
+1370416646 c:\users\jackie\documents\github\dhc\repetition_pattern.hpp
+	"lexer_pattern.hpp"
+	"sequence_match.hpp"
+	<memory>
+	<vector>
+
+1370709158 source:c:\users\jackie\documents\github\dhc\scanner.cpp
+	"scanner.hpp"
+
+1370363771 c:\users\jackie\documents\github\dhc\lexer_match.hpp
+	<string>
+
+1370182514 source:c:\users\jackie\documents\github\dhc\lexer_match.cpp
+	"lexer_match.hpp"
+
+1370620930 source:c:\users\jackie\documents\github\dhc\optional_pattern.cpp
+	"optional_pattern.hpp"
+	<sstream>
+
+1370416895 c:\users\jackie\documents\github\dhc\optional_pattern.hpp
+	"lexer_pattern.hpp"
+	"optional_match.hpp"
+
+1370364571 source:c:\users\jackie\documents\github\dhc\char_match.cpp
+	"char_match.hpp"
+	<sstream>
+
+1370363790 c:\users\jackie\documents\github\dhc\char_match.hpp
+	"lexer_match.hpp"
+
+1370415826 source:c:\users\jackie\documents\github\dhc\string_pattern.cpp
+	"string_pattern.hpp"
+
+1370415994 c:\users\jackie\documents\github\dhc\string_pattern.hpp
+	"compound_pattern.hpp"
+	"string_match.hpp"
+
+1370366551 source:c:\users\jackie\documents\github\dhc\sequence_match.cpp
+	"sequence_match.hpp"
+	<sstream>
+
+1370364056 c:\users\jackie\documents\github\dhc\sequence_match.hpp
+	"lexer_match.hpp"
+	<memory>
+	<vector>
+
+1370364271 c:\users\jackie\documents\github\dhc\optional_match.hpp
+	"lexer_match.hpp"
+	<memory>
+
+1370622749 source:c:\users\jackie\documents\github\dhc\optional_match.cpp
+	"optional_match.hpp"
+	<iostream>
+
+1370364206 c:\users\jackie\documents\github\dhc\string_match.hpp
+	"lexer_match.hpp"
+	<string>
+
+1370364389 source:c:\users\jackie\documents\github\dhc\string_match.cpp
+	"string_match.hpp"
+
+1370709120 source:c:\users\jackie\documents\github\dhc\exclude_pattern.cpp
+	"exclude_pattern.hpp"
+	<sstream>
+
+1370416759 c:\users\jackie\documents\github\dhc\exclude_pattern.hpp
+	"lexer_pattern.hpp"
+
+1370417363 source:c:\users\jackie\documents\github\dhc\lexer_pattern.cpp
+	"lexer_pattern.hpp"
+
+1370717763 source:c:\users\jackie\documents\github\dhc\lexer\lexer.cpp
+	"lexer.hpp"
+	"pattern/character.hpp"
+	"pattern/choice.hpp"
+	"pattern/compound.hpp"
+	"pattern/exclude.hpp"
+	"pattern/repetition.hpp"
+	"pattern/string.hpp"
+	<iostream>
+
+1370718021 c:\users\jackie\documents\github\dhc\lexer\lexer.hpp
+	"pattern.hpp"
+	"scanner.hpp"
+	"match.hpp"
+	<memory>
+
+1370715465 c:\users\jackie\documents\github\dhc\lexer\pattern.hpp
+	"match.hpp"
+	"scanner.hpp"
+	<memory>
+
+1370714483 c:\users\jackie\documents\github\dhc\lexer\match.hpp
+	<string>
+
+1370709170 c:\users\jackie\documents\github\dhc\lexer\scanner.hpp
+	<string>
+	<stack>
+
+1370715624 c:\users\jackie\documents\github\dhc\lexer\pattern\character.hpp
+	"../pattern.hpp"
+	"../match/character.hpp"
+
+1370713319 c:\users\jackie\documents\github\dhc\lexer\match\character.hpp
+	"../match.hpp"
+
+1370715707 c:\users\jackie\documents\github\dhc\lexer\pattern\choice.hpp
+	"../pattern.hpp"
+	<initializer_list>
+	<memory>
+	<vector>
+
+1370715790 c:\users\jackie\documents\github\dhc\lexer\pattern\compound.hpp
+	"../pattern.hpp"
+	"../match/sequence.hpp"
+	<memory>
+	<vector>
+
+1370715749 c:\users\jackie\documents\github\dhc\lexer\match\sequence.hpp
+	"../match.hpp"
+	<memory>
+	<vector>
+
+1370715950 c:\users\jackie\documents\github\dhc\lexer\pattern\exclude.hpp
+	"../pattern.hpp"
+
+1370716017 c:\users\jackie\documents\github\dhc\lexer\pattern\repetition.hpp
+	"../pattern.hpp"
+	"../match/sequence.hpp"
+	<memory>
+	<vector>
+
+1370716204 c:\users\jackie\documents\github\dhc\lexer\pattern\string.hpp
+	"compound.hpp"
+	"character.hpp"
+	"../match/string.hpp"
+
+1370716081 c:\users\jackie\documents\github\dhc\lexer\match\string.hpp
+	"../match.hpp"
+	<string>
+
+1370709158 source:c:\users\jackie\documents\github\dhc\lexer\scanner.cpp
+	"scanner.hpp"
+
+1370718126 source:c:\users\jackie\documents\github\dhc\lexer\pattern\character.cpp
+	"character.hpp"
+	<stdexcept>
+	<sstream>
+
+1370718247 source:c:\users\jackie\documents\github\dhc\lexer\pattern\choice.cpp
+	"choice.hpp"
+	<sstream>
+
+1370718345 source:c:\users\jackie\documents\github\dhc\lexer\pattern\compound.cpp
+	"compound.hpp"
+	<sstream>
+
+1370718395 source:c:\users\jackie\documents\github\dhc\lexer\pattern\exclude.cpp
+	"exclude.hpp"
+	<sstream>
+
+1370718451 source:c:\users\jackie\documents\github\dhc\lexer\pattern\repetition.cpp
+	"repetition.hpp"
+	<sstream>
+
+1370718473 source:c:\users\jackie\documents\github\dhc\lexer\pattern\string.cpp
+	"string.hpp"
+
+1370713249 source:c:\users\jackie\documents\github\dhc\lexer\match\character.cpp
+	"character.hpp"
+	<sstream>
+
+1370713355 source:c:\users\jackie\documents\github\dhc\lexer\match\sequence.cpp
+	"sequence.hpp"
+	<sstream>
+
+1370713647 source:c:\users\jackie\documents\github\dhc\lexer\match\string.cpp
+	"string.hpp"
+

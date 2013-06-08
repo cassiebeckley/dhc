@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="dhc" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/dhc" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/dhc" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="lexer/lexer.cpp" />
+		<Unit filename="lexer/lexer.hpp" />
+		<Unit filename="lexer/match.hpp" />
+		<Unit filename="lexer/match/character.cpp" />
+		<Unit filename="lexer/match/sequence.cpp" />
+		<Unit filename="lexer/match/sequence.hpp" />
+		<Unit filename="lexer/match/string.cpp" />
+		<Unit filename="lexer/match/string.hpp" />
+		<Unit filename="lexer/pattern.cpp" />
+		<Unit filename="lexer/pattern.hpp" />
+		<Unit filename="lexer/pattern/character.cpp" />
+		<Unit filename="lexer/pattern/character.hpp" />
+		<Unit filename="lexer/pattern/choice.cpp" />
+		<Unit filename="lexer/pattern/choice.hpp" />
+		<Unit filename="lexer/pattern/compound.cpp" />
+		<Unit filename="lexer/pattern/compound.hpp" />
+		<Unit filename="lexer/pattern/exclude.cpp" />
+		<Unit filename="lexer/pattern/exclude.hpp" />
+		<Unit filename="lexer/pattern/repetition.cpp" />
+		<Unit filename="lexer/pattern/repetition.hpp" />
+		<Unit filename="lexer/pattern/string.cpp" />
+		<Unit filename="lexer/pattern/string.hpp" />
+		<Unit filename="lexer/scanner.cpp" />
+		<Unit filename="lexer/scanner.hpp" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
