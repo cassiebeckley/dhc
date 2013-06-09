@@ -27,12 +27,14 @@ int main(int argc, char** argv)
 
     dhc::lexer::lexer lex(source);
 
-    std::shared_ptr<dhc::lexer::match::match> token;
-
-    while (token = lex.next()) {
+    while (!lex.finished()) {
+        dhc::lexer::match_ptr token (lex.next());
 
         if (token) {
             std::cout << "\"" << token->flatten() << "\"" << std::endl;
+        } else {
+            std::cout << lex.error(argv[1]) << std::endl;
+            break;
         }
     }
 
