@@ -10,6 +10,9 @@ unsigned int dhc::lexer::match::character::length()
 std::string dhc::lexer::match::character::flatten()
 {
     std::stringstream ss;
-    ss << data;
+    if (data == '\r')
+        ss << "";
+    else
+        ss << data;
     return ss.str();
 }

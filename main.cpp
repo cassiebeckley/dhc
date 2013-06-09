@@ -1,7 +1,21 @@
 #include "lexer/lexer.hpp"
 #include <iostream>
 #include <fstream>
-/*
+
+#include <sstream>
+
+// original version from http://stackoverflow.com/a/5878802/963937
+std::string myreplace(std::string &s,
+                      std::string toReplace,
+                      std::string replaceWith)
+{
+    auto pos = s.find(toReplace);
+    if (pos != std::string::npos)
+        return(s.replace(pos, toReplace.length(), replaceWith));
+    else
+        return s;
+}
+
 int main(int argc, char** argv)
 {
     if (argc < 2) {
@@ -27,46 +41,36 @@ int main(int argc, char** argv)
 
     dhc::lexer::lexer lex(source);
 
+    std::stringstream ss;
+    ss  << "<html>\n<head>\n<title>" << argv[1] << "</title>\n"
+        << "<style type=\"text/css\">\n"
+        << "body { background-color: #000000 }\n"
+        << ".whitespace { color: #aaaaaa }\n"
+        << ".qvarid { font-weight: bolder; color: #ffff00 }\n"
+        << ".qconid { color: #00ffff }\n"
+        << ".qvarsym { color: #ff00ff }\n"
+        << ".qconsym { color: #ab0010 }\n"
+        << ".literal { color: #0000ff }\n"
+        << ".special { color: #ff0000 }\n"
+        << ".reservedop { color: #00ab10 }\n"
+        << ".reservedid { color: #00ff00 }\n"
+        << "</style>" << std::endl << "<body>\n"
+        << "<pre>" << std::endl;
+
     while (!lex.finished()) {
         dhc::lexer::match_ptr token (lex.next());
 
         if (token) {
-            std::cout << "\"" << token->flatten() << "\" type: " << token->type << std::endl;
+            ss << "<span class=\"" << lex.typenames[token->type] << "\">" << token->flatten() << "</span>";
         } else {
             std::cout << lex.error(argv[1]) << std::endl;
-            break;
+            return -1;
         }
     }
 
-    return 0;
-}*/
+    ss << "</pre></body>" << std::endl;
 
-int main(int argc, char** argv)
-{
-    while (true) {
-        std::cout << "> ";
-        char buffer[512];
-        std::cin.getline(buffer, 512);
-        std::string source(buffer);
-
-        dhc::lexer::lexer lex(source);
-
-        dhc::lexer::match_ptr token;
-
-        while (!lex.finished()) {
-            dhc::lexer::match_ptr token (lex.next());
-
-            if (token) {
-                std::cout << "\"" << token->flatten() << "\": " << lex.typenames[token->type] << std::endl;
-            } else {
-                std::cout << lex.error("stdin") << std::endl;
-                break;
-            }
-        }
-
-        std::cout << std::endl << "Done" << std::endl;
-    }
+    std::cout << ss.str();
 
     return 0;
 }
-
