@@ -8,9 +8,9 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::character::find(s
     try {
         char current = s.peek();
 
-        if (current == char_match->data) {
+        if (current == pat) {
             s.get();
-            return std::static_pointer_cast<match::match>(char_match);
+            return std::shared_ptr<match::match> (new match::character(s.charno(), type, pat));
         }
     } catch (std::out_of_range& e) {
         return nullptr;
@@ -22,6 +22,6 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::character::find(s
 std::string dhc::lexer::pattern::character::str() const
 {
     std::stringstream ss;
-    ss << char_match->data;
+    ss << pat;
     return ss.str();
 }

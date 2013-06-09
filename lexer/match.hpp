@@ -9,8 +9,12 @@ namespace dhc {
 
             class match {
                 public:
-                    virtual int length() = 0;
+                    match(unsigned int c, int t) : column(c), type(t) {}
+                    virtual unsigned int length() = 0;
                     virtual std::string flatten() = 0;
+                    const unsigned int column;
+
+                    int type;
                 protected:
                 private:
             };

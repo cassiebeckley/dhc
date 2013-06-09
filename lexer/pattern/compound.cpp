@@ -3,7 +3,8 @@
 
 std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::compound::find(scanner& s)
 {
-    int old_index = s.get_index();
+    auto old_state = s.get_state();
+    int column = s.charno();
 
     std::vector<std::shared_ptr<match::match>> matches;
 
@@ -11,14 +12,14 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::compound::find(sc
         std::shared_ptr<match::match> current = (*it)->find(s);
 
         if (!current) {
-            s.set_index(old_index);
+            s.set_state(old_state);
             return nullptr;
         } else {
             matches.push_back(current);
         }
     }
 
-    return std::shared_ptr<match::match>(new match::sequence(matches));
+    return std::shared_ptr<match::match>(new match::sequence(column, type, matches));
 }
 
 std::string dhc::lexer::pattern::compound::str() const

@@ -12,8 +12,8 @@ namespace dhc {
 
             class sequence : public match {
                 public:
-                    sequence(std::vector<std::shared_ptr<match>> d) : data(d) {}
-                    virtual int length();
+                    sequence(unsigned int column, int type, std::vector<std::shared_ptr<match>> d) : match(column, type), data(d) {}
+                    virtual int unsigned length();
                     virtual std::string flatten();
 
                     const std::vector<std::shared_ptr<match>> data;

@@ -6,20 +6,23 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::choice::find(scan
 {
     std::shared_ptr<match::match> longest;
 
-    int old_index = s.get_index();
-    int max_length = 0;
+    auto old_state = s.get_state();
+    auto max_length = old_state;
 
     for (auto it = pat.begin(); it != pat.end(); ++it) {
         std::shared_ptr<match::match> match = (*it)->find(s);
 
-        if (match && (match->length() > max_length)) {
+        if (match && (match->length() > max_length.index - old_state.index)) {
             longest = match;
-            max_length = s.get_index() - old_index;
+            max_length = s.get_state();
         }
-        s.set_index(old_index);
+        s.set_state(old_state);
     }
 
-    s.set_index(old_index + max_length);
+    s.set_state(max_length);
+
+    if (type != -1 && longest)
+        longest->type = type;
 
     return longest;
 }

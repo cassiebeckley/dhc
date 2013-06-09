@@ -13,9 +13,12 @@ namespace dhc {
             class pattern
             {
                 public:
-                    pattern() {}
+                    pattern(int t) : type(t) {}
+                    pattern() : type(-1) {}
                     virtual std::shared_ptr<match::match> find(scanner& s) = 0;
                     virtual std::string str() const = 0;
+
+                    int type;
                 protected:
             };
 

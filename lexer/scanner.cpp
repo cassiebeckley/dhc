@@ -1,52 +1,43 @@
 #include "scanner.hpp"
 
-char dhc::scanner::peek()
+char dhc::lexer::scanner::peek()
 {
-    index_to_line_number[index] = line_number;
-    if (line_number_to_index[line_number].count(index) == 0) {
-        line_number_to_index[line_number].insert(index);
-    }
-
-    return source.at(index);
+    return source.at(state.index);
 }
 
-char dhc::scanner::get()
+char dhc::lexer::scanner::get()
 {
-    index_to_line_number[index] = line_number;
-    if (line_number_to_index[line_number].count(index) == 0) {
-        line_number_to_index[line_number].insert(index);
-    }
-
-    return source.at(index++);
+    state.column++;
+    return source.at(state.index++);
 }
 
-unsigned int dhc::scanner::get_index()
+dhc::lexer::scanstate dhc::lexer::scanner::get_state()
 {
-    return index;
+    return state;
 }
 
-void dhc::scanner::set_index(int i)
+void dhc::lexer::scanner::set_state(scanstate& s)
 {
-    index = i;
-    line_number = index_to_line_number[index];
+    state = s;
 }
 
-bool dhc::scanner::finished()
+bool dhc::lexer::scanner::finished()
 {
-    return index >= source.length();
+    return state.index >= source.length();
 }
 
-void dhc::scanner::newline()
+void dhc::lexer::scanner::newline()
 {
-    line_number++;
+    state.line_number++;
+    state.column = 0;
 }
 
-unsigned int dhc::scanner::lineno()
+unsigned int dhc::lexer::scanner::lineno()
 {
-    return line_number;
+    return state.line_number;
 }
 
-unsigned int dhc::scanner::charno()
+unsigned int dhc::lexer::scanner::charno()
 {
-    return index - *(line_number_to_index[index_to_line_number[index]].begin());
+    return state.column;
 }

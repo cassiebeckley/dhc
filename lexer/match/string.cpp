@@ -1,6 +1,6 @@
 #include "string.hpp"
 
-int dhc::lexer::match::string::length()
+unsigned int dhc::lexer::match::string::length()
 {
     return data.length();
 }

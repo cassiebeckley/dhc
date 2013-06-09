@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-int dhc::lexer::match::character::length()
+unsigned int dhc::lexer::match::character::length()
 {
     return 1;
 }

@@ -14,16 +14,43 @@
 
 #include <memory>
 #include <sstream>
+#include <unordered_map>
 
 namespace dhc {
     namespace lexer {
         typedef std::shared_ptr<dhc::lexer::pattern::pattern> pattern_ptr;
         typedef std::shared_ptr<dhc::lexer::match::match> match_ptr;
 
+        enum class type {
+            NONE = -1,
+            WHITESPACE,
+            QVARID,
+            QCONID,
+            QVARSYM,
+            QCONSYM,
+            LITERAL,
+            SPECIAL,
+            RESERVEDOP,
+            RESERVEDID
+        };
+
         class lexer {
             public:
-                lexer(std::string source) : s(source) {
+                lexer(std::string source) : s(source)
+                {
                     using namespace pattern;
+
+                    typenames[static_cast<int>(type::NONE)] = "none";
+                    typenames[static_cast<int>(type::WHITESPACE)] = "whitespace";
+                    typenames[static_cast<int>(type::QVARID)] = "qvarid";
+                    typenames[static_cast<int>(type::QCONID)] = "qconid";
+                    typenames[static_cast<int>(type::QVARSYM)] = "qvarsym";
+                    typenames[static_cast<int>(type::QCONSYM)] = "qconsym";
+                    typenames[static_cast<int>(type::LITERAL)] = "literal";
+                    typenames[static_cast<int>(type::SPECIAL)] = "special";
+                    typenames[static_cast<int>(type::RESERVEDOP)] = "reservedop";
+                    typenames[static_cast<int>(type::RESERVEDID)] = "reservedid";
+
                     ascDigit = pattern_ptr (new choice(std::vector<pattern_ptr> {
                         pattern_ptr (new character('0')),
                         pattern_ptr (new character('1')),
@@ -172,7 +199,7 @@ namespace dhc {
                         pattern_ptr (new character('`')),
                         pattern_ptr (new character('{')),
                         pattern_ptr (new character('}'))
-                    }));
+                    }, static_cast<int>(type::SPECIAL)));
 
                     graphic = pattern_ptr (new choice(std::vector<pattern_ptr> {
                         small,
@@ -273,7 +300,7 @@ namespace dhc {
                     whitespace = pattern_ptr (new compound(std::vector<pattern_ptr> {
                         whitestuff,
                         pattern_ptr (new repetition(whitestuff))
-                    }));
+                    }, static_cast<int>(type::WHITESPACE)));
 
                     decimal = pattern_ptr (new compound(std::vector<pattern_ptr> {
                         digit,
@@ -476,7 +503,7 @@ namespace dhc {
                         floating,
                         character_literal,
                         string_literal
-                    }));
+                    }, static_cast<int>(type::LITERAL)));
 
                     reservedid = pattern_ptr (new choice(std::vector<pattern_ptr> {
                         pattern_ptr (new string("case")),
@@ -502,7 +529,7 @@ namespace dhc {
                         pattern_ptr (new string("type")),
                         pattern_ptr (new string("where")),
                         pattern_ptr (new character('_'))
-                    }));
+                    }, static_cast<int>(type::RESERVEDID)));
 
                     varid = pattern_ptr (new exclude(
                         pattern_ptr (new compound(std::vector<pattern_ptr> {
@@ -539,7 +566,7 @@ namespace dhc {
                         pattern_ptr (new character('@')),
                         pattern_ptr (new character('~')),
                         pattern_ptr (new string("=>"))
-                    }));
+                    }, static_cast<int>(type::RESERVEDOP)));
 
                     varsym = pattern_ptr (new exclude(pattern_ptr (new compound(std::vector<pattern_ptr> {
                         pattern_ptr (new exclude(symbol, pattern_ptr (new character(':')))),
@@ -560,7 +587,7 @@ namespace dhc {
                             pattern_ptr (new character('.')),
                             conid
                         }))))
-                    }));
+                    }, static_cast<int>(type::QCONID)));
 
                     qvarid = pattern_ptr (new choice(std::vector<pattern_ptr> {
                         pattern_ptr (new compound(std::vector<pattern_ptr> {
@@ -569,7 +596,7 @@ namespace dhc {
                             varid
                         })),
                         varid
-                    }));
+                    }, static_cast<int>(type::QVARID)));
 
                     qconid = pattern_ptr (modid);
 
@@ -580,7 +607,7 @@ namespace dhc {
                             varsym
                         })),
                         varsym
-                    }));
+                    }, static_cast<int>(type::QVARSYM)));
 
                     qconsym = pattern_ptr (new choice(std::vector<pattern_ptr> {
                         pattern_ptr (new compound(std::vector<pattern_ptr> {
@@ -589,7 +616,7 @@ namespace dhc {
                             consym
                         })),
                         consym
-                    }));
+                    }, static_cast<int>(type::QCONSYM)));
 
                     lexeme = pattern_ptr (new choice(std::vector<pattern_ptr> {
                         qvarid,
@@ -611,6 +638,7 @@ namespace dhc {
                 bool finished();
 
                 std::string error(std::string filename);
+                std::unordered_map<int, std::string> typenames;
             private:
                 pattern_ptr ascDigit;
                 pattern_ptr digit;

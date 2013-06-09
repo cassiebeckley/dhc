@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-int dhc::lexer::match::sequence::length()
+unsigned int dhc::lexer::match::sequence::length()
 {
     int l = 0;
     for (auto it = data.begin(); it != data.end(); ++it) {

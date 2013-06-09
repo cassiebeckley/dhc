@@ -7,33 +7,38 @@
 #include <stack>
 
 namespace dhc {
+    namespace lexer {
 
-    class scanner {
-        public:
-            scanner(std::string source) : source(source), index(0)
-            {
-                this->source += "\n";
-            }
-            char peek();
-            char get();
-            unsigned int get_index();
-            void set_index(int i);
-            bool finished();
-
-            void newline();
-
-            unsigned int lineno();
-            unsigned int charno();
-        protected:
-            std::string source;
-            unsigned int index;
+        struct scanstate {
             unsigned int line_number;
+            unsigned int column;
+            unsigned int index;
+        };
 
-            std::map<unsigned int, std::set<unsigned int>> line_number_to_index;
-            std::map<unsigned int, unsigned int> index_to_line_number;
-        private:
-    };
+        class scanner {
+            public:
+                scanner(std::string source) : source(source), state({0, 0, 0})
+                {
+                    this->source += "\n";
+                }
+                char peek();
+                char get();
+                scanstate get_state();
+                void set_state(scanstate& state);
+                bool finished();
 
+                void newline();
+
+                unsigned int lineno();
+                unsigned int charno();
+            protected:
+                std::string source;
+
+                scanstate state;
+            private:
+        };
+
+    }
 }
 
 #endif // SCANNER_HPP

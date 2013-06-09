@@ -11,11 +11,12 @@ namespace dhc {
             class character : public pattern
             {
                 public:
-                    character(char pattern) : char_match(new match::character(pattern)) {}
+                    character(char p, int type) : pattern(type), pat(p) {}
+                    character(char p) : pattern(), pat(p) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);
                     virtual std::string str() const;
                 protected:
-                    std::shared_ptr<match::character> char_match;
+                    char pat;
                 private:
             };
 

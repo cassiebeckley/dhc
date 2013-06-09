@@ -9,8 +9,8 @@ namespace dhc {
 
             class character : public match {
                 public:
-                    character(char d) : data(d) {}
-                    virtual int length();
+                    character(unsigned int column, int type, char d) : match(column, type), data(d) {}
+                    virtual unsigned int length();
                     virtual std::string flatten();
 
                     const char data;

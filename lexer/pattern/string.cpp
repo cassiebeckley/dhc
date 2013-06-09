@@ -2,8 +2,9 @@
 
 std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::string::find(scanner& s)
 {
-    if (compound::find(s)) {
-        return str_match;
+    std::shared_ptr<match::match> comp (compound::find(s));
+    if (comp) {
+        return std::shared_ptr<match::match> (new match::string(comp->column, type, str_pat));
     } else {
         return nullptr;
     }
@@ -11,5 +12,5 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::string::find(scan
 
 std::string dhc::lexer::pattern::string::str() const
 {
-    return str_match->data;
+    return str_pat;
 }

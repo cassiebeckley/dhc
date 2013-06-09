@@ -15,7 +15,8 @@ namespace dhc {
             class compound : public pattern
             {
                 public:
-                    compound(std::vector<std::shared_ptr<pattern>>&& pattern) : pat(pattern) {}
+                    compound(std::vector<std::shared_ptr<pattern>>&& p, int type) : pattern(type), pat(p) {}
+                    compound(std::vector<std::shared_ptr<pattern>>&& p) : pattern(), pat(p) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);
                     virtual std::string str() const;
 

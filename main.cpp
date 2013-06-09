@@ -1,7 +1,7 @@
 #include "lexer/lexer.hpp"
 #include <iostream>
 #include <fstream>
-
+/*
 int main(int argc, char** argv)
 {
     if (argc < 2) {
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
         dhc::lexer::match_ptr token (lex.next());
 
         if (token) {
-            std::cout << "\"" << token->flatten() << "\"" << std::endl;
+            std::cout << "\"" << token->flatten() << "\" type: " << token->type << std::endl;
         } else {
             std::cout << lex.error(argv[1]) << std::endl;
             break;
@@ -39,8 +39,8 @@ int main(int argc, char** argv)
     }
 
     return 0;
-}
-/*
+}*/
+
 int main(int argc, char** argv)
 {
     while (true) {
@@ -49,13 +49,18 @@ int main(int argc, char** argv)
         std::cin.getline(buffer, 512);
         std::string source(buffer);
 
-        dhc::lexer lex(source);
+        dhc::lexer::lexer lex(source);
 
-        std::shared_ptr<dhc::lexer_match> token;
+        dhc::lexer::match_ptr token;
 
-        while (token = lex.next()) {
+        while (!lex.finished()) {
+            dhc::lexer::match_ptr token (lex.next());
+
             if (token) {
-                std::cout << "\"" << token->flatten() << "\"" << std::endl;
+                std::cout << "\"" << token->flatten() << "\": " << lex.typenames[token->type] << std::endl;
+            } else {
+                std::cout << lex.error("stdin") << std::endl;
+                break;
             }
         }
 
@@ -64,4 +69,4 @@ int main(int argc, char** argv)
 
     return 0;
 }
-*/
+

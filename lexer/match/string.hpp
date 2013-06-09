@@ -11,8 +11,8 @@ namespace dhc {
 
             class string : public match {
                 public:
-                    string(std::string d) : data(d) {}
-                    virtual int length();
+                    string(unsigned int column, int type, std::string d) : match(column, type), data(d) {}
+                    virtual unsigned int length();
                     virtual std::string flatten();
 
                     const std::string data;
