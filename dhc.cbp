@@ -36,6 +36,7 @@
 		<Unit filename="lexer/lexer.hpp" />
 		<Unit filename="lexer/match.hpp" />
 		<Unit filename="lexer/match/character.cpp" />
+		<Unit filename="lexer/match/character.hpp" />
 		<Unit filename="lexer/match/sequence.cpp" />
 		<Unit filename="lexer/match/sequence.hpp" />
 		<Unit filename="lexer/match/string.cpp" />

@@ -50,7 +50,7 @@ int main(int argc, char** argv)
         << ".qconid { color: #00ffff }\n"
         << ".qvarsym { color: #ff00ff }\n"
         << ".qconsym { color: #ab0010 }\n"
-        << ".literal { color: #0000ff }\n"
+        << ".literal { color: #ffffff }\n"
         << ".special { color: #ff0000 }\n"
         << ".reservedop { color: #00ab10 }\n"
         << ".reservedid { color: #00ff00 }\n"
