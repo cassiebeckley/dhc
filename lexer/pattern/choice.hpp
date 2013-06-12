@@ -14,6 +14,7 @@ namespace dhc {
             class choice : public pattern
             {
                 public:
+                    choice(std::vector<std::shared_ptr<pattern>>&& p, int type, std::function<std::shared_ptr<match::match>(std::shared_ptr<match::match>)> call) : pattern(type, call), pat(p) {}
                     choice(std::vector<std::shared_ptr<pattern>>&& p, int type) : pattern(type), pat(p) {}
                     choice(std::vector<std::shared_ptr<pattern>>&& p) : pattern(), pat(p) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);

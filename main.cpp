@@ -15,7 +15,7 @@ std::string myreplace(std::string &s,
     else
         return s;
 }
-
+/*
 int main(int argc, char** argv)
 {
     if (argc < 2) {
@@ -48,9 +48,9 @@ int main(int argc, char** argv)
         << ".whitespace { color: #aaaaaa }\n"
         << ".qvarid { font-weight: bolder; color: #ffff00 }\n"
         << ".qconid { color: #00ffff }\n"
-        << ".qvarsym { color: #ff00ff }\n"
+        << ".qvarsym { color: #ffbb11 }\n"
         << ".qconsym { color: #ab0010 }\n"
-        << ".literal { color: #ffffff }\n"
+        << ".literal { color: #ff00ff }\n"
         << ".special { color: #ff0000 }\n"
         << ".reservedop { color: #00ab10 }\n"
         << ".reservedid { color: #00ff00 }\n"
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
         if (token) {
             ss << "<span class=\"" << lex.typenames[token->type] << "\">" << token->flatten() << "</span>";
         } else {
-            std::cout << lex.error(argv[1]) << std::endl;
+            std::cerr << lex.error(argv[1]) << std::endl;
             return -1;
         }
     }
@@ -73,4 +73,30 @@ int main(int argc, char** argv)
     std::cout << ss.str();
 
     return 0;
+}*/
+
+int main(int argc, char** argv)
+{
+    while (true) {
+        std::cout << "> ";
+        char buffer[512];
+        std::cin.getline(buffer, 512);
+        std::string source(buffer);
+
+        dhc::lexer::lexer lex(source);
+
+        while (!lex.finished()) {
+            dhc::lexer::match_ptr token (lex.next());
+
+            if (token) {
+                std::cout << "\"" << token->flatten() << "\": " << lex.typenames[token->type] << std::endl;
+            } else {
+                std::cerr << lex.error(argv[1]) << std::endl;
+                return -1;
+            }
+        }
+    }
+
+    return 0;
 }
+

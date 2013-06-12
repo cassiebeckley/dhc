@@ -1,10 +1,10 @@
 #ifndef SCANNER_HPP
 #define SCANNER_HPP
 
-#include <map>
-#include <set>
+#include "match/character.hpp"
+
+#include <memory>
 #include <string>
-#include <stack>
 
 namespace dhc {
     namespace lexer {
@@ -21,8 +21,8 @@ namespace dhc {
                 {
                     this->source += "\n";
                 }
-                char peek();
-                char get();
+                std::shared_ptr<match::match> lookahead();
+                void consume();
                 scanstate get_state();
                 void set_state(scanstate& state);
                 bool finished();

@@ -14,3 +14,11 @@ std::string dhc::lexer::pattern::string::str() const
 {
     return str_pat;
 }
+
+void dhc::lexer::pattern::string::initialize()
+{
+    for (auto it = str_pat.begin(); it != str_pat.end(); ++it) {
+        std::shared_ptr<character> pat (new character(*it, -1));
+        this->pat.push_back(pat);
+    }
+}

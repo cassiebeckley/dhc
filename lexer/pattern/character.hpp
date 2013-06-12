@@ -11,6 +11,7 @@ namespace dhc {
             class character : public pattern
             {
                 public:
+                    character(char p, int type, std::function<std::shared_ptr<match::match>(std::shared_ptr<match::match>)> call) : pattern(type, call), pat(p) {}
                     character(char p, int type) : pattern(type), pat(p) {}
                     character(char p) : pattern(), pat(p) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);

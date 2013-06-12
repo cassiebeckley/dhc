@@ -14,6 +14,7 @@ namespace dhc {
 
             class repetition : public pattern {
                 public:
+                    repetition(std::shared_ptr<pattern> pat, int type, std::function<std::shared_ptr<match::match>(std::shared_ptr<match::match>)> call) : pattern(type, call), pat(pat) {}
                     repetition(std::shared_ptr<pattern> pat, int type) : pattern(type), pat(pat) {}
                     repetition(std::shared_ptr<pattern> pat) : pattern(), pat(pat) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);

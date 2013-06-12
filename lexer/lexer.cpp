@@ -13,6 +13,6 @@ bool dhc::lexer::lexer::finished()
 std::string dhc::lexer::lexer::error(std::string filename)
 {
     std::stringstream ss;
-    ss << filename << ':' << s.lineno() << ':' << s.charno() << ": Lexical error" << std::endl;
+    ss << filename << /*':' << s.lineno() << ':' << s.charno() << */ ": Lexical error" << std::endl;
     return ss.str();
 }

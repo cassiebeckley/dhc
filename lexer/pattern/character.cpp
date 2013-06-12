@@ -6,11 +6,14 @@
 std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::character::find(scanner& s)
 {
     try {
-        char current = s.peek();
+        std::shared_ptr<match::character> current = std::dynamic_pointer_cast<match::character>(s.lookahead());
 
-        if (current == pat) {
-            s.get();
-            return std::shared_ptr<match::match> (new match::character(s.charno(), type, pat));
+        if (!current)
+            return nullptr;
+
+        if (current->data == pat) {
+            s.consume();
+            return current;
         }
     } catch (std::out_of_range& e) {
         return nullptr;

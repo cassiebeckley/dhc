@@ -598,7 +598,9 @@ namespace dhc {
                         varid
                     }, static_cast<int>(type::QVARID)));
 
-                    qconid = pattern_ptr (modid);
+                    qconid = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                        modid
+                    }, static_cast<int>(type::QCONID)));
 
                     qvarsym = pattern_ptr (new choice(std::vector<pattern_ptr> {
                         pattern_ptr (new compound(std::vector<pattern_ptr> {

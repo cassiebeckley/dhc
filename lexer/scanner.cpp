@@ -1,14 +1,14 @@
 #include "scanner.hpp"
 
-char dhc::lexer::scanner::peek()
+std::shared_ptr<dhc::lexer::match::match> dhc::lexer::scanner::lookahead()
 {
-    return source.at(state.index);
+    return std::shared_ptr<match::match> (new match::character(state.column, -1, source.at(state.index)));
 }
 
-char dhc::lexer::scanner::get()
+void dhc::lexer::scanner::consume()
 {
     state.column++;
-    return source.at(state.index++);
+    state.index++;
 }
 
 dhc::lexer::scanstate dhc::lexer::scanner::get_state()
