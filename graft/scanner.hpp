@@ -1,5 +1,5 @@
-#ifndef SCANNER_HPP
-#define SCANNER_HPP
+#ifndef DHC_GRAFT_SCANNER_HPP
+#define DHC_GRAFT_SCANNER_HPP
 
 #include "match/character.hpp"
 
@@ -41,4 +41,4 @@ namespace dhc {
     }
 }
 
-#endif // SCANNER_HPP
+#endif // DHC_GRAFT_SCANNER_HPP

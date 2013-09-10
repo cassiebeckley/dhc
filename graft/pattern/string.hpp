@@ -1,5 +1,5 @@
-#ifndef DHC_LEXER_PATTERN_STRING_HPP
-#define DHC_LEXER_PATTERN_STRING_HPP
+#ifndef DHC_GRAFT_PATTERN_STRING_HPP
+#define DHC_GRAFT_PATTERN_STRING_HPP
 
 #include "compound.hpp"
 #include "character.hpp"
@@ -32,4 +32,4 @@ namespace dhc {
     }
 }
 
-#endif // DHC_LEXER_PATTERN_STRING_HPP
+#endif // DHC_GRAFT_PATTERN_STRING_HPP

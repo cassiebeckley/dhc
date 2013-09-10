@@ -1,5 +1,5 @@
-#ifndef LEXER_MATCH_HPP
-#define LEXER_MATCH_HPP
+#ifndef DHC_GRAFT_MATCH_HPP
+#define DHC_GRAFT_MATCH_HPP
 
 #include <string>
 
@@ -23,4 +23,4 @@ namespace dhc {
     }
 }
 
-#endif // LEXER_MATCH_HPP
+#endif // DHC_GRAFT_MATCH_HPP

@@ -1,5 +1,5 @@
-#ifndef DHC_LEXER_MATCH_SEQUENCE_HPP
-#define DHC_LEXER_MATCH_SEQUENCE_HPP
+#ifndef DHC_GRAFT_MATCH_SEQUENCE_HPP
+#define DHC_GRAFT_MATCH_SEQUENCE_HPP
 
 #include "../match.hpp"
 
@@ -25,4 +25,4 @@ namespace dhc {
     }
 }
 
-#endif // DHC_LEXER_MATCH_SEQUENCE_HPP
+#endif // DHC_GRAFT_MATCH_SEQUENCE_HPP

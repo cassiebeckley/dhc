@@ -1,5 +1,5 @@
-#ifndef DHC_LEXER_PATTERN_EXCLUDE_HPP
-#define DHC_LEXER_PATTERN_EXCLUDE_HPP
+#ifndef DHC_GRAFT_PATTERN_EXCLUDE_HPP
+#define DHC_GRAFT_PATTERN_EXCLUDE_HPP
 
 #include "../pattern.hpp"
 
@@ -24,4 +24,4 @@ namespace dhc {
     }
 }
 
-#endif // DHC_LEXER_PATTERN_EXCLUDE_HPP
+#endif // DHC_GRAFT_PATTERN_EXCLUDE_HPP
