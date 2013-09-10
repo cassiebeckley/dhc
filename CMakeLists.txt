@@ -32,3 +32,21 @@ add_executable(dhc
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/sequence.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/string.cpp
 )
+
+# add a test executable
+add_executable(hl
+    ${CMAKE_CURRENT_SOURCE_DIR}/highlight.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/pattern.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/scanner.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/pattern/character.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/pattern/choice.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/pattern/compound.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/pattern/exclude.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/pattern/repetition.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/pattern/string.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/character.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/sequence.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/string.cpp
+)
