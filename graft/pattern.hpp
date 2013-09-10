@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace pattern {
 
             class pattern

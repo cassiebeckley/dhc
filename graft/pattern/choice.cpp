@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::choice::find(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::find(scanner& s)
 {
     std::shared_ptr<match::match> longest;
 
@@ -27,7 +27,7 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::choice::find(scan
     return longest;
 }
 
-std::string dhc::lexer::pattern::choice::str() const
+std::string dhc::graft::pattern::choice::str() const
 {
     std::stringstream ss;
     ss << "(";

@@ -4,7 +4,7 @@
 #include "../match.hpp"
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace match {
 
             class character : public match {

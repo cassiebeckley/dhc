@@ -6,7 +6,7 @@
 #include <string>
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace match {
 
             class string : public match {

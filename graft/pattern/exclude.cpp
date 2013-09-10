@@ -1,7 +1,7 @@
 #include "exclude.hpp"
 #include <sstream>
 
-std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::exclude::find(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::exclude::find(scanner& s)
 {
     auto old_state = s.get_state();
     std::shared_ptr<match::match> ex_match (exc->find(s));
@@ -19,7 +19,7 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::exclude::find(sca
     }
 }
 
-std::string dhc::lexer::pattern::exclude::str() const
+std::string dhc::graft::pattern::exclude::str() const
 {
     std::stringstream ss;
 

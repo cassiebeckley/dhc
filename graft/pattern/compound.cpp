@@ -1,7 +1,7 @@
 #include "compound.hpp"
 #include <sstream>
 
-std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::compound::find(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::find(scanner& s)
 {
     auto old_state = s.get_state();
     int column = s.charno();
@@ -22,7 +22,7 @@ std::shared_ptr<dhc::lexer::match::match> dhc::lexer::pattern::compound::find(sc
     return std::shared_ptr<match::match>(new match::sequence(column, type, matches));
 }
 
-std::string dhc::lexer::pattern::compound::str() const
+std::string dhc::graft::pattern::compound::str() const
 {
     std::stringstream ss;
 
@@ -35,7 +35,7 @@ std::string dhc::lexer::pattern::compound::str() const
     return ss.str();
 }
 
-void dhc::lexer::pattern::compound::add_pattern(std::shared_ptr<pattern> patt)
+void dhc::graft::pattern::compound::add_pattern(std::shared_ptr<pattern> patt)
 {
     pat.push_back(patt);
 }

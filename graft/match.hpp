@@ -4,7 +4,7 @@
 #include <string>
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace match {
 
             class match {

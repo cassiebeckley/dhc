@@ -2,12 +2,12 @@
 
 #include <sstream>
 
-unsigned int dhc::lexer::match::character::length()
+unsigned int dhc::graft::match::character::length()
 {
     return 1;
 }
 
-std::string dhc::lexer::match::character::flatten()
+std::string dhc::graft::match::character::flatten()
 {
     std::stringstream ss;
     if (data == '\r')

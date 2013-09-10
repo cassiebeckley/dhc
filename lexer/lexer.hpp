@@ -1,16 +1,17 @@
 #ifndef LEXER_HPP
 #define LEXER_HPP
 
-#include "pattern.hpp"
-#include "scanner.hpp"
-#include "match.hpp"
+#include "../graft/scanner.hpp"
 
-#include "pattern/character.hpp"
-#include "pattern/choice.hpp"
-#include "pattern/compound.hpp"
-#include "pattern/exclude.hpp"
-#include "pattern/repetition.hpp"
-#include "pattern/string.hpp"
+#include "../graft/pattern.hpp"
+#include "../graft/match.hpp"
+
+#include "../graft/pattern/character.hpp"
+#include "../graft/pattern/choice.hpp"
+#include "../graft/pattern/compound.hpp"
+#include "../graft/pattern/exclude.hpp"
+#include "../graft/pattern/repetition.hpp"
+#include "../graft/pattern/string.hpp"
 
 #include <memory>
 #include <sstream>
@@ -18,8 +19,8 @@
 
 namespace dhc {
     namespace lexer {
-        typedef std::shared_ptr<dhc::lexer::pattern::pattern> pattern_ptr;
-        typedef std::shared_ptr<dhc::lexer::match::match> match_ptr;
+        typedef std::shared_ptr<graft::pattern::pattern> pattern_ptr;
+        typedef std::shared_ptr<graft::match::match> match_ptr;
 
         enum class type {
             NONE = -1,
@@ -38,7 +39,8 @@ namespace dhc {
             public:
                 lexer(std::string source) : s(source)
                 {
-                    using namespace pattern;
+                    // TODO: get rid of this mebbe?
+                    using namespace graft::pattern;
 
                     typenames[static_cast<int>(type::NONE)] = "none";
                     typenames[static_cast<int>(type::WHITESPACE)] = "whitespace";
@@ -700,7 +702,7 @@ namespace dhc {
                 pattern_ptr lexeme;
                 pattern_ptr program;
 
-                scanner s;
+                graft::scanner s;
         };
 
     }

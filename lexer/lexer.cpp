@@ -1,6 +1,6 @@
 #include "lexer.hpp"
 
-std::shared_ptr<dhc::lexer::match::match> dhc::lexer::lexer::next()
+std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
 {
     return program->find(s);
 }

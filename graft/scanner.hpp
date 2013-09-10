@@ -7,7 +7,7 @@
 #include <string>
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
 
         struct scanstate {
             unsigned int line_number;

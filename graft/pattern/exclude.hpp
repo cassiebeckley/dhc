@@ -4,7 +4,7 @@
 #include "../pattern.hpp"
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace pattern {
 
             class exclude : public pattern {

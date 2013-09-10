@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-unsigned int dhc::lexer::match::sequence::length()
+unsigned int dhc::graft::match::sequence::length()
 {
     int l = 0;
     for (auto it = data.begin(); it != data.end(); ++it) {
@@ -12,7 +12,7 @@ unsigned int dhc::lexer::match::sequence::length()
     return l;
 }
 
-std::string dhc::lexer::match::sequence::flatten()
+std::string dhc::graft::match::sequence::flatten()
 {
     std::stringstream ss;
     for (auto it = data.begin(); it != data.end(); ++it) {

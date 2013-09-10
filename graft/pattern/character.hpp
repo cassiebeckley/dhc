@@ -5,7 +5,7 @@
 #include "../match/character.hpp"
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace pattern {
 
             class character : public pattern

@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace pattern {
 
             class choice : public pattern

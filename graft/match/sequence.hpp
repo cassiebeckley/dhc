@@ -7,7 +7,7 @@
 #include <vector>
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace match {
 
             class sequence : public match {

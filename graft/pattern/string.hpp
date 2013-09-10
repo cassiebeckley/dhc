@@ -6,7 +6,7 @@
 #include "../match/string.hpp"
 
 namespace dhc {
-    namespace lexer {
+    namespace graft {
         namespace pattern {
 
             class string : public compound {
