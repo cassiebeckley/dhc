@@ -5,19 +5,21 @@
 
 std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::character::find(scanner& s)
 {
-    try {
-        std::shared_ptr<match::character> current = std::dynamic_pointer_cast<match::character>(s.lookahead());
+    auto state = s.get_state();
 
-        if (!current)
-            return nullptr;
+    try
+    {
+        std::shared_ptr<match::character> current = std::dynamic_pointer_cast<match::character>(s.next());
 
-        if (current->data == pat) {
-            s.consume();
+        if (current && current->data == pat)
             return current;
-        }
-    } catch (std::out_of_range& e) {
-        return nullptr;
     }
+    catch (std::out_of_range& e)
+    {
+        // ignore and return nullptr
+    }
+
+    s.set_state(state);
 
     return nullptr;
 }

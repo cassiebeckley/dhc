@@ -1,14 +1,8 @@
 #include "scanner.hpp"
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::lookahead()
+std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::next()
 {
-    return std::shared_ptr<match::match> (new match::character(state.column, -1, source.at(state.index)));
-}
-
-void dhc::graft::scanner::consume()
-{
-    state.column++;
-    state.index++;
+    return std::shared_ptr<match::match> (new match::character(state.column++, -1, source.at(state.index++)));
 }
 
 dhc::graft::scanstate dhc::graft::scanner::get_state()
