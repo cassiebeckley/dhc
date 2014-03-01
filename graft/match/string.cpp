@@ -2,10 +2,10 @@
 
 unsigned int dhc::graft::match::string::length()
 {
-    return data.length();
+    return data.countChar32();
 }
 
-std::string dhc::graft::match::string::flatten()
+UnicodeString dhc::graft::match::string::flatten()
 {
     return data;
 }

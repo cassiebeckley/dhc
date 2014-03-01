@@ -18,7 +18,9 @@ int main(int argc, char** argv)
             dhc::lexer::match_ptr token (lex.next());
 
             if (token) {
-                std::cout << "\"" << token->flatten() << "\": " << lex.typenames[token->type] << std::endl;
+                std::string flat;
+                token->flatten().toUTF8String(flat);
+                std::cout << "\"" << flat << "\": " << lex.typenames[token->type] << std::endl;
             } else {
                 std::cerr << lex.error(argv[1]) << std::endl;
                 return -1;

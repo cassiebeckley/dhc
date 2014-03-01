@@ -49,7 +49,9 @@ int main(int argc, char** argv)
         dhc::lexer::match_ptr token (lex.next());
 
         if (token) {
-            ss << "<span class=\"" << lex.typenames[token->type] << "\">" << token->flatten() << "</span>";
+            std::string flat;
+            token->flatten().toUTF8String(flat);
+            ss << "<span class=\"" << lex.typenames[token->type] << "\">" << flat << "</span>";
         } else {
             std::cerr << lex.error(argv[1]) << std::endl;
             return -1;

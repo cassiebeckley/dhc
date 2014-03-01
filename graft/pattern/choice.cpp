@@ -27,17 +27,17 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::find(scan
     return longest;
 }
 
-std::string dhc::graft::pattern::choice::str() const
+icu::UnicodeString dhc::graft::pattern::choice::str() const
 {
-    std::stringstream ss;
-    ss << "(";
+    icu::UnicodeString result;
+    result.append('(');
 
     for (auto it = pat.begin(); it != pat.end(); ++it) {
         if (it != pat.begin())
-            ss << " | ";
-        ss << (*it)->str();
+            result.append(" | ");
+        result.append((*it)->str());
     }
-    ss << ")";
+    result.append(')');
 
-    return ss.str();
+    return result;
 }

@@ -4,6 +4,7 @@
 #include "../match.hpp"
 
 #include <string>
+#include <unicode/unistr.h>
 
 namespace dhc {
     namespace graft {
@@ -11,11 +12,11 @@ namespace dhc {
 
             class string : public match {
                 public:
-                    string(unsigned int column, int type, std::string d) : match(column, type), data(d) {}
+                    string(unsigned int column, int type, UnicodeString d) : match(column, type), data(d) {}
                     virtual unsigned int length();
-                    virtual std::string flatten();
+                    virtual UnicodeString flatten();
 
-                    const std::string data;
+                    const UnicodeString data;
                 protected:
                 private:
             };

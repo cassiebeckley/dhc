@@ -14,7 +14,7 @@ namespace dhc {
                 public:
                     sequence(unsigned int column, int type, std::vector<std::shared_ptr<match>> d) : match(column, type), data(d) {}
                     virtual int unsigned length();
-                    virtual std::string flatten();
+                    virtual icu::UnicodeString flatten();
 
                     const std::vector<std::shared_ptr<match>> data;
                 protected:

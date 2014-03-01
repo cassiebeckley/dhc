@@ -18,7 +18,7 @@ namespace dhc {
                     choice(std::vector<std::shared_ptr<pattern>>&& p, int type) : pattern(type), pat(p) {}
                     choice(std::vector<std::shared_ptr<pattern>>&& p) : pattern(), pat(p) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);
-                    virtual std::string str() const;
+                    virtual icu::UnicodeString str() const;
                 protected:
                     std::vector<std::shared_ptr<pattern>> pat;
                 private:

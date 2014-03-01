@@ -5,6 +5,7 @@
 #include "scanner.hpp"
 
 #include <memory>
+#include <unicode/unistr.h>
 
 namespace dhc {
     namespace graft {
@@ -18,7 +19,7 @@ namespace dhc {
                     pattern() : pattern(-1) {}
 
                     virtual std::shared_ptr<match::match> find(scanner& s) = 0;
-                    virtual std::string str() const = 0;
+                    virtual icu::UnicodeString str() const = 0;
 
                     int type;
                 protected:

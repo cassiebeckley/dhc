@@ -2,6 +2,7 @@
 #define DHC_GRAFT_MATCH_CHARACTER_HPP
 
 #include "../match.hpp"
+#include <unicode/utypes.h>
 
 namespace dhc {
     namespace graft {
@@ -9,11 +10,11 @@ namespace dhc {
 
             class character : public match {
                 public:
-                    character(unsigned int column, int type, char d) : match(column, type), data(d) {}
+                    character(unsigned int column, int type, UChar32 d) : match(column, type), data(d) {}
                     virtual unsigned int length();
-                    virtual std::string flatten();
+                    virtual icu::UnicodeString flatten();
 
-                    const char data;
+                    const UChar32 data;
                 protected:
                 private:
             };

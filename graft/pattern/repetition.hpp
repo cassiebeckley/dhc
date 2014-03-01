@@ -18,7 +18,7 @@ namespace dhc {
                     repetition(std::shared_ptr<pattern> pat, int type) : pattern(type), pat(pat) {}
                     repetition(std::shared_ptr<pattern> pat) : pattern(), pat(pat) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);
-                    virtual std::string str() const;
+                    virtual icu::UnicodeString str() const;
                 protected:
                     std::shared_ptr<pattern> pat;
                 private:

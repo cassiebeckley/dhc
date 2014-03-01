@@ -12,12 +12,12 @@ unsigned int dhc::graft::match::sequence::length()
     return l;
 }
 
-std::string dhc::graft::match::sequence::flatten()
+icu::UnicodeString dhc::graft::match::sequence::flatten()
 {
-    std::stringstream ss;
+    icu::UnicodeString res;
     for (auto it = data.begin(); it != data.end(); ++it) {
-        ss << (*it)->flatten();
+        res.append((*it)->flatten());
     }
 
-    return ss.str();
+    return res;
 }

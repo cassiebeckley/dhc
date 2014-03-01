@@ -24,9 +24,9 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::character::find(s
     return nullptr;
 }
 
-std::string dhc::graft::pattern::character::str() const
+icu::UnicodeString dhc::graft::pattern::character::str() const
 {
-    std::stringstream ss;
-    ss << pat;
-    return ss.str();
+    icu::UnicodeString result;
+    result.append(pat);
+    return result;
 }

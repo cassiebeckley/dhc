@@ -15,11 +15,13 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::repetition::find(
     return std::shared_ptr<match::match>(new match::sequence(column, type, matches));
 }
 
-std::string dhc::graft::pattern::repetition::str() const
+icu::UnicodeString dhc::graft::pattern::repetition::str() const
 {
-    std::stringstream ss;
+    icu::UnicodeString result;
 
-    ss << "{" << pat->str() << "}";
+    result.append('{');
+    result.append(pat->str());
+    result.append('}');
 
-    return ss.str();
+    return result;
 }

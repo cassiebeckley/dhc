@@ -10,15 +10,20 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::string::find(scan
     }
 }
 
-std::string dhc::graft::pattern::string::str() const
+icu::UnicodeString dhc::graft::pattern::string::str() const
 {
     return str_pat;
 }
 
 void dhc::graft::pattern::string::initialize()
 {
-    for (auto it = str_pat.begin(); it != str_pat.end(); ++it) {
-        std::shared_ptr<character> pat (new character(*it, -1));
+    UChar32 buffer[500];
+    UErrorCode e;
+
+    str_pat.toUTF32(buffer, sizeof(buffer), e);
+
+    for (int i = 0; i < sizeof(buffer); i++) {
+        std::shared_ptr<character> pat (new character(buffer[i], -1));
         this->pat.push_back(pat);
     }
 }
