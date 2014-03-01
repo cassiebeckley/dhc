@@ -53,576 +53,579 @@ namespace dhc {
                     typenames[static_cast<int>(type::RESERVEDOP)] = "reservedop";
                     typenames[static_cast<int>(type::RESERVEDID)] = "reservedid";
 
-                    ascDigit = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('0')),
-                        pattern_ptr (new character('1')),
-                        pattern_ptr (new character('2')),
-                        pattern_ptr (new character('3')),
-                        pattern_ptr (new character('4')),
-                        pattern_ptr (new character('5')),
-                        pattern_ptr (new character('6')),
-                        pattern_ptr (new character('7')),
-                        pattern_ptr (new character('8')),
-                        pattern_ptr (new character('9'))
-                    }));
+                    ascDigit = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('0'),
+                        std::make_shared<character>('1'),
+                        std::make_shared<character>('2'),
+                        std::make_shared<character>('3'),
+                        std::make_shared<character>('4'),
+                        std::make_shared<character>('5'),
+                        std::make_shared<character>('6'),
+                        std::make_shared<character>('7'),
+                        std::make_shared<character>('8'),
+                        std::make_shared<character>('9')
+                    });
 
-                    digit = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    digit = std::make_shared<choice>(std::vector<pattern_ptr> {
                         ascDigit
-                    }));
+                    });
 
-                    octit = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('0')),
-                        pattern_ptr (new character('1')),
-                        pattern_ptr (new character('2')),
-                        pattern_ptr (new character('3')),
-                        pattern_ptr (new character('4')),
-                        pattern_ptr (new character('5')),
-                        pattern_ptr (new character('6')),
-                        pattern_ptr (new character('7'))
-                    }));
+                    octit = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('0'),
+                        std::make_shared<character>('1'),
+                        std::make_shared<character>('2'),
+                        std::make_shared<character>('3'),
+                        std::make_shared<character>('4'),
+                        std::make_shared<character>('5'),
+                        std::make_shared<character>('6'),
+                        std::make_shared<character>('7')
+                    });
 
-                    hexit = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    hexit = std::make_shared<choice>(std::vector<pattern_ptr> {
                         digit,
-                        pattern_ptr (new character('A')),
-                        pattern_ptr (new character('B')),
-                        pattern_ptr (new character('C')),
-                        pattern_ptr (new character('D')),
-                        pattern_ptr (new character('E')),
-                        pattern_ptr (new character('F')),
-                        pattern_ptr (new character('a')),
-                        pattern_ptr (new character('b')),
-                        pattern_ptr (new character('c')),
-                        pattern_ptr (new character('d')),
-                        pattern_ptr (new character('e')),
-                        pattern_ptr (new character('f')),
-                    }));
+                        std::make_shared<character>('A'),
+                        std::make_shared<character>('B'),
+                        std::make_shared<character>('C'),
+                        std::make_shared<character>('D'),
+                        std::make_shared<character>('E'),
+                        std::make_shared<character>('F'),
+                        std::make_shared<character>('a'),
+                        std::make_shared<character>('b'),
+                        std::make_shared<character>('c'),
+                        std::make_shared<character>('d'),
+                        std::make_shared<character>('e'),
+                        std::make_shared<character>('f'),
+                    });
 
-                    ascSymbol = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('!')),
-                        pattern_ptr (new character('#')),
-                        pattern_ptr (new character('$')),
-                        pattern_ptr (new character('%')),
-                        pattern_ptr (new character('&')),
-                        pattern_ptr (new character('*')),
-                        pattern_ptr (new character('+')),
-                        pattern_ptr (new character('.')),
-                        pattern_ptr (new character('/')),
-                        pattern_ptr (new character('<')),
-                        pattern_ptr (new character('=')),
-                        pattern_ptr (new character('>')),
-                        pattern_ptr (new character('?')),
-                        pattern_ptr (new character('@')),
-                        pattern_ptr (new character('\\')),
-                        pattern_ptr (new character('^')),
-                        pattern_ptr (new character('|')),
-                        pattern_ptr (new character('-')),
-                        pattern_ptr (new character('~')),
-                        pattern_ptr (new character(':'))
-                    }));
+                    ascSymbol = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('!'),
+                        std::make_shared<character>('#'),
+                        std::make_shared<character>('$'),
+                        std::make_shared<character>('%'),
+                        std::make_shared<character>('&'),
+                        std::make_shared<character>('*'),
+                        std::make_shared<character>('+'),
+                        std::make_shared<character>('.'),
+                        std::make_shared<character>('/'),
+                        std::make_shared<character>('<'),
+                        std::make_shared<character>('='),
+                        std::make_shared<character>('>'),
+                        std::make_shared<character>('?'),
+                        std::make_shared<character>('@'),
+                        std::make_shared<character>('\\'),
+                        std::make_shared<character>('^'),
+                        std::make_shared<character>('|'),
+                        std::make_shared<character>('-'),
+                        std::make_shared<character>('~'),
+                        std::make_shared<character>(':')
+                    });
 
-                    symbol = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    symbol = std::make_shared<choice>(std::vector<pattern_ptr> {
                         ascSymbol
-                    }));
+                    });
 
-                    ascLarge = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('A')),
-                        pattern_ptr (new character('B')),
-                        pattern_ptr (new character('C')),
-                        pattern_ptr (new character('D')),
-                        pattern_ptr (new character('E')),
-                        pattern_ptr (new character('F')),
-                        pattern_ptr (new character('G')),
-                        pattern_ptr (new character('H')),
-                        pattern_ptr (new character('I')),
-                        pattern_ptr (new character('J')),
-                        pattern_ptr (new character('K')),
-                        pattern_ptr (new character('L')),
-                        pattern_ptr (new character('M')),
-                        pattern_ptr (new character('N')),
-                        pattern_ptr (new character('O')),
-                        pattern_ptr (new character('P')),
-                        pattern_ptr (new character('Q')),
-                        pattern_ptr (new character('R')),
-                        pattern_ptr (new character('S')),
-                        pattern_ptr (new character('T')),
-                        pattern_ptr (new character('U')),
-                        pattern_ptr (new character('V')),
-                        pattern_ptr (new character('W')),
-                        pattern_ptr (new character('X')),
-                        pattern_ptr (new character('Y')),
-                        pattern_ptr (new character('Z'))
-                    }));
+                    ascLarge = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('A'),
+                        std::make_shared<character>('B'),
+                        std::make_shared<character>('C'),
+                        std::make_shared<character>('D'),
+                        std::make_shared<character>('E'),
+                        std::make_shared<character>('F'),
+                        std::make_shared<character>('G'),
+                        std::make_shared<character>('H'),
+                        std::make_shared<character>('I'),
+                        std::make_shared<character>('J'),
+                        std::make_shared<character>('K'),
+                        std::make_shared<character>('L'),
+                        std::make_shared<character>('M'),
+                        std::make_shared<character>('N'),
+                        std::make_shared<character>('O'),
+                        std::make_shared<character>('P'),
+                        std::make_shared<character>('Q'),
+                        std::make_shared<character>('R'),
+                        std::make_shared<character>('S'),
+                        std::make_shared<character>('T'),
+                        std::make_shared<character>('U'),
+                        std::make_shared<character>('V'),
+                        std::make_shared<character>('W'),
+                        std::make_shared<character>('X'),
+                        std::make_shared<character>('Y'),
+                        std::make_shared<character>('Z')
+                    });
 
-                    large = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    large = std::make_shared<choice>(std::vector<pattern_ptr> {
                         ascLarge
-                    }));
+                    });
 
-                    ascSmall = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('a')),
-                        pattern_ptr (new character('b')),
-                        pattern_ptr (new character('c')),
-                        pattern_ptr (new character('d')),
-                        pattern_ptr (new character('e')),
-                        pattern_ptr (new character('f')),
-                        pattern_ptr (new character('g')),
-                        pattern_ptr (new character('h')),
-                        pattern_ptr (new character('i')),
-                        pattern_ptr (new character('j')),
-                        pattern_ptr (new character('k')),
-                        pattern_ptr (new character('l')),
-                        pattern_ptr (new character('m')),
-                        pattern_ptr (new character('n')),
-                        pattern_ptr (new character('o')),
-                        pattern_ptr (new character('p')),
-                        pattern_ptr (new character('q')),
-                        pattern_ptr (new character('r')),
-                        pattern_ptr (new character('s')),
-                        pattern_ptr (new character('t')),
-                        pattern_ptr (new character('u')),
-                        pattern_ptr (new character('v')),
-                        pattern_ptr (new character('w')),
-                        pattern_ptr (new character('x')),
-                        pattern_ptr (new character('y')),
-                        pattern_ptr (new character('z'))
-                    }));
+                    ascSmall = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('a'),
+                        std::make_shared<character>('b'),
+                        std::make_shared<character>('c'),
+                        std::make_shared<character>('d'),
+                        std::make_shared<character>('e'),
+                        std::make_shared<character>('f'),
+                        std::make_shared<character>('g'),
+                        std::make_shared<character>('h'),
+                        std::make_shared<character>('i'),
+                        std::make_shared<character>('j'),
+                        std::make_shared<character>('k'),
+                        std::make_shared<character>('l'),
+                        std::make_shared<character>('m'),
+                        std::make_shared<character>('n'),
+                        std::make_shared<character>('o'),
+                        std::make_shared<character>('p'),
+                        std::make_shared<character>('q'),
+                        std::make_shared<character>('r'),
+                        std::make_shared<character>('s'),
+                        std::make_shared<character>('t'),
+                        std::make_shared<character>('u'),
+                        std::make_shared<character>('v'),
+                        std::make_shared<character>('w'),
+                        std::make_shared<character>('x'),
+                        std::make_shared<character>('y'),
+                        std::make_shared<character>('z')
+                    });
 
-                    small = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    small = std::make_shared<choice>(std::vector<pattern_ptr> {
                         ascSmall,
-                        pattern_ptr (new character('_'))
-                    }));
+                        std::make_shared<character>('_')
+                    });
 
-                    special = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('(')),
-                        pattern_ptr (new character(')')),
-                        pattern_ptr (new character(',')),
-                        pattern_ptr (new character(';')),
-                        pattern_ptr (new character('[')),
-                        pattern_ptr (new character(']')),
-                        pattern_ptr (new character('`')),
-                        pattern_ptr (new character('{')),
-                        pattern_ptr (new character('}'))
-                    }, static_cast<int>(type::SPECIAL)));
+                    special = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('('),
+                        std::make_shared<character>(')'),
+                        std::make_shared<character>(','),
+                        std::make_shared<character>(';'),
+                        std::make_shared<character>('['),
+                        std::make_shared<character>(']'),
+                        std::make_shared<character>('`'),
+                        std::make_shared<character>('{'),
+                        std::make_shared<character>('}')
+                    }, static_cast<int>(type::SPECIAL));
 
-                    graphic = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    graphic = std::make_shared<choice>(std::vector<pattern_ptr> {
                         small,
                         large,
                         symbol,
                         digit,
                         special,
-                        pattern_ptr (new character('"')),
-                        pattern_ptr (new character('\''))
-                    }));
+                        std::make_shared<character>('"'),
+                        std::make_shared<character>('\'')
+                    });
 
-                    carriage_return = pattern_ptr (new character('\r'));
-                    linefeed = pattern_ptr (new character('\n'));
-                    vertab = pattern_ptr (new character('\v'));
-                    formfeed = pattern_ptr (new character('\f'));
-                    space = pattern_ptr (new character(' '));
-                    tab = pattern_ptr (new character('\t'));
+                    carriage_return = std::make_shared<character>('\r');
+                    linefeed = std::make_shared<character>('\n');
+                    vertab = std::make_shared<character>('\v');
+                    formfeed = std::make_shared<character>('\f');
+                    space = std::make_shared<character>(' ');
+                    tab = std::make_shared<character>('\t');
 
-                    any = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    any = std::make_shared<choice>(std::vector<pattern_ptr> {
                         graphic,
                         space,
                         tab
-                    }));
+                    });
 
-                    newline = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    newline = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             carriage_return,
                             linefeed
-                        })),
+                        }),
                         carriage_return,
                         linefeed,
                         formfeed
-                    }));
+                    });
 
-                    whitechar = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    whitechar = std::make_shared<choice>(std::vector<pattern_ptr> {
                         newline,
                         vertab,
                         space,
                         tab
-                    }));
+                    });
 
-                    opencom = pattern_ptr (new string("{-"));
-                    closecom = pattern_ptr (new string("-}"));
+                    opencom = std::make_shared<string>("{-");
+                    closecom = std::make_shared<string>("-}");
 
-                    dashes = pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new string("--")),
-                        pattern_ptr (new repetition(pattern_ptr(new character('-'))))
-                    }));
+                    dashes = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<string>("--"),
+                        std::make_shared<repetition>(std::make_shared<character>('-'))
+                    });
 
-                    ANY = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    ANY = std::make_shared<choice>(std::vector<pattern_ptr> {
                         graphic,
                         whitechar
-                    }));
+                    });
 
-                    ANY_seq = pattern_ptr (new repetition(
-                        pattern_ptr (new exclude(ANY, pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    ANY_seq = std::make_shared<repetition>(
+                        std::make_shared<exclude>(ANY, std::make_shared<choice>(std::vector<pattern_ptr> {
                             opencom,
                             closecom
-                        }))))
-                    ));
+                        }))
+                    );
 
-                    comment = pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new choice(std::vector<pattern_ptr> {
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    comment = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
                                 dashes,
-                                pattern_ptr (new compound(std::vector<pattern_ptr> {
-                                    pattern_ptr (new exclude(any, symbol)),
-                                    pattern_ptr (new repetition(any))
-                                })),
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<exclude>(any, symbol),
+                                    std::make_shared<repetition>(any)
+                                }),
                                 newline
-                            })),
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
+                            }),
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
                                 dashes,
                                 newline
-                            }))
-                        })),
-                    }));
+                            })
+                        }),
+                    });
 
-                    ncomment = pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    ncomment = std::make_shared<compound>(std::vector<pattern_ptr> {
                         opencom,
                         ANY_seq
-                    }));
+                    });
 
-                    std::static_pointer_cast<compound>(ncomment)->add_pattern(pattern_ptr (new repetition(
-                        pattern_ptr(new compound(std::vector<pattern_ptr> {
+                    std::static_pointer_cast<compound>(ncomment)->add_pattern(std::make_shared<repetition>(
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             ncomment,
                             ANY_seq
-                        }))
-                    )));
+                        })
+                    ));
                     std::static_pointer_cast<compound>(ncomment)->add_pattern(closecom);
 
-                    whitestuff = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    whitestuff = std::make_shared<choice>(std::vector<pattern_ptr> {
                         whitechar,
                         comment,
                         ncomment
-                    }));
+                    });
 
-                    whitespace = pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    whitespace = std::make_shared<compound>(std::vector<pattern_ptr> {
                         whitestuff,
-                        pattern_ptr (new repetition(whitestuff))
-                    }, static_cast<int>(type::WHITESPACE)));
+                        std::make_shared<repetition>(whitestuff)
+                    }, static_cast<int>(type::WHITESPACE));
 
-                    decimal = pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    decimal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         digit,
-                        pattern_ptr (new repetition(digit))
-                    }));
+                        std::make_shared<repetition>(digit)
+                    });
 
-                    octal = pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    octal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         octit,
-                        pattern_ptr (new repetition(octit))
-                    }));
+                        std::make_shared<repetition>(octit)
+                    });
 
-                    hexadecimal = pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    hexadecimal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         hexit,
-                        pattern_ptr (new repetition(hexit))
-                    }));
+                        std::make_shared<repetition>(hexit)
+                    });
 
-                    integer = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    integer = std::make_shared<choice>(std::vector<pattern_ptr> {
                         decimal,
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
-                                pattern_ptr (new character('0')),
-                                pattern_ptr (new choice(std::vector<pattern_ptr> {
-                                    pattern_ptr (new character('o')),
-                                    pattern_ptr (new character('O'))
-                                }))
-                            })),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('0'),
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<character>('o'),
+                                    std::make_shared<character>('O')
+                                })
+                            }),
                             octal
-                        })),
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
-                                pattern_ptr (new character('0')),
-                                pattern_ptr (new choice(std::vector<pattern_ptr> {
-                                    pattern_ptr (new character('x')),
-                                    pattern_ptr (new character('X'))
-                                }))
-                            })),
+                        }),
+                        // TODO:
+                        // Hm? Double check below
+                        // Find out if it's weird stuff
+                        // or if it can be removed
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('0'),
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<character>('x'),
+                                    std::make_shared<character>('X')
+                                })
+                            }),
                             hexadecimal
-                        }))
-                    }));
+                        })
+                    });
 
-                    exponent = pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new choice(std::vector<pattern_ptr> {
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
-                                pattern_ptr (new choice(std::vector<pattern_ptr> {
-                                    pattern_ptr (new character('e')),
-                                    pattern_ptr (new character('E'))
-                                })),
-                                pattern_ptr (new choice(std::vector<pattern_ptr> {
-                                    pattern_ptr (new character('+')),
-                                    pattern_ptr (new character('-'))
-                                })),
+                    exponent = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<character>('e'),
+                                    std::make_shared<character>('E')
+                                }),
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<character>('+'),
+                                    std::make_shared<character>('-')
+                                }),
                                 decimal
-                            })),
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
-                                pattern_ptr (new choice(std::vector<pattern_ptr> {
-                                    pattern_ptr (new character('e')),
-                                    pattern_ptr (new character('E'))
-                                })),
+                            }),
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<character>('e'),
+                                    std::make_shared<character>('E')
+                                }),
                                 decimal
-                            }))
-                        }))
-                    }));
+                            })
+                        })
+                    });
 
-                    floating = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    floating = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             decimal,
-                            pattern_ptr (new character('.')),
+                            std::make_shared<character>('.'),
                             decimal
-                        })),
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             decimal,
-                            pattern_ptr (new character('.')),
-                            decimal,
-                            exponent
-                        })),
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                            std::make_shared<character>('.'),
                             decimal,
                             exponent
-                        }))
-                    }));
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            decimal,
+                            exponent
+                        })
+                    });
 
-                    charesc = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('a')),
-                        pattern_ptr (new character('b')),
-                        pattern_ptr (new character('f')),
-                        pattern_ptr (new character('n')),
-                        pattern_ptr (new character('r')),
-                        pattern_ptr (new character('t')),
-                        pattern_ptr (new character('v')),
-                        pattern_ptr (new character('\\')),
-                        pattern_ptr (new character('"')),
-                        pattern_ptr (new character('\'')),
-                        pattern_ptr (new character('&'))
-                    }));
+                    charesc = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('a'),
+                        std::make_shared<character>('b'),
+                        std::make_shared<character>('f'),
+                        std::make_shared<character>('n'),
+                        std::make_shared<character>('r'),
+                        std::make_shared<character>('t'),
+                        std::make_shared<character>('v'),
+                        std::make_shared<character>('\\'),
+                        std::make_shared<character>('"'),
+                        std::make_shared<character>('\''),
+                        std::make_shared<character>('&')
+                    });
 
-                    cntrl = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    cntrl = std::make_shared<choice>(std::vector<pattern_ptr> {
                         ascLarge,
-                        pattern_ptr (new character('@')),
-                        pattern_ptr (new character('[')),
-                        pattern_ptr (new character('\\')),
-                        pattern_ptr (new character(']')),
-                        pattern_ptr (new character('^')),
-                        pattern_ptr (new character('_'))
-                    }));
+                        std::make_shared<character>('@'),
+                        std::make_shared<character>('['),
+                        std::make_shared<character>('\\'),
+                        std::make_shared<character>(']'),
+                        std::make_shared<character>('^'),
+                        std::make_shared<character>('_')
+                    });
 
-                    ascii = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
-                            pattern_ptr (new character('^')),
+                    ascii = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<character>('^'),
                             cntrl
-                        })),
-                        pattern_ptr (new string("NUL")),
-                        pattern_ptr (new string("SOH")),
-                        pattern_ptr (new string("STX")),
-                        pattern_ptr (new string("ETX")),
-                        pattern_ptr (new string("EOT")),
-                        pattern_ptr (new string("ENQ")),
-                        pattern_ptr (new string("ACK")),
-                        pattern_ptr (new string("BEL")),
-                        pattern_ptr (new string("BS")),
-                        pattern_ptr (new string("HT")),
-                        pattern_ptr (new string("LF")),
-                        pattern_ptr (new string("VT")),
-                        pattern_ptr (new string("FF")),
-                        pattern_ptr (new string("CR")),
-                        pattern_ptr (new string("SO")),
-                        pattern_ptr (new string("SI")),
-                        pattern_ptr (new string("DLE")),
-                        pattern_ptr (new string("DC1")),
-                        pattern_ptr (new string("DC2")),
-                        pattern_ptr (new string("DC3")),
-                        pattern_ptr (new string("DC4")),
-                        pattern_ptr (new string("NAK")),
-                        pattern_ptr (new string("SYN")),
-                        pattern_ptr (new string("ETB")),
-                        pattern_ptr (new string("CAN")),
-                        pattern_ptr (new string("EM")),
-                        pattern_ptr (new string("SUB")),
-                        pattern_ptr (new string("ESC")),
-                        pattern_ptr (new string("FS")),
-                        pattern_ptr (new string("GS")),
-                        pattern_ptr (new string("RS")),
-                        pattern_ptr (new string("US")),
-                        pattern_ptr (new string("SP")),
-                        pattern_ptr (new string("DEL"))
-                    }));
+                        }),
+                        std::make_shared<string>("NUL"),
+                        std::make_shared<string>("SOH"),
+                        std::make_shared<string>("STX"),
+                        std::make_shared<string>("ETX"),
+                        std::make_shared<string>("EOT"),
+                        std::make_shared<string>("ENQ"),
+                        std::make_shared<string>("ACK"),
+                        std::make_shared<string>("BEL"),
+                        std::make_shared<string>("BS"),
+                        std::make_shared<string>("HT"),
+                        std::make_shared<string>("LF"),
+                        std::make_shared<string>("VT"),
+                        std::make_shared<string>("FF"),
+                        std::make_shared<string>("CR"),
+                        std::make_shared<string>("SO"),
+                        std::make_shared<string>("SI"),
+                        std::make_shared<string>("DLE"),
+                        std::make_shared<string>("DC1"),
+                        std::make_shared<string>("DC2"),
+                        std::make_shared<string>("DC3"),
+                        std::make_shared<string>("DC4"),
+                        std::make_shared<string>("NAK"),
+                        std::make_shared<string>("SYN"),
+                        std::make_shared<string>("ETB"),
+                        std::make_shared<string>("CAN"),
+                        std::make_shared<string>("EM"),
+                        std::make_shared<string>("SUB"),
+                        std::make_shared<string>("ESC"),
+                        std::make_shared<string>("FS"),
+                        std::make_shared<string>("GS"),
+                        std::make_shared<string>("RS"),
+                        std::make_shared<string>("US"),
+                        std::make_shared<string>("SP"),
+                        std::make_shared<string>("DEL")
+                    });
 
-                    escape = pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('\\')),
-                        pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    escape = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('\\'),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
                             charesc,
                             ascii,
                             decimal,
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
-                                pattern_ptr (new character('o')),
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('o'),
                                 octal
-                            })),
-                            pattern_ptr (new compound(std::vector<pattern_ptr> {
-                                pattern_ptr (new character('x')),
+                            }),
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('x'),
                                 hexadecimal
-                            }))
-                        }))
-                    }));
+                            })
+                        })
+                    });
 
-                    character_literal = pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('\'')),
-                        pattern_ptr (new choice(std::vector<pattern_ptr> {
-                            pattern_ptr (new exclude(graphic, pattern_ptr (new choice(std::vector<pattern_ptr> {
-                                pattern_ptr (new character('\'')),
-                                pattern_ptr (new character('\\'))
-                            })))),
+                    character_literal = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('\''),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<exclude>(graphic, std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('\''),
+                                std::make_shared<character>('\\')
+                            })),
                             space,
-                            pattern_ptr (new exclude(escape, pattern_ptr (new string("\\&"))))
-                        })),
-                        pattern_ptr (new character('\''))
-                    }));
+                            std::make_shared<exclude>(escape, std::make_shared<string>("\\&"))
+                        }),
+                        std::make_shared<character>('\'')
+                    });
 
-                    gap = pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('\\')),
+                    gap = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('\\'),
                         whitechar,
-                        pattern_ptr (new repetition(whitechar)),
-                        pattern_ptr (new character('\\'))
-                    }));
+                        std::make_shared<repetition>(whitechar),
+                        std::make_shared<character>('\\')
+                    });
 
-                    string_literal = pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new character('"')),
-                        pattern_ptr (new repetition(pattern_ptr (new choice(std::vector<pattern_ptr> {
-                            pattern_ptr (new exclude(graphic, pattern_ptr (new choice(std::vector<pattern_ptr> {
-                                pattern_ptr (new character('"')),
-                                pattern_ptr (new character('\\'))
-                            })))),
+                    string_literal = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<character>('"'),
+                        std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<exclude>(graphic, std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('"'),
+                                std::make_shared<character>('\\')
+                            })),
                             space,
                             escape,
                             gap
-                        })))),
-                        pattern_ptr (new character('"'))
-                    }));
+                        })),
+                        std::make_shared<character>('"')
+                    });
 
-                    literal = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    literal = std::make_shared<choice>(std::vector<pattern_ptr> {
                         integer,
                         floating,
                         character_literal,
                         string_literal
-                    }, static_cast<int>(type::LITERAL)));
+                    }, static_cast<int>(type::LITERAL));
 
-                    reservedid = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new string("case")),
-                        pattern_ptr (new string("class")),
-                        pattern_ptr (new string("data")),
-                        pattern_ptr (new string("default")),
-                        pattern_ptr (new string("deriving")),
-                        pattern_ptr (new string("do")),
-                        pattern_ptr (new string("else")),
-                        pattern_ptr (new string("foreign")),
-                        pattern_ptr (new string("if")),
-                        pattern_ptr (new string("import")),
-                        pattern_ptr (new string("in")),
-                        pattern_ptr (new string("infix")),
-                        pattern_ptr (new string("infix1")),
-                        pattern_ptr (new string("infixr")),
-                        pattern_ptr (new string("instance")),
-                        pattern_ptr (new string("let")),
-                        pattern_ptr (new string("module")),
-                        pattern_ptr (new string("newtype")),
-                        pattern_ptr (new string("of")),
-                        pattern_ptr (new string("then")),
-                        pattern_ptr (new string("type")),
-                        pattern_ptr (new string("where")),
-                        pattern_ptr (new character('_'))
-                    }, static_cast<int>(type::RESERVEDID)));
-
-                    varid = pattern_ptr (new exclude(
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    reservedid = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<string>("case"),
+                        std::make_shared<string>("class"),
+                        std::make_shared<string>("data"),
+                        std::make_shared<string>("default"),
+                        std::make_shared<string>("deriving"),
+                        std::make_shared<string>("do"),
+                        std::make_shared<string>("else"),
+                        std::make_shared<string>("foreign"),
+                        std::make_shared<string>("if"),
+                        std::make_shared<string>("import"),
+                        std::make_shared<string>("in"),
+                        std::make_shared<string>("infix"),
+                        std::make_shared<string>("infix1"),
+                        std::make_shared<string>("infixr"),
+                        std::make_shared<string>("instance"),
+                        std::make_shared<string>("let"),
+                        std::make_shared<string>("module"),
+                        std::make_shared<string>("newtype"),
+                        std::make_shared<string>("of"),
+                        std::make_shared<string>("then"),
+                        std::make_shared<string>("type"),
+                        std::make_shared<string>("where"),
+                        std::make_shared<character>('_')
+                    }, static_cast<int>(type::RESERVEDID)); 
+                    varid = std::make_shared<exclude>(
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             small,
-                            pattern_ptr (new repetition(pattern_ptr (new choice(std::vector<pattern_ptr> {
+                            std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
                                 small,
                                 large,
                                 digit,
-                                pattern_ptr (new character('\''))
-                            }))))
-                        })),
+                                std::make_shared<character>('\'')
+                            }))
+                        }),
                         reservedid
-                    ));
+                    );
 
-                    conid = pattern_ptr (pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    conid = std::make_shared<compound>(std::vector<pattern_ptr> {
                         large,
-                        pattern_ptr (new repetition(pattern_ptr (new choice(std::vector<pattern_ptr> {
+                        std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
                             small,
                             large,
                             digit,
-                            pattern_ptr (new character('\''))
-                        }))))
-                    })));
+                            std::make_shared<character>('\'')
+                        }))
+                    });
 
-                    reservedop = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new string("..")),
-                        pattern_ptr (new character(':')),
-                        pattern_ptr (new string("::")),
-                        pattern_ptr (new character('=')),
-                        pattern_ptr (new character('\\')),
-                        pattern_ptr (new character('|')),
-                        pattern_ptr (new string("<-")),
-                        pattern_ptr (new string("->")),
-                        pattern_ptr (new character('@')),
-                        pattern_ptr (new character('~')),
-                        pattern_ptr (new string("=>"))
-                    }, static_cast<int>(type::RESERVEDOP)));
+                    reservedop = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<string>(".."),
+                        std::make_shared<character>(':'),
+                        std::make_shared<string>("::"),
+                        std::make_shared<character>('='),
+                        std::make_shared<character>('\\'),
+                        std::make_shared<character>('|'),
+                        std::make_shared<string>("<-"),
+                        std::make_shared<string>("->"),
+                        std::make_shared<character>('@'),
+                        std::make_shared<character>('~'),
+                        std::make_shared<string>("=>")
+                    }, static_cast<int>(type::RESERVEDOP));
 
-                    varsym = pattern_ptr (new exclude(pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new exclude(symbol, pattern_ptr (new character(':')))),
-                        pattern_ptr (new repetition(symbol))
-                    })), pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    varsym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<exclude>(symbol, std::make_shared<character>(':')),
+                        std::make_shared<repetition>(symbol)
+                    }), std::make_shared<choice>(std::vector<pattern_ptr> {
                         reservedop,
                         dashes
-                    }))));
+                    }));
 
-                    consym = pattern_ptr (new exclude(pattern_ptr (new compound(std::vector<pattern_ptr> {
-                        pattern_ptr (new character(':')),
-                        pattern_ptr (new repetition(symbol))
-                    })), reservedop));
+                    consym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<character>(':'),
+                        std::make_shared<repetition>(symbol)
+                    }), reservedop);
 
-                    modid = pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    modid = std::make_shared<compound>(std::vector<pattern_ptr> {
                         conid,
-                        pattern_ptr (new repetition(pattern_ptr (new compound(std::vector<pattern_ptr> {
-                            pattern_ptr (new character('.')),
+                        std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<character>('.'),
                             conid
-                        }))))
-                    }, static_cast<int>(type::QCONID)));
+                        }))
+                    }, static_cast<int>(type::QCONID)); // TODO: why is this set to QCONID rather than, say, MODID?
 
-                    qvarid = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    qvarid = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             modid,
-                            pattern_ptr (new character('.')),
+                            std::make_shared<character>('.'),
                             varid
-                        })),
+                        }),
                         varid
-                    }, static_cast<int>(type::QVARID)));
+                    }, static_cast<int>(type::QVARID));
 
-                    qconid = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    qconid = std::make_shared<choice>(std::vector<pattern_ptr> {
                         modid
-                    }, static_cast<int>(type::QCONID)));
+                    }, static_cast<int>(type::QCONID));
 
-                    qvarsym = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    qvarsym = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             modid,
-                            pattern_ptr (new character('.')),
+                            std::make_shared<character>('.'),
                             varsym
-                        })),
+                        }),
                         varsym
-                    }, static_cast<int>(type::QVARSYM)));
+                    }, static_cast<int>(type::QVARSYM));
 
-                    qconsym = pattern_ptr (new choice(std::vector<pattern_ptr> {
-                        pattern_ptr (new compound(std::vector<pattern_ptr> {
+                    qconsym = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
                             modid,
-                            pattern_ptr (new character('.')),
+                            std::make_shared<character>('.'),
                             consym
-                        })),
+                        }),
                         consym
-                    }, static_cast<int>(type::QCONSYM)));
+                    }, static_cast<int>(type::QCONSYM));
 
-                    lexeme = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    lexeme = std::make_shared<choice>(std::vector<pattern_ptr> {
                         qvarid,
                         qconid,
                         qvarsym,
@@ -631,12 +634,12 @@ namespace dhc {
                         special,
                         reservedop,
                         reservedid
-                    }));
+                    });
 
-                    program = pattern_ptr (new choice(std::vector<pattern_ptr> {
+                    program = std::make_shared<choice>(std::vector<pattern_ptr> {
                         lexeme,
                         whitespace
-                    }));
+                    });
                 }
                 match_ptr next();
                 bool finished();
