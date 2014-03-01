@@ -56,7 +56,7 @@ int main(int argc, char** argv)
         }
     }
 
-    ss << "</pre></body>" << std::endl;
+    ss << "</pre></body></html>" << std::endl;
 
     std::cout << ss.str();
 
