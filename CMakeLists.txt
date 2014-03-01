@@ -15,38 +15,39 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # ensure that the cxx files get compiled with c++11 support enabled
 set(CMAKE_CXX_FLAGS "--std=c++11 ${CMAKE_CXX_FLAGS}")
 
+# build graft as a standalone library
+set(GRAFT_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/graft)
+add_library (graft
+    ${GRAFT_LIB_SRC}/scanner.cpp
+    ${GRAFT_LIB_SRC}/pattern.cpp
+    ${GRAFT_LIB_SRC}/match.cpp
+    ${GRAFT_LIB_SRC}/pattern/character.cpp
+    ${GRAFT_LIB_SRC}/pattern/choice.cpp
+    ${GRAFT_LIB_SRC}/pattern/compound.cpp
+    ${GRAFT_LIB_SRC}/pattern/exclude.cpp
+    ${GRAFT_LIB_SRC}/pattern/repetition.cpp
+    ${GRAFT_LIB_SRC}/pattern/string.cpp
+    ${GRAFT_LIB_SRC}/match/character.cpp
+    ${GRAFT_LIB_SRC}/match/sequence.cpp
+    ${GRAFT_LIB_SRC}/match/string.cpp
+)
+
 # add the primary executable
 add_executable(dhc
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/scanner.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/character.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/choice.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/compound.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/exclude.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/repetition.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/string.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match/character.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match/sequence.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match/string.cpp
+)
+
+target_link_libraries(dhc
+    graft
 )
 
 # add a test executable
 add_executable(hl
     ${CMAKE_CURRENT_SOURCE_DIR}/highlight.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/scanner.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/character.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/choice.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/compound.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/exclude.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/repetition.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/pattern/string.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match/character.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match/sequence.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/graft/match/string.cpp
+)
+
+target_link_libraries(hl
+    graft
 )
