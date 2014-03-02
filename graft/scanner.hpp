@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <unicode/unistr.h>
 
 namespace dhc {
     namespace graft {
@@ -17,7 +18,16 @@ namespace dhc {
 
         class scanner {
             public:
-                scanner(std::string source) : source(source), state({0, 0, 0}) {}
+                scanner(icu::UnicodeString src) : state({0, 0, 0})
+                {
+                    length = src.countChar32();
+                    source = new UChar32[length];
+                    UErrorCode e;
+                    src.toUTF32(source, length, e);
+                }
+
+                virtual ~scanner();
+
                 /* TODO: bad bad bad
                  *       fix this so it returns a more specific match object
                  *       ideally for the atomic type of the scanner
@@ -32,7 +42,8 @@ namespace dhc {
                 unsigned int lineno();
                 unsigned int charno();
             protected:
-                std::string source;
+                int length;
+                UChar32 *source;
 
                 scanstate state;
             private:

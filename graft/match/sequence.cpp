@@ -1,7 +1,5 @@
 #include "sequence.hpp"
 
-#include <sstream>
-
 unsigned int dhc::graft::match::sequence::length()
 {
     int l = 0;

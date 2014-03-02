@@ -24,6 +24,7 @@ include_directories(
 # build graft as a standalone library
 set(GRAFT_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/graft)
 add_library (graft
+    ${GRAFT_LIB_SRC}/ustream.cpp
     ${GRAFT_LIB_SRC}/scanner.cpp
     ${GRAFT_LIB_SRC}/pattern.cpp
     ${GRAFT_LIB_SRC}/match.cpp

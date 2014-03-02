@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include <sstream>
+#include "graft/ustream.hpp"
 
 int main(int argc, char** argv)
 {
@@ -10,7 +11,10 @@ int main(int argc, char** argv)
         std::cout << "> ";
         char buffer[512];
         std::cin.getline(buffer, 512);
-        std::string source(buffer);
+        std::string utf8(buffer);
+
+        icu::UnicodeString source;
+        source.fromUTF8(utf8);
 
         dhc::lexer::lexer lex(source);
 
@@ -18,9 +22,7 @@ int main(int argc, char** argv)
             dhc::lexer::match_ptr token (lex.next());
 
             if (token) {
-                std::string flat;
-                token->flatten().toUTF8String(flat);
-                std::cout << "\"" << flat << "\": " << lex.typenames[token->type] << std::endl;
+                std::cout << "\"" << token->flatten() << "\": " << lex.typenames[token->type] << std::endl;
             } else {
                 std::cerr << lex.error(argv[1]) << std::endl;
                 return -1;

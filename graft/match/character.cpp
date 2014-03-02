@@ -1,7 +1,5 @@
 #include "character.hpp"
 
-#include <sstream>
-
 unsigned int dhc::graft::match::character::length()
 {
     return 1;
