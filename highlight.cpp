@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include <sstream>
+#include <unicode/unistr.h>
 
 int main(int argc, char** argv)
 {
@@ -12,20 +13,31 @@ int main(int argc, char** argv)
     }
 
     std::ifstream file (argv[1], std::ios::in | std::ios::binary | std::ios::ate);
-    std::string source;
+    std::string utf8;
 
     if (!file.is_open()) {
         std::cerr << "I can't open that file. I hate you too." << std::endl;
         return -1;
     }
 
-    source.reserve(file.tellg());
+    utf8.reserve(file.tellg());
     file.seekg(0, std::ios::beg);
 
-    source.assign((std::istreambuf_iterator<char>(file)),
+    utf8.assign((std::istreambuf_iterator<char>(file)),
                    std::istreambuf_iterator<char>());
 
     file.close();
+
+    UErrorCode e = U_ZERO_ERROR;
+    UChar utf16[512];
+
+    u_strFromUTF8(utf16, sizeof(utf16), NULL, utf8.c_str(), -1, &e);
+    if (U_FAILURE(e))
+    {
+        std::cerr << "error " << u_errorName(e) << std::endl;
+    }
+
+    icu::UnicodeString source(utf16);
 
     dhc::lexer::lexer lex(source);
 
