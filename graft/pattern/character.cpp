@@ -9,7 +9,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::character::find(s
 
     try
     {
-        std::shared_ptr<match::character> current = std::dynamic_pointer_cast<match::character>(s.next());
+        std::shared_ptr<match::character> current = s.next();
 
         if (current && current->data == pat)
             return current;

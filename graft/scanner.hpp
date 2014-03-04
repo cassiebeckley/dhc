@@ -4,7 +4,10 @@
 #include "match/character.hpp"
 
 #include <memory>
-#include <string>
+#include <unicode/unistr.h>
+
+// TODO: shouldn't have this in lib
+#include <iostream>
 
 namespace dhc {
     namespace graft {
@@ -17,12 +20,21 @@ namespace dhc {
 
         class scanner {
             public:
-                scanner(std::string source) : source(source), state({0, 0, 0}) {}
-                /* TODO: bad bad bad
-                 *       fix this so it returns a more specific match object
-                 *       ideally for the atomic type of the scanner
-                 */
-                std::shared_ptr<match::match> next();
+                scanner(icu::UnicodeString src) : state({0, 0, 0})
+                {
+                    length = src.countChar32();
+                    source = new UChar32[length];
+                    UErrorCode e = U_ZERO_ERROR;
+                    src.toUTF32(source, length, e);
+
+                    if (U_FAILURE(e))
+                    {
+                        std::cerr << "error " << u_errorName(e) << std::endl;
+                    }
+                }
+
+                virtual ~scanner();
+                std::shared_ptr<match::character> next();
                 scanstate get_state();
                 void set_state(scanstate& state);
                 bool finished();
@@ -32,7 +44,8 @@ namespace dhc {
                 unsigned int lineno();
                 unsigned int charno();
             protected:
-                std::string source;
+                int length;
+                UChar32 *source;
 
                 scanstate state;
             private:

@@ -1,8 +1,18 @@
 #include "scanner.hpp"
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::next()
+dhc::graft::scanner::~scanner()
 {
-    return std::shared_ptr<match::match> (new match::character(state.column++, -1, source.at(state.index++)));
+    delete [] source;
+}
+
+std::shared_ptr<dhc::graft::match::character> dhc::graft::scanner::next()
+{
+    UChar32 c = -1;
+
+    if (!finished())
+        c = source[state.index++];
+
+    return std::make_shared<match::character>(state.column++, -1, c);
 }
 
 dhc::graft::scanstate dhc::graft::scanner::get_state()
@@ -17,7 +27,7 @@ void dhc::graft::scanner::set_state(scanstate& s)
 
 bool dhc::graft::scanner::finished()
 {
-    return state.index >= source.length();
+    return state.index >= length;
 }
 
 void dhc::graft::scanner::newline()

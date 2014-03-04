@@ -17,6 +17,8 @@
 #include <sstream>
 #include <unordered_map>
 
+#include <unicode/unistr.h>
+
 namespace dhc {
     namespace lexer {
         typedef std::shared_ptr<graft::pattern::pattern> pattern_ptr;
@@ -37,7 +39,7 @@ namespace dhc {
 
         class lexer {
             public:
-                lexer(std::string source) : s(source)
+                lexer(icu::UnicodeString source) : s(source)
                 {
                     // TODO: get rid of this mebbe?
                     using namespace graft::pattern;
