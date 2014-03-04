@@ -18,11 +18,7 @@ namespace dhc {
         class scanner {
             public:
                 scanner(std::string source) : source(source), state({0, 0, 0}) {}
-                /* TODO: bad bad bad
-                 *       fix this so it returns a more specific match object
-                 *       ideally for the atomic type of the scanner
-                 */
-                std::shared_ptr<match::match> next();
+                std::shared_ptr<match::character> next();
                 scanstate get_state();
                 void set_state(scanstate& state);
                 bool finished();
