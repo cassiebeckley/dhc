@@ -44,7 +44,7 @@ namespace dhc {
                 unsigned int lineno();
                 unsigned int charno();
             protected:
-                int length;
+                unsigned int length;
                 UChar32 *source;
 
                 scanstate state;

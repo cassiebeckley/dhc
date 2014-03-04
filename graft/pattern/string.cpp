@@ -27,7 +27,7 @@ void dhc::graft::pattern::string::initialize()
         return;
     }
 
-    for (int i = 0; i < sizeof(buffer); i++) {
+    for (unsigned int i = 0; i < sizeof(buffer); i++) {
         std::shared_ptr<character> pat (new character(buffer[i], -1));
         this->pat.push_back(pat);
     }

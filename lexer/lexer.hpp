@@ -7,6 +7,7 @@
 #include "../graft/match.hpp"
 
 #include "../graft/pattern/character.hpp"
+#include "../graft/pattern/property.hpp"
 #include "../graft/pattern/choice.hpp"
 #include "../graft/pattern/compound.hpp"
 #include "../graft/pattern/exclude.hpp"
@@ -55,6 +56,8 @@ namespace dhc {
                     typenames[static_cast<int>(type::RESERVEDOP)] = "reservedop";
                     typenames[static_cast<int>(type::RESERVEDID)] = "reservedid";
 
+                    uniDigit = std::make_shared<property>("[:Nd:]");
+
                     ascDigit = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<character>('0'),
                         std::make_shared<character>('1'),
@@ -69,7 +72,7 @@ namespace dhc {
                     });
 
                     digit = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        ascDigit
+                        uniDigit
                     });
 
                     octit = std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -99,6 +102,8 @@ namespace dhc {
                         std::make_shared<character>('f'),
                     });
 
+                    uniSymbol = std::make_shared<property>("[[:Punctuation:][:Symbol:]]");
+
                     ascSymbol = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<character>('!'),
                         std::make_shared<character>('#'),
@@ -123,8 +128,10 @@ namespace dhc {
                     });
 
                     symbol = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        ascSymbol
+                        uniSymbol
                     });
+
+                    uniLarge = std::make_shared<property>("[[:Lu:][:Lt:]]");
 
                     ascLarge = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<character>('A'),
@@ -156,8 +163,10 @@ namespace dhc {
                     });
 
                     large = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        ascLarge
+                        uniLarge // omit ascLarge - it'll only slow us down
                     });
+
+                    uniSmall = std::make_shared<property>("[:Ll:]");
 
                     ascSmall = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<character>('a'),
@@ -189,8 +198,9 @@ namespace dhc {
                     });
 
                     small = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        ascSmall,
+                        uniSmall,
                         std::make_shared<character>('_')
+                        // omit ascSmall - it'll only slow us down
                     });
 
                     special = std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -238,11 +248,16 @@ namespace dhc {
                         formfeed
                     });
 
+                    uniWhite = std::make_shared<property>("[:White_Space:]");
+
                     whitechar = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        newline,
-                        vertab,
-                        space,
-                        tab
+                        /** omit because redundant **
+                         * newline,
+                         * vertab,
+                         * space,
+                         * tab,
+                         */
+                        uniWhite
                     });
 
                     opencom = std::make_shared<string>("{-");
@@ -649,14 +664,18 @@ namespace dhc {
                 std::string error(std::string filename);
                 std::unordered_map<int, std::string> typenames;
             private:
+                pattern_ptr uniDigit;
                 pattern_ptr ascDigit;
                 pattern_ptr digit;
                 pattern_ptr octit;
                 pattern_ptr hexit;
+                pattern_ptr uniSymbol;
                 pattern_ptr ascSymbol;
                 pattern_ptr symbol;
+                pattern_ptr uniLarge;
                 pattern_ptr ascLarge;
                 pattern_ptr large;
+                pattern_ptr uniSmall;
                 pattern_ptr ascSmall;
                 pattern_ptr small;
                 pattern_ptr special;
@@ -669,6 +688,7 @@ namespace dhc {
                 pattern_ptr tab;
                 pattern_ptr any;
                 pattern_ptr newline;
+                pattern_ptr uniWhite;
                 pattern_ptr whitechar;
                 pattern_ptr opencom;
                 pattern_ptr closecom;
