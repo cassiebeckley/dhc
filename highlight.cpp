@@ -3,8 +3,6 @@
 #include <fstream>
 
 #include <sstream>
-#include "graft/ustream.hpp"
-#include <unicode/unistr.h>
 
 int main(int argc, char** argv)
 {
@@ -14,23 +12,20 @@ int main(int argc, char** argv)
     }
 
     std::ifstream file (argv[1], std::ios::in | std::ios::binary | std::ios::ate);
-    std::string utf8;
+    std::string source;
 
     if (!file.is_open()) {
         std::cerr << "I can't open that file. I hate you too." << std::endl;
         return -1;
     }
 
-    utf8.reserve(file.tellg());
+    source.reserve(file.tellg());
     file.seekg(0, std::ios::beg);
 
-    utf8.assign((std::istreambuf_iterator<char>(file)),
+    source.assign((std::istreambuf_iterator<char>(file)),
                    std::istreambuf_iterator<char>());
 
     file.close();
-
-    icu::UnicodeString source;
-    source.fromUTF8(utf8);
 
     dhc::lexer::lexer lex(source);
 
@@ -54,7 +49,9 @@ int main(int argc, char** argv)
         dhc::lexer::match_ptr token (lex.next());
 
         if (token) {
-            ss << "<span class=\"" << lex.typenames[token->type] << "\">" << token->flatten() << "</span>";
+            std::string flat;
+            token->flatten().toUTF8String(flat);
+            ss << "<span class=\"" << lex.typenames[token->type] << "\">" << flat << "</span>";
         } else {
             std::cerr << lex.error(argv[1]) << std::endl;
             return -1;
