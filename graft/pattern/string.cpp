@@ -18,9 +18,14 @@ icu::UnicodeString dhc::graft::pattern::string::str() const
 void dhc::graft::pattern::string::initialize()
 {
     UChar32 buffer[500];
-    UErrorCode e;
+    UErrorCode e = U_ZERO_ERROR;
 
     str_pat.toUTF32(buffer, sizeof(buffer), e);
+    if (U_FAILURE(e))
+    {
+        std::cerr << "error " << u_errorName(e) << std::endl;
+        return;
+    }
 
     for (int i = 0; i < sizeof(buffer); i++) {
         std::shared_ptr<character> pat (new character(buffer[i], -1));
