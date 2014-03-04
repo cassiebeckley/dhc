@@ -5,23 +5,14 @@
 #include <sstream>
 
 #include <unicode/unistr.h>
-#include <unicode/ucnv.h>
 
 int main(int argc, char** argv)
 {
-    UConverter *cnv;
-    UErrorCode e = U_ZERO_ERROR;
-
-    std::string filename = argc > 1 ? argv[1] : "main";
-
-    cnv = ucnv_open(NULL, &e);
-    if (U_FAILURE(e))
+    while (true)
     {
-        std::cerr << "error " << u_errorName(e) << " opening the default converter" << std::endl;
-        return e;
-    }
+        UErrorCode e = U_ZERO_ERROR;
+        std::string filename = argc > 1 ? argv[1] : "main";
 
-    while (true) {
         std::cout << "> ";
         char utf8[512];
         std::cin.getline(utf8, 512);
@@ -30,7 +21,7 @@ int main(int argc, char** argv)
         u_strFromUTF8(utf16, sizeof(utf16), NULL, utf8, -1, &e);
         if (U_FAILURE(e))
         {
-            std::cerr << "error " << u_errorName(e) << std::endl;
+            std::cerr << "error converting to UTF16: " << u_errorName(e) << std::endl;
         }
 
         icu::UnicodeString source(utf16);
@@ -50,8 +41,6 @@ int main(int argc, char** argv)
             }
         }
     }
-
-    ucnv_close(cnv);
 
     return 0;
 }

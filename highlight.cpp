@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include <sstream>
+#include <unicode/ustring.h>
 #include <unicode/unistr.h>
 
 int main(int argc, char** argv)
@@ -28,16 +29,28 @@ int main(int argc, char** argv)
 
     file.close();
 
-    UErrorCode e = U_ZERO_ERROR;
-    UChar utf16[512];
 
-    u_strFromUTF8(utf16, sizeof(utf16), NULL, utf8.c_str(), -1, &e);
+    // This could be more accurate
+    // As it is, we assume that the UTF-16 string
+    // will be the same number of characters as
+    // the UTF-8 string, (basically assuming all codepoints
+    // are stored in a single byte) plus another character
+    // for the \0
+    int32_t size = utf8.size() + 1;
+
+    UChar *utf16 = new UChar[size];
+    UErrorCode e = U_ZERO_ERROR;
+
+    u_strFromUTF8(utf16, size, NULL, utf8.c_str(), -1, &e);
     if (U_FAILURE(e))
     {
-        std::cerr << "error " << u_errorName(e) << std::endl;
+        std::cerr << "highlight::main error: " << u_errorName(e) << std::endl;
+        return e;
     }
 
     icu::UnicodeString source(utf16);
+
+    delete [] utf16;
 
     dhc::lexer::lexer lex(source);
 

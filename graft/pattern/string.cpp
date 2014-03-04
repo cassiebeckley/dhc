@@ -23,7 +23,7 @@ void dhc::graft::pattern::string::initialize()
     str_pat.toUTF32(buffer, sizeof(buffer), e);
     if (U_FAILURE(e))
     {
-        std::cerr << "error " << u_errorName(e) << std::endl;
+        std::cerr << "string::initialize error: " << u_errorName(e) << std::endl;
         return;
     }
 

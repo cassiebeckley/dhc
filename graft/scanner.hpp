@@ -29,7 +29,7 @@ namespace dhc {
 
                     if (U_FAILURE(e))
                     {
-                        std::cerr << "error " << u_errorName(e) << std::endl;
+                        std::cerr << "scnnaer::scanner error: " << u_errorName(e) << std::endl;
                     }
                 }
 
