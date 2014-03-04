@@ -13,10 +13,6 @@ namespace dhc {
 
             class string : public compound {
                 public:
-                    string(icu::UnicodeString pat, int type, std::function<std::shared_ptr<match::match>(std::shared_ptr<match::match>)> call) : compound(std::vector<std::shared_ptr<pattern>>(), type, call), str_pat(pat)
-                    {
-                        initialize();
-                    }
                     string(icu::UnicodeString pat, int type) : compound(std::vector<std::shared_ptr<pattern>>(), type), str_pat(pat)
                     {
                         initialize();

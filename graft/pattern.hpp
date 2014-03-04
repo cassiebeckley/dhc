@@ -14,8 +14,7 @@ namespace dhc {
             class pattern
             {
                 public:
-                    pattern(int t, std::function<std::shared_ptr<match::match>(std::shared_ptr<match::match>)> call) : type(t), callback(call) {}
-                    pattern(int t) : pattern(t, [](std::shared_ptr<match::match> m) {return m;}) {}
+                    pattern(int t) : type(t) {}
                     pattern() : pattern(-1) {}
 
                     virtual std::shared_ptr<match::match> find(scanner& s) = 0;
