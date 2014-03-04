@@ -58,19 +58,6 @@ namespace dhc {
 
                     uniDigit = std::make_shared<property>("[:Nd:]");
 
-                    ascDigit = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        std::make_shared<character>('0'),
-                        std::make_shared<character>('1'),
-                        std::make_shared<character>('2'),
-                        std::make_shared<character>('3'),
-                        std::make_shared<character>('4'),
-                        std::make_shared<character>('5'),
-                        std::make_shared<character>('6'),
-                        std::make_shared<character>('7'),
-                        std::make_shared<character>('8'),
-                        std::make_shared<character>('9')
-                    });
-
                     digit = std::make_shared<choice>(std::vector<pattern_ptr> {
                         uniDigit
                     });
@@ -104,103 +91,21 @@ namespace dhc {
 
                     uniSymbol = std::make_shared<property>("[[:Punctuation:][:Symbol:]]");
 
-                    ascSymbol = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        std::make_shared<character>('!'),
-                        std::make_shared<character>('#'),
-                        std::make_shared<character>('$'),
-                        std::make_shared<character>('%'),
-                        std::make_shared<character>('&'),
-                        std::make_shared<character>('*'),
-                        std::make_shared<character>('+'),
-                        std::make_shared<character>('.'),
-                        std::make_shared<character>('/'),
-                        std::make_shared<character>('<'),
-                        std::make_shared<character>('='),
-                        std::make_shared<character>('>'),
-                        std::make_shared<character>('?'),
-                        std::make_shared<character>('@'),
-                        std::make_shared<character>('\\'),
-                        std::make_shared<character>('^'),
-                        std::make_shared<character>('|'),
-                        std::make_shared<character>('-'),
-                        std::make_shared<character>('~'),
-                        std::make_shared<character>(':')
-                    });
-
                     symbol = std::make_shared<choice>(std::vector<pattern_ptr> {
                         uniSymbol
                     });
 
                     uniLarge = std::make_shared<property>("[[:Lu:][:Lt:]]");
 
-                    ascLarge = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        std::make_shared<character>('A'),
-                        std::make_shared<character>('B'),
-                        std::make_shared<character>('C'),
-                        std::make_shared<character>('D'),
-                        std::make_shared<character>('E'),
-                        std::make_shared<character>('F'),
-                        std::make_shared<character>('G'),
-                        std::make_shared<character>('H'),
-                        std::make_shared<character>('I'),
-                        std::make_shared<character>('J'),
-                        std::make_shared<character>('K'),
-                        std::make_shared<character>('L'),
-                        std::make_shared<character>('M'),
-                        std::make_shared<character>('N'),
-                        std::make_shared<character>('O'),
-                        std::make_shared<character>('P'),
-                        std::make_shared<character>('Q'),
-                        std::make_shared<character>('R'),
-                        std::make_shared<character>('S'),
-                        std::make_shared<character>('T'),
-                        std::make_shared<character>('U'),
-                        std::make_shared<character>('V'),
-                        std::make_shared<character>('W'),
-                        std::make_shared<character>('X'),
-                        std::make_shared<character>('Y'),
-                        std::make_shared<character>('Z')
-                    });
-
                     large = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        uniLarge // omit ascLarge - it'll only slow us down
+                        uniLarge
                     });
 
                     uniSmall = std::make_shared<property>("[:Ll:]");
 
-                    ascSmall = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        std::make_shared<character>('a'),
-                        std::make_shared<character>('b'),
-                        std::make_shared<character>('c'),
-                        std::make_shared<character>('d'),
-                        std::make_shared<character>('e'),
-                        std::make_shared<character>('f'),
-                        std::make_shared<character>('g'),
-                        std::make_shared<character>('h'),
-                        std::make_shared<character>('i'),
-                        std::make_shared<character>('j'),
-                        std::make_shared<character>('k'),
-                        std::make_shared<character>('l'),
-                        std::make_shared<character>('m'),
-                        std::make_shared<character>('n'),
-                        std::make_shared<character>('o'),
-                        std::make_shared<character>('p'),
-                        std::make_shared<character>('q'),
-                        std::make_shared<character>('r'),
-                        std::make_shared<character>('s'),
-                        std::make_shared<character>('t'),
-                        std::make_shared<character>('u'),
-                        std::make_shared<character>('v'),
-                        std::make_shared<character>('w'),
-                        std::make_shared<character>('x'),
-                        std::make_shared<character>('y'),
-                        std::make_shared<character>('z')
-                    });
-
                     small = std::make_shared<choice>(std::vector<pattern_ptr> {
                         uniSmall,
                         std::make_shared<character>('_')
-                        // omit ascSmall - it'll only slow us down
                     });
 
                     special = std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -420,7 +325,7 @@ namespace dhc {
                     });
 
                     cntrl = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        ascLarge,
+                        std::make_shared<property>("[A-Z]"),
                         std::make_shared<character>('@'),
                         std::make_shared<character>('['),
                         std::make_shared<character>('\\'),
@@ -665,18 +570,14 @@ namespace dhc {
                 std::unordered_map<int, std::string> typenames;
             private:
                 pattern_ptr uniDigit;
-                pattern_ptr ascDigit;
                 pattern_ptr digit;
                 pattern_ptr octit;
                 pattern_ptr hexit;
                 pattern_ptr uniSymbol;
-                pattern_ptr ascSymbol;
                 pattern_ptr symbol;
                 pattern_ptr uniLarge;
-                pattern_ptr ascLarge;
                 pattern_ptr large;
                 pattern_ptr uniSmall;
-                pattern_ptr ascSmall;
                 pattern_ptr small;
                 pattern_ptr special;
                 pattern_ptr graphic;
