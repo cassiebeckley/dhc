@@ -14,7 +14,7 @@ namespace dhc {
                     character(char p, int type) : pattern(type), pat(p) {}
                     character(char p) : pattern(), pat(p) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);
-                    virtual icu::UnicodeString str() const;
+                    virtual std::string str() const;
                 protected:
                     UChar32 pat;
                 private:

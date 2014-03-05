@@ -10,9 +10,11 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::string::find(scan
     }
 }
 
-icu::UnicodeString dhc::graft::pattern::string::str() const
+std::string dhc::graft::pattern::string::str() const
 {
-    return str_pat;
+    std::string s;
+    str_pat.toUTF8String(s);
+    return s;
 }
 
 void dhc::graft::pattern::string::initialize()

@@ -202,18 +202,20 @@ namespace dhc {
                         }),
                     });
 
-                    ncomment = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    std::shared_ptr<compound> ncm = std::make_shared<compound>(std::vector<pattern_ptr> {
                         opencom,
                         ANY_seq
                     });
 
-                    std::static_pointer_cast<compound>(ncomment)->add_pattern(std::make_shared<repetition>(
+                    ncm->add_pattern(std::make_shared<repetition>(
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             ncomment,
                             ANY_seq
                         })
                     ));
-                    std::static_pointer_cast<compound>(ncomment)->add_pattern(closecom);
+                    ncm->add_pattern(closecom);
+
+                    ncomment = ncm;
 
                     whitestuff = std::make_shared<choice>(std::vector<pattern_ptr> {
                         whitechar,

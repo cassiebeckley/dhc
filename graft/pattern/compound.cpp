@@ -22,17 +22,17 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::find(sc
     return std::shared_ptr<match::match>(new match::sequence(column, type, matches));
 }
 
-icu::UnicodeString dhc::graft::pattern::compound::str() const
+std::string dhc::graft::pattern::compound::str() const
 {
-    icu::UnicodeString result;
+    std::stringstream ss;
 
     for (auto it = pat.begin(); it != pat.end(); ++it) {
         if (it != pat.begin())
-            result.append(' ');
-        result.append((*it)->str());
+            ss << ' ';
+        ss << (*it)->str();
     }
 
-    return result;
+    return ss.str();
 }
 
 void dhc::graft::pattern::compound::add_pattern(std::shared_ptr<pattern> patt)

@@ -19,14 +19,10 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::exclude::find(sca
     }
 }
 
-icu::UnicodeString dhc::graft::pattern::exclude::str() const
+std::string dhc::graft::pattern::exclude::str() const
 {
-    icu::UnicodeString result;
-
     std::stringstream ss;
-    ss << *pat << "^(" << *exc << ")";
+    ss << pat->str() << "^(" << exc->str() << ")";
 
-    result.fromUTF8(ss.str());
-
-    return result;
+    return ss.str();
 }
