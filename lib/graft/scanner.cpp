@@ -28,16 +28,6 @@ std::shared_ptr<dhc::graft::match::character> dhc::graft::scanner::next()
     return nullptr;
 }
 
-dhc::graft::scanstate dhc::graft::scanner::get_state()
-{
-    return state;
-}
-
-void dhc::graft::scanner::set_state(scanstate& s)
-{
-    state = s;
-}
-
 bool dhc::graft::scanner::finished()
 {
     //std::cout << "Finished yet? state.index: " << state.index << " length: " << length << std::endl;

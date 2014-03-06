@@ -3,7 +3,7 @@
 
 std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::find(scanner& s)
 {
-    auto old_state = s.get_state();
+    auto old_state = s.state;
     int column = s.charno();
 
     std::vector<std::shared_ptr<match::match>> matches;
@@ -12,7 +12,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::find(sc
         std::shared_ptr<match::match> current = (*it)->find(s);
 
         if (!current) {
-            s.set_state(old_state);
+            s.state = old_state;
             return nullptr;
         } else {
             matches.push_back(current);

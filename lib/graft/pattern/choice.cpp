@@ -6,7 +6,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::find(scan
 {
     std::shared_ptr<match::match> longest;
 
-    auto old_state = s.get_state();
+    auto old_state = s.state;
     auto max_state = old_state;
 
     int max_length = 0;
@@ -21,13 +21,13 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::find(scan
             {
                 longest = match;
                 max_length = current_length;
-                max_state = s.get_state();
+                max_state = s.state;
             }
         }
-        s.set_state(old_state);
+        s.state = old_state;
     }
 
-    s.set_state(max_state);
+    s.state = max_state;
 
     if (type != -1 && longest)
         longest->type = type;
