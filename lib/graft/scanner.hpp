@@ -11,28 +11,18 @@
 
 namespace dhc {
     namespace graft {
+        class scanner;
 
         /**
          * \brief A struct to hold a scanner's state.
-         * @todo Either make all members private for full encapsulation
-         *       and make this a friend of scanner, or make
-         *       scanner::get_state() private.
          */
-        struct scanstate {
-            /**
-             * \brief The current line number
-             */
-            unsigned int line_number;
-
-            /**
-             * \brief The current column number
-             */
-            unsigned int column;
-
-            /**
-             * \brief The current index
-             */
-            unsigned int index;
+        class scanstate {
+            private:
+                friend scanner;
+                scanstate() : line_number(0), column(0), index(0) {}
+                unsigned int line_number;
+                unsigned int column;
+                unsigned int index;
         };
 
         /**
@@ -46,11 +36,7 @@ namespace dhc {
                  * \brief Create a scanner.
                  * @param src A string containing the source code.
                  */
-                scanner(icu::UnicodeString src) : state({0, 0, 0})
-                {
-                    // separate function because Doxygen would get confused
-                    initialize(src);
-                }
+                scanner(icu::UnicodeString src);
 
                 /**
                  * \brief Free memory allocated by the scanner.
@@ -66,25 +52,6 @@ namespace dhc {
                  * @return a match::character containing the next character.
                  */
                 std::shared_ptr<match::character> next();
-
-                /**
-                 * \brief Returns the current state of the scanner.
-                 *
-                 * Use this to back up the scanner's state.
-                 * @todo Consider simply changing state to be public.
-                 *
-                 * @return The current state.
-                 */
-                scanstate get_state();
-
-                /**
-                 * \brief Sets the current state of the scanner.
-                 *
-                 * Use this to restore the scanner to an earlier state.
-                 *
-                 * @param state the state to restore.
-                 */
-                void set_state(scanstate& state);
 
                 /**
                  * \brief Check if the scanner is finished.
@@ -104,15 +71,24 @@ namespace dhc {
                 unsigned int lineno();
 
                 /**
-                 * @return The character number.
+                 * @return The column number.
                  */
                 unsigned int charno();
+
+                /**
+                 * @return The index.
+                 */
+                unsigned int index();
+
+                /**
+                 * \brief The current state of the scanner.
+                 */
+                scanstate state;
             protected:
             private:
                 unsigned int length;
                 UChar32 *source;
 
-                scanstate state;
                 void initialize(icu::UnicodeString);
        };
 

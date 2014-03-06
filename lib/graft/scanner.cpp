@@ -1,5 +1,18 @@
 #include "scanner.hpp"
 
+dhc::graft::scanner::scanner(icu::UnicodeString src)
+{
+    length = src.countChar32();
+    source = new UChar32[length];
+    UErrorCode e = U_ZERO_ERROR;
+    src.toUTF32(source, length, e);
+
+    if (U_FAILURE(e))
+    {
+        std::cerr << "scanner::scanner error: " << u_errorName(e) << std::endl;
+    }
+}
+
 dhc::graft::scanner::~scanner()
 {
     delete [] source;
@@ -45,17 +58,4 @@ unsigned int dhc::graft::scanner::lineno()
 unsigned int dhc::graft::scanner::charno()
 {
     return state.column;
-}
-
-void dhc::graft::scanner::initialize(icu::UnicodeString src)
-{
-    length = src.countChar32();
-    source = new UChar32[length];
-    UErrorCode e = U_ZERO_ERROR;
-    src.toUTF32(source, length, e);
-
-    if (U_FAILURE(e))
-    {
-        std::cerr << "scanner::scanner error: " << u_errorName(e) << std::endl;
-    }
 }
