@@ -49,3 +49,8 @@ unsigned int dhc::graft::scanner::charno()
 {
     return state.column;
 }
+
+unsigned int dhc::graft::scanner::index()
+{
+    return state.index;
+}
