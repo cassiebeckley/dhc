@@ -7,12 +7,6 @@ unsigned int dhc::graft::match::character::length()
     return 1;
 }
 
-icu::UnicodeString dhc::graft::match::character::tree(unsigned int indent)
-{
-    indent += 2;
-    return flatten();
-}
-
 icu::UnicodeString dhc::graft::match::character::flatten()
 {
     icu::UnicodeString result;

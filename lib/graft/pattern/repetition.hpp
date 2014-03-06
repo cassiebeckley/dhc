@@ -31,7 +31,7 @@ namespace dhc {
                      */
                     repetition(std::shared_ptr<pattern> pat) : pattern(), pat(pat) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);
-                    virtual std::string str() const;
+
                 protected:
                 private:
                     std::shared_ptr<pattern> pat;

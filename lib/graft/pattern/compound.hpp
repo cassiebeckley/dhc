@@ -32,8 +32,6 @@ namespace dhc {
                     compound(std::vector<std::shared_ptr<pattern>>&& p) : pattern(), pat(p) {}
 
                     virtual std::shared_ptr<match::match> find(scanner& s);
-                    virtual std::string str() const;
-
                     /**
                      * \brief Add a pattern to the list of patterns.
                      *

@@ -23,7 +23,6 @@ namespace dhc {
                     character(unsigned int column, int type, UChar32 data) : match(column, type), data(data) {}
 
                     virtual unsigned int length();
-                    virtual icu::UnicodeString tree(unsigned int indent);
                     virtual icu::UnicodeString flatten();
 
                     /**

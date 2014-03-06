@@ -23,14 +23,3 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::property::find(sc
 
     return nullptr;
 }
-
-
-// TODO: consider removing these
-std::string dhc::graft::pattern::property::str() const
-{
-    std::string s;
-    icu::UnicodeString us;
-    pat.toPattern(us);
-    us.toUTF8String(s);
-    return s;
-}

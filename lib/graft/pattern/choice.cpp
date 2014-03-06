@@ -26,18 +26,3 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::find(scan
 
     return longest;
 }
-
-std::string dhc::graft::pattern::choice::str() const
-{
-    std::stringstream ss;
-    ss << '(';
-
-    for (auto it = pat.begin(); it != pat.end(); ++it) {
-        if (it != pat.begin())
-            ss << " | ";
-        ss << (*it)->str();
-    }
-    ss << ')';
-
-    return ss.str();
-}

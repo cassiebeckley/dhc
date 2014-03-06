@@ -24,7 +24,6 @@ namespace dhc {
                      */
                     sequence(unsigned int column, int type, std::vector<std::shared_ptr<match>> data) : match(column, type), data(data) {}
                     virtual int unsigned length();
-                    virtual icu::UnicodeString tree(unsigned int indent);
                     virtual icu::UnicodeString flatten();
 
                     /**

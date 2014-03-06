@@ -14,14 +14,3 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::repetition::find(
 
     return std::shared_ptr<match::match>(new match::sequence(column, type, matches));
 }
-
-std::string dhc::graft::pattern::repetition::str() const
-{
-    std::stringstream ss;
-
-    ss << '{';
-    ss << pat->str();
-    ss << '}';
-
-    return ss.str();
-}

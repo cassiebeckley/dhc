@@ -24,7 +24,6 @@ namespace dhc {
                      */
                     string(unsigned int column, int type, icu::UnicodeString data) : match(column, type), data(data) {}
                     virtual unsigned int length();
-                    virtual icu::UnicodeString tree(unsigned int indent);
                     virtual icu::UnicodeString flatten();
 
                     /**

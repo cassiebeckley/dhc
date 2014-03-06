@@ -49,7 +49,6 @@ namespace dhc {
                     property(icu::UnicodeString str) : property(str, -1) {}
 
                     virtual std::shared_ptr<match::match> find(scanner& s);
-                    virtual std::string str() const;
                 protected:
                 private:
                     icu::UnicodeSet pat;

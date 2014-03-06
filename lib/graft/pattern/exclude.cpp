@@ -18,11 +18,3 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::exclude::find(sca
         return pat_match;
     }
 }
-
-std::string dhc::graft::pattern::exclude::str() const
-{
-    std::stringstream ss;
-    ss << pat->str() << "^(" << exc->str() << ")";
-
-    return ss.str();
-}

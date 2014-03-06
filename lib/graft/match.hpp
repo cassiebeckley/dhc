@@ -27,15 +27,6 @@ namespace dhc {
                     virtual unsigned int length() = 0;
 
                     /**
-                     * \brief Represent the match as a tree
-                     *
-                     * Don't use this, removing soon
-                     * @param indent the number of characters to indent
-                     * @deprecated Seriously, don't use it.
-                     */
-                    virtual icu::UnicodeString tree(unsigned int indent) = 0;
-
-                    /**
                      * \brief Represent the match as a string.
                      *
                      * Returns the matched characters as a string.

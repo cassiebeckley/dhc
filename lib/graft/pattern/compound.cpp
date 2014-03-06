@@ -22,19 +22,6 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::find(sc
     return std::shared_ptr<match::match>(new match::sequence(column, type, matches));
 }
 
-std::string dhc::graft::pattern::compound::str() const
-{
-    std::stringstream ss;
-
-    for (auto it = pat.begin(); it != pat.end(); ++it) {
-        if (it != pat.begin())
-            ss << ' ';
-        ss << (*it)->str();
-    }
-
-    return ss.str();
-}
-
 void dhc::graft::pattern::compound::add_pattern(std::shared_ptr<pattern> patt)
 {
     pat.push_back(patt);

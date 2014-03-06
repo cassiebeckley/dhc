@@ -38,14 +38,6 @@ namespace dhc {
                      */
                     virtual std::shared_ptr<match::match> find(scanner& s) = 0;
 
-                    /**
-                     * \brief Returns a string representation of the pattern
-                     * @deprecated Really bad idea
-                     *
-                     * Recursion and whatnot.
-                     */
-                    virtual std::string str() const = 0;
-
                 protected:
                     /**
                      * \brief The type of the matched token.
