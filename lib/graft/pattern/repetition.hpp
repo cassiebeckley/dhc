@@ -12,15 +12,29 @@ namespace dhc {
     namespace graft {
         namespace pattern {
 
+            /**
+             * \brief A pattern that matches a pattern repeated
+             *        an arbitrary number of times.
+             */
             class repetition : public pattern {
                 public:
+                    /**
+                     * \brief Create a repetition pattern.
+                     * @param pat The repeated pattern.
+                     * @param type The type of the matched token.
+                     */
                     repetition(std::shared_ptr<pattern> pat, int type) : pattern(type), pat(pat) {}
+
+                    /**
+                     * \brief Create a repetition pattern without a type.
+                     * @param pat The repeated pattern.
+                     */
                     repetition(std::shared_ptr<pattern> pat) : pattern(), pat(pat) {}
                     virtual std::shared_ptr<match::match> find(scanner& s);
                     virtual std::string str() const;
                 protected:
-                    std::shared_ptr<pattern> pat;
                 private:
+                    std::shared_ptr<pattern> pat;
             };
 
         }

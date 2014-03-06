@@ -1,18 +1,18 @@
 #ifndef LEXER_HPP
 #define LEXER_HPP
 
-#include "../graft/scanner.hpp"
+#include <graft/scanner.hpp>
 
-#include "../graft/pattern.hpp"
-#include "../graft/match.hpp"
+#include <graft/pattern.hpp>
+#include <graft/match.hpp>
 
-#include "../graft/pattern/character.hpp"
-#include "../graft/pattern/property.hpp"
-#include "../graft/pattern/choice.hpp"
-#include "../graft/pattern/compound.hpp"
-#include "../graft/pattern/exclude.hpp"
-#include "../graft/pattern/repetition.hpp"
-#include "../graft/pattern/string.hpp"
+#include <graft/pattern/character.hpp>
+#include <graft/pattern/property.hpp>
+#include <graft/pattern/choice.hpp>
+#include <graft/pattern/compound.hpp>
+#include <graft/pattern/exclude.hpp>
+#include <graft/pattern/repetition.hpp>
+#include <graft/pattern/string.hpp>
 
 #include <memory>
 #include <sstream>
@@ -25,6 +25,9 @@ namespace dhc {
         typedef std::shared_ptr<graft::pattern::pattern> pattern_ptr;
         typedef std::shared_ptr<graft::match::match> match_ptr;
 
+        /**
+         * An enumeration of all possible token types.
+         */
         enum class type {
             NONE = -1,
             WHITESPACE,
@@ -38,8 +41,20 @@ namespace dhc {
             RESERVEDID
         };
 
+        /**
+         * \brief A lexical analyzer for Haskell 2010.
+         *
+         * Like, stuff
+         */
         class lexer {
             public:
+                /**
+                 * \brief Initialize the lexical analyzer
+                 * 
+                 * Creates a lexical analyzer conforming to the Haskell
+                 * 2010 specification.
+                 * @param source the source code to analyze
+                 */
                 lexer(icu::UnicodeString source) : s(source)
                 {
                     // TODO: get rid of this mebbe?
@@ -156,12 +171,6 @@ namespace dhc {
                     uniWhite = std::make_shared<property>("[:White_Space:]");
 
                     whitechar = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        /** omit because redundant **
-                         * newline,
-                         * vertab,
-                         * space,
-                         * tab,
-                         */
                         uniWhite
                     });
 
@@ -565,10 +574,36 @@ namespace dhc {
                         whitespace
                     });
                 }
+
+                /**
+                 * \brief Get the next token.
+                 *
+                 * Returns the next token from the source code.
+                 * @return The match object representing the lexeme found.
+                 *         nullptr is returned if an error has occurred.
+                 */
                 match_ptr next();
+
+                /**
+                 * \brief Checks if the end of the source has been reached.
+                 * @return A boolean value representing whether or not lexical
+                 *         analysis is finished.
+                 */
                 bool finished();
 
+                /**
+                 * \brief Returns an error message.
+                 *
+                 * Creates an error message to be used if next()
+                 * returned an error value.
+                 * @param filename the name of the source file
+                 * @return An error message
+                 */
                 std::string error(std::string filename);
+
+                /**
+                 * \brief Maps each token type to a string representing it.
+                 */
                 std::unordered_map<int, std::string> typenames;
             private:
                 pattern_ptr uniDigit;

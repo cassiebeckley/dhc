@@ -14,9 +14,20 @@ namespace dhc {
     namespace graft {
         namespace pattern {
 
+            /**
+             * \brief A pattern that matches a character based on
+             *        an icu::UnicodeSet
+             */
             class property : public pattern
             {
                 public:
+                    /**
+                     * @brief Create a property pattern.
+                     * @param str A string which will be used to create
+                     *            an icu::UnicodeSet. See ICU's
+                     *            documentation for further details.
+                     * @param type The type of the matched token.
+                     */
                     property(icu::UnicodeString str, int type) : pattern(type)
                     {
                         UErrorCode e = U_ZERO_ERROR;
@@ -29,12 +40,19 @@ namespace dhc {
                         }
                     }
 
-                    property(icu::UnicodeString pat) : property(pat, -1) {}
+                    /**
+                     * @brief Create a property pattern without a type.
+                     * @param str A string which will be used to create
+                     *            an icu::UnicodeSet. See ICU's
+                     *            documentation for further details.
+                     */
+                    property(icu::UnicodeString str) : property(str, -1) {}
+
                     virtual std::shared_ptr<match::match> find(scanner& s);
                     virtual std::string str() const;
                 protected:
-                    icu::UnicodeSet pat;
                 private:
+                    icu::UnicodeSet pat;
             };
 
         }

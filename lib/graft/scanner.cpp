@@ -7,12 +7,12 @@ dhc::graft::scanner::~scanner()
 
 std::shared_ptr<dhc::graft::match::character> dhc::graft::scanner::next()
 {
-    UChar32 c = -1;
-
     if (!finished())
-        c = source[state.index++];
+    {
+        return std::make_shared<match::character>(state.column++, -1, source[state.index++]);
+    }
 
-    return std::make_shared<match::character>(state.column++, -1, c);
+    return nullptr;
 }
 
 dhc::graft::scanstate dhc::graft::scanner::get_state()
@@ -27,6 +27,7 @@ void dhc::graft::scanner::set_state(scanstate& s)
 
 bool dhc::graft::scanner::finished()
 {
+    //std::cout << "Finished yet? state.index: " << state.index << " length: " << length << std::endl;
     return state.index >= length;
 }
 
@@ -44,4 +45,17 @@ unsigned int dhc::graft::scanner::lineno()
 unsigned int dhc::graft::scanner::charno()
 {
     return state.column;
+}
+
+void dhc::graft::scanner::initialize(icu::UnicodeString src)
+{
+    length = src.countChar32();
+    source = new UChar32[length];
+    UErrorCode e = U_ZERO_ERROR;
+    src.toUTF32(source, length, e);
+
+    if (U_FAILURE(e))
+    {
+        std::cerr << "scanner::scanner error: " << u_errorName(e) << std::endl;
+    }
 }
