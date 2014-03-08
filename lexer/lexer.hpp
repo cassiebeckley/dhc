@@ -71,69 +71,19 @@ namespace dhc {
                     typenames[static_cast<int>(type::RESERVEDOP)] = "reservedop";
                     typenames[static_cast<int>(type::RESERVEDID)] = "reservedid";
 
-                    uniDigit = std::make_shared<property>("[:Nd:]");
-
-                    digit = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        uniDigit
-                    });
-
-                    octit = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        std::make_shared<character>('0'),
-                        std::make_shared<character>('1'),
-                        std::make_shared<character>('2'),
-                        std::make_shared<character>('3'),
-                        std::make_shared<character>('4'),
-                        std::make_shared<character>('5'),
-                        std::make_shared<character>('6'),
-                        std::make_shared<character>('7')
-                    });
+                    digit = std::make_shared<property>("[:Nd:]");
+                    octit = std::make_shared<property>("[0-7]");
 
                     hexit = std::make_shared<choice>(std::vector<pattern_ptr> {
                         digit,
-                        std::make_shared<character>('A'),
-                        std::make_shared<character>('B'),
-                        std::make_shared<character>('C'),
-                        std::make_shared<character>('D'),
-                        std::make_shared<character>('E'),
-                        std::make_shared<character>('F'),
-                        std::make_shared<character>('a'),
-                        std::make_shared<character>('b'),
-                        std::make_shared<character>('c'),
-                        std::make_shared<character>('d'),
-                        std::make_shared<character>('e'),
-                        std::make_shared<character>('f'),
+                        std::make_shared<property>("[[A-F][a-f]]")
                     });
 
-                    uniSymbol = std::make_shared<property>("[[:Punctuation:][:Symbol:]]");
+                    symbol = std::make_shared<property>("[[:Punctuation:][:Symbol:]]");
+                    large = std::make_shared<property>("[[:Lu:][:Lt:]]");
+                    small = std::make_shared<property>("[[:Ll:]_]");
 
-                    symbol = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        uniSymbol
-                    });
-
-                    uniLarge = std::make_shared<property>("[[:Lu:][:Lt:]]");
-
-                    large = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        uniLarge
-                    });
-
-                    uniSmall = std::make_shared<property>("[:Ll:]");
-
-                    small = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        uniSmall,
-                        std::make_shared<character>('_')
-                    });
-
-                    special = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        std::make_shared<character>('('),
-                        std::make_shared<character>(')'),
-                        std::make_shared<character>(','),
-                        std::make_shared<character>(';'),
-                        std::make_shared<character>('['),
-                        std::make_shared<character>(']'),
-                        std::make_shared<character>('`'),
-                        std::make_shared<character>('{'),
-                        std::make_shared<character>('}')
-                    }, static_cast<int>(type::SPECIAL));
+                    special = std::make_shared<property>("[\\(\\)\\,\\;\\[\\]\\`\\{\\}]", static_cast<int>(type::SPECIAL));
 
                     graphic = std::make_shared<choice>(std::vector<pattern_ptr> {
                         small,
@@ -606,15 +556,11 @@ namespace dhc {
                  */
                 std::unordered_map<int, std::string> typenames;
             private:
-                pattern_ptr uniDigit;
                 pattern_ptr digit;
                 pattern_ptr octit;
                 pattern_ptr hexit;
-                pattern_ptr uniSymbol;
                 pattern_ptr symbol;
-                pattern_ptr uniLarge;
                 pattern_ptr large;
-                pattern_ptr uniSmall;
                 pattern_ptr small;
                 pattern_ptr special;
                 pattern_ptr graphic;
