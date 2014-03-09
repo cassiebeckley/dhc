@@ -2,6 +2,9 @@
 
 std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
 {
+    if (s.finished())
+        return nullptr;
+
     return program->find(s);
 }
 

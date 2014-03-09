@@ -25,6 +25,7 @@ int main(int argc, char** argv)
         }
 
         icu::UnicodeString source(utf16);
+        source.append("\n");
 
         dhc::lexer::lexer lex(source);
 

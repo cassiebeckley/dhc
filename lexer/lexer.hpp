@@ -79,11 +79,18 @@ namespace dhc {
                         std::make_shared<property>("[[A-F][a-f]]")
                     });
 
-                    symbol = std::make_shared<property>("[[:Punctuation:][:Symbol:]]");
+                    special = std::make_shared<property>("[\\(\\),;\\[\\]`\\{\\}]", static_cast<int>(type::SPECIAL));
+
+                    symbol = std::make_shared<exclude>(
+                        std::make_shared<property>("[[:Punctuation:][:Symbol:]]"),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            special,
+                            std::make_shared<property>("[_\"']")
+                        })
+                    );
+
                     large = std::make_shared<property>("[[:Lu:][:Lt:]]");
                     small = std::make_shared<property>("[[:Ll:]_]");
-
-                    special = std::make_shared<property>("[\\(\\)\\,\\;\\[\\]\\`\\{\\}]", static_cast<int>(type::SPECIAL));
 
                     graphic = std::make_shared<choice>(std::vector<pattern_ptr> {
                         small,
@@ -168,7 +175,7 @@ namespace dhc {
 
                     ncm->add_pattern(std::make_shared<repetition>(
                         std::make_shared<compound>(std::vector<pattern_ptr> {
-                            ncomment,
+                            ncm,
                             ANY_seq
                         })
                     ));
