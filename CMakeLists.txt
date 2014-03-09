@@ -73,12 +73,3 @@ target_link_libraries(hl
     graft
     ${ICU_LIBRARIES}
 )
-
-add_executable(tests
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/tests.cpp
-)
-
-target_link_libraries(tests
-    graft
-    ${ICU_LIBRARIES}
-)
