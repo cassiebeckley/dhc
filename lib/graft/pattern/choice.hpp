@@ -31,7 +31,7 @@ namespace dhc {
                     choice(std::vector<std::shared_ptr<pattern>>&& p, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(p) {}
 
                 protected:
-                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+                    virtual std::shared_ptr<match::match> findmatch(scanner::scanner& s);
 
                     /**
                      * \brief The list of patterns to choose from.

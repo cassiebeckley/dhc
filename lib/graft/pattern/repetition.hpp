@@ -28,7 +28,7 @@ namespace dhc {
                     repetition(std::shared_ptr<pattern> pat, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(pat) {}
 
                 protected:
-                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+                    virtual std::shared_ptr<match::match> findmatch(scanner::scanner& s);
 
                 private:
                     std::shared_ptr<pattern> pat;

@@ -1,7 +1,7 @@
 #include "repetition.hpp"
 #include <sstream>
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::repetition::findmatch(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::repetition::findmatch(scanner::scanner& s)
 {
     std::vector<std::shared_ptr<match::match>> matches;
     std::shared_ptr<match::match> current;

@@ -28,7 +28,7 @@ namespace dhc {
                     character(UChar32 p, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(p) {}
 
                 protected:
-                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+                    virtual std::shared_ptr<match::match> findmatch(scanner::scanner& s);
 
                 private:
                     UChar32 pat;

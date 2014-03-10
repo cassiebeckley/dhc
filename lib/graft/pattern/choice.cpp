@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::findmatch(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::findmatch(scanner::scanner& s)
 {
     std::shared_ptr<match::match> longest;
 

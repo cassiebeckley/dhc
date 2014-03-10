@@ -1,7 +1,7 @@
 #include "exclude.hpp"
 #include <sstream>
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::exclude::findmatch(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::exclude::findmatch(scanner::scanner& s)
 {
     auto old_state = s.state;
     std::shared_ptr<match::match> ex_match (exc->find(s));

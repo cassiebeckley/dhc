@@ -42,7 +42,7 @@ namespace dhc {
                      * @return A match, if a match is found, and nullptr if
                      *         one is not.
                      */
-                    std::shared_ptr<match::match> find(scanner& s);
+                    std::shared_ptr<match::match> find(scanner::scanner& s);
 
                 protected:
                     /**
@@ -58,7 +58,7 @@ namespace dhc {
                      * @return A match, if a match is found, and nullptr if
                      *         one is not.
                      */
-                    virtual std::shared_ptr<match::match> findmatch(scanner& s) = 0;
+                    virtual std::shared_ptr<match::match> findmatch(scanner::scanner& s) = 0;
 
                     /**
                      * \brief The type of the matched token.

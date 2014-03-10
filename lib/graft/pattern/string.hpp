@@ -34,7 +34,7 @@ namespace dhc {
                     }
 
                 protected:
-                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+                    virtual std::shared_ptr<match::match> findmatch(scanner::scanner& s);
 
                 private:
                     icu::UnicodeString str_pat;

@@ -1,6 +1,6 @@
 #include "pattern.hpp"
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::pattern::find(scanner &s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::pattern::find(scanner::scanner &s)
 {
     auto match = findmatch(s);
 

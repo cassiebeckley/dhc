@@ -1,6 +1,9 @@
 #include "scanner.hpp"
 
-dhc::graft::scanner::scanner(icu::UnicodeString src)
+// TODO: remove
+#include <iostream>
+
+dhc::graft::scanner::scanner::scanner(icu::UnicodeString src)
 {
     length = src.countChar32();
     source = new UChar32[length];
@@ -13,12 +16,12 @@ dhc::graft::scanner::scanner(icu::UnicodeString src)
     }
 }
 
-dhc::graft::scanner::~scanner()
+dhc::graft::scanner::scanner::~scanner()
 {
     delete [] source;
 }
 
-std::shared_ptr<dhc::graft::match::character> dhc::graft::scanner::next()
+std::shared_ptr<dhc::graft::match::character> dhc::graft::scanner::scanner::next()
 {
     if (!finished())
     {
@@ -28,29 +31,28 @@ std::shared_ptr<dhc::graft::match::character> dhc::graft::scanner::next()
     return nullptr;
 }
 
-bool dhc::graft::scanner::finished()
+bool dhc::graft::scanner::scanner::finished()
 {
-    //std::cout << "Finished yet? state.index: " << state.index << " length: " << length << std::endl;
     return state.index >= length;
 }
 
-void dhc::graft::scanner::newline()
+void dhc::graft::scanner::scanner::newline()
 {
     state.line_number++;
     state.column = 0;
 }
 
-unsigned int dhc::graft::scanner::lineno()
+unsigned int dhc::graft::scanner::scanner::lineno()
 {
     return state.line_number;
 }
 
-unsigned int dhc::graft::scanner::charno()
+unsigned int dhc::graft::scanner::scanner::charno()
 {
     return state.column;
 }
 
-unsigned int dhc::graft::scanner::index()
+unsigned int dhc::graft::scanner::scanner::index()
 {
     return state.index;
 }

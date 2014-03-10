@@ -39,7 +39,7 @@ namespace dhc {
                      */
                     void add_pattern(std::shared_ptr<pattern> pat);
                 protected:
-                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+                    virtual std::shared_ptr<match::match> findmatch(scanner::scanner& s);
 
                     /**
                      * \brief The sequence of patterns to match.

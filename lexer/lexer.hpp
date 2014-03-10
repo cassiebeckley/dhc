@@ -748,7 +748,7 @@ namespace dhc {
                 pattern_ptr lexeme;
                 pattern_ptr program;
 
-                graft::scanner s;
+                graft::scanner::scanner s;
         };
 
     }
