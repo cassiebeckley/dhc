@@ -143,6 +143,9 @@ namespace dhc {
                         carriage_return,
                         linefeed,
                         formfeed
+                    }, -1, [&] (match_ptr m) {
+                        s.newline();
+                        return m;
                     });
 
                     uniWhite = std::make_shared<property>("[:White_Space:]");
