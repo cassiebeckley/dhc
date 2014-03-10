@@ -22,17 +22,14 @@ namespace dhc {
                      * \brief Create a repetition pattern.
                      * @param pat The repeated pattern.
                      * @param type The type of the matched token.
+                     * @param callback a callback that performs additional
+                     *                 processing on the match returned
                      */
-                    repetition(std::shared_ptr<pattern> pat, int type) : pattern(type), pat(pat) {}
-
-                    /**
-                     * \brief Create a repetition pattern without a type.
-                     * @param pat The repeated pattern.
-                     */
-                    repetition(std::shared_ptr<pattern> pat) : pattern(), pat(pat) {}
-                    virtual std::shared_ptr<match::match> find(scanner& s);
+                    repetition(std::shared_ptr<pattern> pat, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(pat) {}
 
                 protected:
+                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+
                 private:
                     std::shared_ptr<pattern> pat;
             };

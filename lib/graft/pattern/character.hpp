@@ -22,17 +22,14 @@ namespace dhc {
                      * \brief Create a character pattern.
                      * @param p the character to match.
                      * @param type the type of the pattern.
+                     * @param callback a callback to perform additional
+                     *                 processing on the match returned
                      */
-                    character(UChar32 p, int type) : pattern(type), pat(p) {}
+                    character(UChar32 p, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(p) {}
 
-                    /**
-                     * \brief Create a character pattern without a type.
-                     * @param p the character to match.
-                     */ 
-                    character(UChar32 p) : pattern(), pat(p) {}
-
-                    virtual std::shared_ptr<match::match> find(scanner& s);
                 protected:
+                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+
                 private:
                     UChar32 pat;
             };

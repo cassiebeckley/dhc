@@ -9,3 +9,8 @@ icu::UnicodeString dhc::graft::match::string::flatten()
 {
     return data;
 }
+
+std::vector<std::shared_ptr<dhc::graft::match::match>> dhc::graft::match::string::children()
+{
+    return {};
+}

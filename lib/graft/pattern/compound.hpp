@@ -22,16 +22,11 @@ namespace dhc {
                      * \brief Create a compound pattern.
                      * @param p The list of patterns to match.
                      * @param type The type of the matched token.
+                     * @param callback a callback to perform additional
+                     *                 processing on the match returned
                      */
-                    compound(std::vector<std::shared_ptr<pattern>>&& p, int type) : pattern(type), pat(p) {}
+                    compound(std::vector<std::shared_ptr<pattern>>&& p, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(p) {}
 
-                    /**
-                     * \brief Create a compound pattern without a type.
-                     * @param p The list of patterns to match.
-                     */
-                    compound(std::vector<std::shared_ptr<pattern>>&& p) : pattern(), pat(p) {}
-
-                    virtual std::shared_ptr<match::match> find(scanner& s);
                     /**
                      * \brief Add a pattern to the list of patterns.
                      *
@@ -44,6 +39,8 @@ namespace dhc {
                      */
                     void add_pattern(std::shared_ptr<pattern> pat);
                 protected:
+                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+
                     /**
                      * \brief The sequence of patterns to match.
                      */

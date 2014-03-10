@@ -27,8 +27,10 @@ namespace dhc {
                      *            an icu::UnicodeSet. See ICU's
                      *            documentation for further details.
                      * @param type The type of the matched token.
+                     * @param callback a callback that performs additional
+                     *                 processing on the match returned
                      */
-                    property(icu::UnicodeString str, int type) : pattern(type)
+                    property(icu::UnicodeString str, int type = -1, match_func callback = nullptr) : pattern(type, callback)
                     {
                         UErrorCode e = U_ZERO_ERROR;
                         pat = UnicodeSet(str, e);
@@ -40,16 +42,9 @@ namespace dhc {
                         }
                     }
 
-                    /**
-                     * @brief Create a property pattern without a type.
-                     * @param str A string which will be used to create
-                     *            an icu::UnicodeSet. See ICU's
-                     *            documentation for further details.
-                     */
-                    property(icu::UnicodeString str) : property(str, -1) {}
-
-                    virtual std::shared_ptr<match::match> find(scanner& s);
                 protected:
+                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+
                 private:
                     icu::UnicodeSet pat;
             };

@@ -24,6 +24,7 @@ namespace dhc {
 
                     virtual unsigned int length();
                     virtual icu::UnicodeString flatten();
+                    virtual std::vector<std::shared_ptr<match>> children();
 
                     /**
                      * \brief The matched character.

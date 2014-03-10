@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <sstream>
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::character::find(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::character::findmatch(scanner& s)
 {
     auto state = s.state;
 

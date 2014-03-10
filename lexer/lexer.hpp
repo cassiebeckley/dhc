@@ -1,5 +1,5 @@
-#ifndef LEXER_HPP
-#define LEXER_HPP
+#ifndef DHC_LEXER_LEXER_HPP
+#define DHC_LEXER_LEXER_HPP
 
 #include <graft/scanner.hpp>
 
@@ -13,6 +13,13 @@
 #include <graft/pattern/exclude.hpp>
 #include <graft/pattern/repetition.hpp>
 #include <graft/pattern/string.hpp>
+
+#include "digit.hpp"
+#include "qualified.hpp"
+#include "integer.hpp"
+#include "lit_float.hpp"
+#include "lit_char.hpp"
+#include "lit_string.hpp"
 
 #include <memory>
 #include <sstream>
@@ -71,12 +78,25 @@ namespace dhc {
                     typenames[static_cast<int>(type::RESERVEDOP)] = "reservedop";
                     typenames[static_cast<int>(type::RESERVEDID)] = "reservedid";
 
-                    digit = std::make_shared<property>("[:Nd:]");
-                    octit = std::make_shared<property>("[0-7]");
+                    match_func digit_h = [](match_ptr m) {
+                        UChar32 c = m->flatten()[0];
+                        int32_t d = u_charDigitValue(c);
+                        return std::make_shared<dhc::lexer::digit>(m->column, m->type, c, d);
+                    };
+
+                    digit = std::make_shared<property>("[:Nd:]", -1, digit_h);
+                    octit = std::make_shared<property>("[0-7]", -1, digit_h);
 
                     hexit = std::make_shared<choice>(std::vector<pattern_ptr> {
                         digit,
-                        std::make_shared<property>("[[A-F][a-f]]")
+                        std::make_shared<property>("[A-F]", -1, [] (match_ptr m) {
+                            char c = m->flatten()[0];
+                            return std::make_shared<dhc::lexer::digit>(m->column, m->type, c, c - 'A');
+                        }),
+                        std::make_shared<property>("[a-f]", -1, [] (match_ptr m) {
+                            char c = m->flatten()[0];
+                            return std::make_shared<dhc::lexer::digit>(m->column, m->type, c, c - 'a');
+                        })
                     });
 
                     special = std::make_shared<property>("[\\(\\),;\\[\\]`\\{\\}]", static_cast<int>(type::SPECIAL));
@@ -194,20 +214,41 @@ namespace dhc {
                         std::make_shared<repetition>(whitestuff)
                     }, static_cast<int>(type::WHITESPACE));
 
+                    std::function<match_func(int)> from_base = [] (int base)
+                    {
+                        return [base] (match_ptr m)
+                        {
+                            std::vector<match_ptr> children = m->children();
+                            std::shared_ptr<dhc::lexer::digit> head = std::dynamic_pointer_cast<dhc::lexer::digit>(children[0]);
+                            int64_t dec = head->d;
+
+                            auto tail = children[1]->children();
+
+                            for (auto it = tail.begin(); it != tail.end(); ++it)
+                            {
+                                std::shared_ptr<dhc::lexer::digit> c = std::dynamic_pointer_cast<dhc::lexer::digit>(*it);
+                                dec *= base;
+                                dec += c->d;
+                            }
+
+                            return std::make_shared<dhc::lexer::integer>(m->column, m->type, m->length(), dec);
+                        };
+                    };
+
                     decimal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         digit,
                         std::make_shared<repetition>(digit)
-                    });
+                    }, -1, from_base(10));
 
                     octal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         octit,
                         std::make_shared<repetition>(octit)
-                    });
+                    }, -1, from_base(8));
 
                     hexadecimal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         hexit,
                         std::make_shared<repetition>(hexit)
-                    });
+                    }, -1, from_base(16));
 
                     integer = std::make_shared<choice>(std::vector<pattern_ptr> {
                         decimal,
@@ -220,11 +261,17 @@ namespace dhc {
                                 })
                             }),
                             octal
+                        }, -1, [] (match_ptr m) {
+                            return m->children()[1];
                         }),
                         // TODO:
                         // Hm? Double check below
                         // Find out if it's weird stuff
                         // or if it can be removed
+                        //
+                        // sidenote: what was I even thinking
+                        // when I wrote the above? The below
+                        // is necessary for hexadecimal lexing
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<compound>(std::vector<pattern_ptr> {
                                 std::make_shared<character>('0'),
@@ -234,30 +281,44 @@ namespace dhc {
                                 })
                             }),
                             hexadecimal
+                        }, -1, [] (match_ptr m) {
+                            return m->children()[1];
                         })
                     });
 
-                    exponent = std::make_shared<compound>(std::vector<pattern_ptr> {
-                        std::make_shared<choice>(std::vector<pattern_ptr> {
-                            std::make_shared<compound>(std::vector<pattern_ptr> {
-                                std::make_shared<choice>(std::vector<pattern_ptr> {
-                                    std::make_shared<character>('e'),
-                                    std::make_shared<character>('E')
-                                }),
-                                std::make_shared<choice>(std::vector<pattern_ptr> {
-                                    std::make_shared<character>('+'),
-                                    std::make_shared<character>('-')
-                                }),
-                                decimal
+                    exponent = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('e'),
+                                std::make_shared<character>('E')
                             }),
-                            std::make_shared<compound>(std::vector<pattern_ptr> {
-                                std::make_shared<choice>(std::vector<pattern_ptr> {
-                                    std::make_shared<character>('e'),
-                                    std::make_shared<character>('E')
-                                }),
-                                decimal
-                            })
-                        })
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('+'),
+                                std::make_shared<character>('-')
+                            }),
+                            decimal
+                        }, -1, [] (match_ptr m) {
+                            auto children = m->children();
+                            std::shared_ptr<dhc::graft::match::character> sign = std::dynamic_pointer_cast<dhc::graft::match::character>(children[1]);
+                            std::shared_ptr<dhc::lexer::integer> d = std::dynamic_pointer_cast<dhc::lexer::integer>(children[2]);
+                            auto value = d->data;
+                            if (sign->data == '-')
+                                value = -value;
+                            return std::make_shared<dhc::lexer::integer>(m->column, m->type, m->length(), value);
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<character>('e'),
+                                std::make_shared<character>('E')
+                            }),
+                            decimal
+                        }, -1, [] (match_ptr m) {
+                            auto children = m->children();
+                            std::shared_ptr<dhc::lexer::integer> d = std::dynamic_pointer_cast<dhc::lexer::integer>(children[1]);
+                            auto value = d->data;
+                            auto a = std::make_shared<dhc::lexer::integer>(m->column, m->type, m->length(), value);
+                            return a;
+                        }),
                     });
 
                     floating = std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -265,16 +326,34 @@ namespace dhc {
                             decimal,
                             std::make_shared<character>('.'),
                             decimal
+                        }, -1, [] (match_ptr m) {
+                            auto children = m->children();
+                            std::shared_ptr<dhc::lexer::integer> in = std::dynamic_pointer_cast<dhc::lexer::integer>(children[0]);
+                            std::shared_ptr<dhc::lexer::integer> fr = std::dynamic_pointer_cast<dhc::lexer::integer>(children[2]);
+                            return std::make_shared<dhc::lexer::lit_float>(m->column, m->type, m->length(), in->data, fr->data, 1);
                         }),
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             decimal,
                             std::make_shared<character>('.'),
                             decimal,
                             exponent
+                        }, -1, [] (match_ptr m) {
+                            auto children = m->children();
+                            std::shared_ptr<dhc::lexer::integer> in = std::dynamic_pointer_cast<dhc::lexer::integer>(children[0]);
+                            std::shared_ptr<dhc::lexer::integer> fr = std::dynamic_pointer_cast<dhc::lexer::integer>(children[2]);
+                            std::shared_ptr<dhc::lexer::integer> ex = std::dynamic_pointer_cast<dhc::lexer::integer>(children[3]);
+                            return std::make_shared<dhc::lexer::lit_float>(m->column, m->type, m->length(), in->data, fr->data, ex->data);
+
                         }),
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             decimal,
                             exponent
+                        }, -1, [] (match_ptr m) {
+                            auto children = m->children();
+                            auto in = std::dynamic_pointer_cast<dhc::lexer::integer>(children[0]);
+                            auto ex = std::dynamic_pointer_cast<dhc::lexer::integer>(children[1]);
+                            return std::make_shared<dhc::lexer::lit_float>(m->column, m->type, m->length(), in->data, 0, ex->data);
+
                         })
                     });
 
@@ -371,6 +450,10 @@ namespace dhc {
                             std::make_shared<exclude>(escape, std::make_shared<string>("\\&"))
                         }),
                         std::make_shared<character>('\'')
+                    }, -1, [] (match_ptr m) {
+                        auto children = m->children();
+                        auto middle = children[1]->flatten();
+                        return std::make_shared<lit_char>(m->column, m->type, middle);
                     });
 
                     gap = std::make_shared<compound>(std::vector<pattern_ptr> {
@@ -390,8 +473,18 @@ namespace dhc {
                             space,
                             escape,
                             gap
-                        })),
+                        }), -1, [] (match_ptr m) {
+                            auto children = m->children();
+                            std::vector<std::shared_ptr<lit_char>> chars;
+                            for (auto it = children.begin(); it != children.end(); ++it)
+                            {
+                                chars.push_back(std::make_shared<lit_char>((*it)->column, (*it)->type, (*it)->flatten()));
+                            }
+                            return std::make_shared<lit_string>(m->column, m->type, chars);
+                        }),
                         std::make_shared<character>('"')
+                    }, -1, [] (match_ptr m) {
+                        return m->children()[1];
                     });
 
                     literal = std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -426,6 +519,11 @@ namespace dhc {
                         std::make_shared<string>("where"),
                         std::make_shared<character>('_')
                     }, static_cast<int>(type::RESERVEDID)); 
+
+                    match_func flatten = [] (match_ptr m) {
+                        return std::make_shared<graft::match::string>(m->column, m->type, m->flatten());
+                    };
+
                     varid = std::make_shared<exclude>(
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             small,
@@ -435,8 +533,8 @@ namespace dhc {
                                 digit,
                                 std::make_shared<character>('\'')
                             }))
-                        }),
-                        reservedid
+                        }, -1, flatten
+                        ), reservedid
                     );
 
                     conid = std::make_shared<compound>(std::vector<pattern_ptr> {
@@ -447,7 +545,7 @@ namespace dhc {
                             digit,
                             std::make_shared<character>('\'')
                         }))
-                    });
+                    }, -1, flatten);
 
                     reservedop = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<string>(".."),
@@ -466,7 +564,8 @@ namespace dhc {
                     varsym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<exclude>(symbol, std::make_shared<character>(':')),
                         std::make_shared<repetition>(symbol)
-                    }), std::make_shared<choice>(std::vector<pattern_ptr> {
+                    }, -1, flatten 
+                    ), std::make_shared<choice>(std::vector<pattern_ptr> {
                         reservedop,
                         dashes
                     }));
@@ -474,22 +573,50 @@ namespace dhc {
                     consym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<character>(':'),
                         std::make_shared<repetition>(symbol)
-                    }), reservedop);
+                    }, -1, flatten), reservedop);
 
                     modid = std::make_shared<compound>(std::vector<pattern_ptr> {
                         conid,
-                        std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
-                            std::make_shared<character>('.'),
-                            conid
-                        }))
-                    }, static_cast<int>(type::QCONID)); // TODO: why is this set to QCONID rather than, say, MODID?
+                        std::make_shared<repetition>(
+                            std::make_shared<compound>(
+                                std::vector<pattern_ptr> {
+                                    std::make_shared<character>('.'),
+                                    conid
+                                }, -1, [] (match_ptr m) {
+                                    return m->children()[1];
+                                }
+                        ), -1, [] (match_ptr m) {
+                            auto mods = m->children();
+                            std::vector<icu::UnicodeString> res;
+                            for (auto it = mods.begin(); it != mods.end(); ++it)
+                            {
+                                res.push_back((*it)->flatten());
+                            }
+                            return std::make_shared<qualified>(m->column, m->type, res);
+                        })
+                    }, -1, [] (match_ptr m) {
+                        auto children = m->children();
+                        icu::UnicodeString conid = children[0]->flatten();
+                        auto second = std::dynamic_pointer_cast<qualified>(children[1]);
+                        auto mods = second->modules;
+                        mods.insert(mods.begin(), conid);
+                        return std::make_shared<qualified>(m->column, m->type, mods);
+                    });
+
+                    match_func qualify = [](match_ptr m) {
+                        auto children = m->children();
+                        auto mods = std::dynamic_pointer_cast<qualified>(children[0])->modules;
+                        icu::UnicodeString id = children[2]->flatten();
+                        mods.push_back(id);
+                        return std::make_shared<qualified>(m->column, m->type, mods);
+                    };
 
                     qvarid = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             modid,
                             std::make_shared<character>('.'),
                             varid
-                        }),
+                        }, -1, qualify),
                         varid
                     }, static_cast<int>(type::QVARID));
 
@@ -502,7 +629,7 @@ namespace dhc {
                             modid,
                             std::make_shared<character>('.'),
                             varsym
-                        }),
+                        }, -1, qualify),
                         varsym
                     }, static_cast<int>(type::QVARSYM));
 
@@ -511,7 +638,7 @@ namespace dhc {
                             modid,
                             std::make_shared<character>('.'),
                             consym
-                        }),
+                        }, -1, qualify),
                         consym
                     }, static_cast<int>(type::QCONSYM));
 

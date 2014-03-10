@@ -25,6 +25,7 @@ namespace dhc {
                     string(unsigned int column, int type, icu::UnicodeString data) : match(column, type), data(data) {}
                     virtual unsigned int length();
                     virtual icu::UnicodeString flatten();
+                    virtual std::vector<std::shared_ptr<match>> children();
 
                     /**
                      * \brief The matched string.

@@ -1,7 +1,7 @@
 #include "compound.hpp"
 #include <sstream>
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::find(scanner& s)
+std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::findmatch(scanner& s)
 {
     auto old_state = s.state;
     int column = s.charno();

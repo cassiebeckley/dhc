@@ -20,8 +20,10 @@ namespace dhc {
                      * \brief Create a string pattern.
                      * @param str the string to match.
                      * @param type the matched token's type
+                     * @param callback a callback that performs additional
+                     *                 processing on the returned match
                      */
-                    string(std::string str, int type) : compound(std::vector<std::shared_ptr<pattern>>(), type), str_pat("")
+                    string(std::string str, int type = -1, match_func callback = nullptr) : compound(std::vector<std::shared_ptr<pattern>>(), type, callback), str_pat("")
                     {
                         for (auto it = str.begin(); it != str.end(); ++it) {
                             std::shared_ptr<character> p (new character(*it, -1));
@@ -31,14 +33,9 @@ namespace dhc {
 
                     }
 
-                    /**
-                     * \brief Create a string pattern without a type.
-                     * @param str the string to match.
-                     */
-                    string(std::string str) : string(str, -1) {}
-                    virtual std::shared_ptr<match::match> find(scanner& s);
-
                 protected:
+                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+
                 private:
                     icu::UnicodeString str_pat;
             };

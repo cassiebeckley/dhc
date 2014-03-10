@@ -25,17 +25,14 @@ namespace dhc {
                      * @param p a vector containing the patterns
                      *          to choose from.
                      * @param type the type of the pattern
+                     * @param callback a callback to perform additional
+                     *        processing on the match returned
                      */
-                    choice(std::vector<std::shared_ptr<pattern>>&& p, int type) : pattern(type), pat(p) {}
+                    choice(std::vector<std::shared_ptr<pattern>>&& p, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(p) {}
 
-                    /**
-                     * Create a choice pattern without a type.
-                     * @param p a vector containing the patterns
-                     *          to choose from.
-                     */
-                    choice(std::vector<std::shared_ptr<pattern>>&& p) : pattern(), pat(p) {}
-                    virtual std::shared_ptr<match::match> find(scanner& s);
                 protected:
+                    virtual std::shared_ptr<match::match> findmatch(scanner& s);
+
                     /**
                      * \brief The list of patterns to choose from.
                      */

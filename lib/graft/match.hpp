@@ -2,6 +2,8 @@
 #define DHC_GRAFT_MATCH_HPP
 
 #include <string>
+#include <vector>
+#include <memory>
 #include <unicode/unistr.h>
 
 namespace dhc {
@@ -33,6 +35,13 @@ namespace dhc {
                      * @return A string containing the matched characters.
                      */
                     virtual icu::UnicodeString flatten() = 0;
+
+                    /**
+                     * \brief Return this node's children.
+                     *
+                     * @return A vector containing this node's children.
+                     */
+                    virtual std::vector<std::shared_ptr<match>> children() = 0;
 
                     /**
                      * \brief The column in the source where the match begins

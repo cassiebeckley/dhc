@@ -6,6 +6,47 @@
 
 #include <unicode/unistr.h>
 
+void print_indent(int indent)
+{
+    for (int i = 0; i < indent; i++)
+    {
+        std::cout << ' ';
+    }
+    std::cout << "* ";
+}
+
+void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent, dhc::lexer::lexer &lex)
+{
+    auto tree = root->children();
+    print_indent(indent);
+    std::string flat;
+    root->flatten().toUTF8String(flat);
+    std::cout << '"' << flat << "\": " << lex.typenames[root->type] << std::endl;
+    for (auto it = tree.begin(); it != tree.end(); ++it)
+    {
+        std::vector<std::shared_ptr<dhc::graft::match::match>> c = (*it)->children();
+        if (c.size() == 0)
+        {
+            print_indent(indent + 4);
+            std::string flat;
+            (*it)->flatten().toUTF8String(flat);
+
+            size_t pos = 0;
+            while ((pos = flat.find("\n", pos)) != std::string::npos)
+            {
+                flat.replace(pos, 1, "\\n");
+                pos += 2;
+            }
+
+            std::cout << '"' << flat << '\"' << std::endl;
+        }
+        else
+        {
+            print_tree((*it), indent + 4, lex);
+        }
+    }
+}
+
 int main(int argc, char** argv)
 {
     while (true)
@@ -33,9 +74,7 @@ int main(int argc, char** argv)
             dhc::lexer::match_ptr token (lex.next());
 
             if (token) {
-                std::string flat;
-                token->flatten().toUTF8String(flat);
-                std::cout << "\"" << flat << "\": " << lex.typenames[token->type] << std::endl;
+                print_tree(token, 0, lex);
             } else {
                 std::cerr << lex.error(filename) << std::endl;
                 return -1;
