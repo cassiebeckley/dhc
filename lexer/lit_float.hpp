@@ -17,7 +17,9 @@ namespace dhc {
                  *               begins on.
                  * @param type An lit_float representing the token type.
                  * @param length The original matched length.
-                 * @param data The matched lit_float.
+                 * @param integral The integer part of the float.
+                 * @param fractional The fractional part of the float.
+                 * @param exponent The exponential part of the float.
                  */
                 lit_float (unsigned int column, int type, int length, int64_t integral, int64_t fractional, int64_t exponent) : literal(column, type, literal_type::FLOAT), len(length), integral(integral), fractional(fractional), exponent(exponent) {}
 
