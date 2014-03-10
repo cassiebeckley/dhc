@@ -49,7 +49,7 @@ namespace dhc {
                      *
                      * @return a match::character containing the next character.
                      */
-                    std::shared_ptr<match::character> next();
+                    std::shared_ptr<match::match> next();
 
                     /**
                      * \brief Check if the scanner is finished.

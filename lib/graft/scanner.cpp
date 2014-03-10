@@ -21,7 +21,7 @@ dhc::graft::scanner::scanner::~scanner()
     delete [] source;
 }
 
-std::shared_ptr<dhc::graft::match::character> dhc::graft::scanner::scanner::next()
+std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::scanner::next()
 {
     if (!finished())
     {

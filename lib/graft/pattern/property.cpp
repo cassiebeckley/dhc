@@ -9,7 +9,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::property::findmat
 
     try
     {
-        std::shared_ptr<match::character> current = s.next();
+        std::shared_ptr<match::character> current = std::dynamic_pointer_cast<match::character>(s.next());
 
         if (current && pat.contains(current->data))
         {
