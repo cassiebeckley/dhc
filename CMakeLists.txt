@@ -68,20 +68,3 @@ target_link_libraries(dhc
     graft
     ${ICU_LIBRARIES}
 )
-
-# add a test executable
-#add_executable(hl
-#    ${CMAKE_CURRENT_SOURCE_DIR}/highlight.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/digit.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/integer.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/qualified.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lit_char.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lit_string.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lit_float.cpp
-#)
-
-#target_link_libraries(hl
-#    graft
-#    ${ICU_LIBRARIES}
-#)
