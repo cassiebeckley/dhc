@@ -29,8 +29,5 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::findmatch
 
     s.state = max_state;
 
-    if (type != -1 && longest)
-        longest->type = type;
-
     return longest;
 }

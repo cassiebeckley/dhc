@@ -13,9 +13,6 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::property::findmat
 
         if (current && pat.contains(current->data))
         {
-            if (type != -1)
-                current->type = type;
-
             return current;
         }
     }

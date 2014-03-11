@@ -4,12 +4,16 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::pattern::find(sca
 {
     auto match = findmatch(s);
 
-    if (match && process)
+    if (match)
     {
-        return process(match);
+        if (type != -1)
+            match->type = type;
+
+        if (process)
+        {
+            return process(match);
+        }
     }
-    else
-    {
-        return match;
-    }
+
+    return match;
 }

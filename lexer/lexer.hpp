@@ -1,6 +1,7 @@
 #ifndef DHC_LEXER_LEXER_HPP
 #define DHC_LEXER_LEXER_HPP
 
+#include <graft/scanner.hpp>
 #include <graft/scanner/character.hpp>
 
 #include <graft/pattern.hpp>
@@ -53,7 +54,7 @@ namespace dhc {
          *
          * Like, stuff
          */
-        class lexer {
+        class lexer : public graft::scanner::scanner {
             public:
                 /**
                  * \brief Initialize the lexical analyzer
@@ -669,14 +670,14 @@ namespace dhc {
                  * @return The match object representing the lexeme found.
                  *         nullptr is returned if an error has occurred.
                  */
-                match_ptr next();
+                virtual match_ptr next();
 
                 /**
                  * \brief Checks if the end of the source has been reached.
                  * @return A boolean value representing whether or not lexical
                  *         analysis is finished.
                  */
-                bool finished();
+                virtual bool finished();
 
                 /**
                  * \brief Returns an error message.
