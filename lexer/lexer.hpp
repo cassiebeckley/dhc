@@ -654,7 +654,7 @@ namespace dhc {
                         special,
                         reservedop,
                         reservedid
-                    });
+                    }, -1);
 
                     program = std::make_shared<choice>(std::vector<pattern_ptr> {
                         lexeme,

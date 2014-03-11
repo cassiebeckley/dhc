@@ -54,6 +54,12 @@ namespace dhc {
                      * The results from this function are processed
                      * through a callback passed to the constructor.
                      *
+                     * @todo add explanation about how to set match type
+                     * @todo all subclasses should set match type
+                     * @todo actually, might be better to automatically
+                     *       set match type in find() so subclasses don't
+                     *       have to.
+                     *
                      * @param s the scanner to test.
                      * @return A match, if a match is found, and nullptr if
                      *         one is not.
