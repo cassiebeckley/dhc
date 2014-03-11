@@ -6,8 +6,8 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::findmatch
 {
     std::shared_ptr<match::match> longest;
 
-    auto old_state = s.state;
-    auto max_state = old_state;
+    scanner::scanstate old_state = s.state();
+    scanner::scanstate max_state = old_state;
 
     int max_length = 0;
 
@@ -21,13 +21,13 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::findmatch
             {
                 longest = match;
                 max_length = current_length;
-                max_state = s.state;
+                max_state = s.state();
             }
         }
-        s.state = old_state;
+        s.state() = old_state;
     }
 
-    s.state = max_state;
+    s.state() = max_state;
 
     return longest;
 }

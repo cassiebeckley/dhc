@@ -14,9 +14,10 @@ namespace dhc {
              * \brief A struct to hold a scanner's state.
              */
             class scanstate {
+                public:
+                    scanstate() : line_number(0), column(0), index(0) {}
                 private:
                     friend scanner;
-                    scanstate() : line_number(0), column(0), index(0) {}
                     unsigned int line_number;
                     unsigned int column;
                     unsigned int index;
@@ -73,9 +74,10 @@ namespace dhc {
                     unsigned int index();
 
                     /**
-                     * \brief The current state of the scanner.
+                     * \brief Get the current state of the scanner.
                      */
-                    scanstate state;
+                    virtual scanstate &state()=0;
+
                 protected:
 
                     /**

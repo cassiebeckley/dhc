@@ -22,30 +22,14 @@ namespace dhc {
                      */
                     character(icu::UnicodeString src);
 
-                    /**
-                     * \brief Free memory allocated by the scanner.
-                     */
                     virtual ~character();
-
-                    /**
-                     * \brief Returns the next character in the source string.
-                     *
-                     * Also modifies the scanner state. Match objects
-                     * must restore the state if they do not find a match.
-                     *
-                     * @return a match::character containing the next character.
-                     */
                     virtual std::shared_ptr<match::match> next();
-
-                    /**
-                     * \brief Check if the scanner is finished.
-                     * @return Whether or not the scanner has reached the
-                     *         end of the source.
-                     */
                     virtual bool finished();
+                    virtual scanstate &state();
 
                 protected:
                 private:
+                    scanstate s;
                     unsigned int length;
                     UChar32 *source;
            };

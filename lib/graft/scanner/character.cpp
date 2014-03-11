@@ -36,3 +36,8 @@ bool dhc::graft::scanner::character::finished()
 {
     return state_index() >= length;
 }
+
+dhc::graft::scanner::scanstate &dhc::graft::scanner::character::state()
+{
+    return s;
+}

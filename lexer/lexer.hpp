@@ -672,12 +672,8 @@ namespace dhc {
                  */
                 virtual match_ptr next();
 
-                /**
-                 * \brief Checks if the end of the source has been reached.
-                 * @return A boolean value representing whether or not lexical
-                 *         analysis is finished.
-                 */
                 virtual bool finished();
+                virtual graft::scanner::scanstate &state();
 
                 /**
                  * \brief Returns an error message.

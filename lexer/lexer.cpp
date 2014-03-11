@@ -13,6 +13,11 @@ bool dhc::lexer::lexer::finished()
     return s.finished();
 }
 
+dhc::graft::scanner::scanstate &dhc::lexer::lexer::state()
+{
+    return s.state();
+}
+
 std::string dhc::lexer::lexer::error(std::string filename)
 {
     std::stringstream ss;
