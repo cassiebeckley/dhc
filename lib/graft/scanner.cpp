@@ -1,45 +1,18 @@
 #include "scanner.hpp"
 
-// TODO: remove
-#include <iostream>
-
-dhc::graft::scanner::scanner::scanner(icu::UnicodeString src)
+unsigned int &dhc::graft::scanner::scanner::state_line_number()
 {
-    length = src.countChar32();
-    source = new UChar32[length];
-    UErrorCode e = U_ZERO_ERROR;
-    src.toUTF32(source, length, e);
-
-    if (U_FAILURE(e))
-    {
-        std::cerr << "scanner::scanner error: " << u_errorName(e) << std::endl;
-    }
+    return state.line_number;
 }
 
-dhc::graft::scanner::scanner::~scanner()
+unsigned int &dhc::graft::scanner::scanner::state_column()
 {
-    delete [] source;
+    return state.column;
 }
 
-std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::scanner::next()
+unsigned int &dhc::graft::scanner::scanner::state_index()
 {
-    if (!finished())
-    {
-        return std::make_shared<match::character>(state.column++, -1, source[state.index++]);
-    }
-
-    return nullptr;
-}
-
-bool dhc::graft::scanner::scanner::finished()
-{
-    return state.index >= length;
-}
-
-void dhc::graft::scanner::scanner::newline()
-{
-    state.line_number++;
-    state.column = 0;
+    return state.index;
 }
 
 unsigned int dhc::graft::scanner::scanner::lineno()

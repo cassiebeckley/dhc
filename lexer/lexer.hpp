@@ -1,7 +1,7 @@
 #ifndef DHC_LEXER_LEXER_HPP
 #define DHC_LEXER_LEXER_HPP
 
-#include <graft/scanner.hpp>
+#include <graft/scanner/character.hpp>
 
 #include <graft/pattern.hpp>
 #include <graft/match.hpp>
@@ -748,7 +748,7 @@ namespace dhc {
                 pattern_ptr lexeme;
                 pattern_ptr program;
 
-                graft::scanner::scanner s;
+                graft::scanner::character s;
         };
 
     }

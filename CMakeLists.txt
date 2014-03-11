@@ -38,6 +38,7 @@ include_directories(
 set(GRAFT_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/lib/graft)
 add_library (graft
     ${GRAFT_LIB_SRC}/scanner.cpp
+    ${GRAFT_LIB_SRC}/scanner/character.cpp
     ${GRAFT_LIB_SRC}/pattern.cpp
     ${GRAFT_LIB_SRC}/match.cpp
     ${GRAFT_LIB_SRC}/pattern/character.cpp

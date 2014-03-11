@@ -1,14 +1,13 @@
 #ifndef DHC_GRAFT_SCANNER_SCANNER_HPP
 #define DHC_GRAFT_SCANNER_SCANNER_HPP
 
-#include "match/character.hpp"
-
+#include "match.hpp"
 #include <memory>
-#include <unicode/unistr.h>
 
 namespace dhc {
     namespace graft {
         namespace scanner {
+
             class scanner;
 
             /**
@@ -23,23 +22,18 @@ namespace dhc {
                     unsigned int index;
             };
 
+
+
             /**
              * \brief scanner provides an interface to keep track of
              *        the state of a source string
              */
-
             class scanner {
                 public:
                     /**
-                     * \brief Create a scanner.
-                     * @param src A string containing the source code.
-                     */
-                    scanner(icu::UnicodeString src);
-
-                    /**
                      * \brief Free memory allocated by the scanner.
                      */
-                    virtual ~scanner();
+                    virtual ~scanner() {}
 
                     /**
                      * \brief Returns the next character in the source string.
@@ -49,19 +43,19 @@ namespace dhc {
                      *
                      * @return a match::character containing the next character.
                      */
-                    std::shared_ptr<match::match> next();
+                    virtual std::shared_ptr<match::match> next()=0;
 
                     /**
                      * \brief Check if the scanner is finished.
                      * @return Whether or not the scanner has reached the
                      *         end of the source.
                      */
-                    bool finished();
+                    virtual bool finished()=0;
 
                     /**
                      * \brief Increment the line number.
                      */
-                    void newline();
+                    virtual void newline()=0;
 
                     /**
                      * @return The line number.
@@ -83,11 +77,25 @@ namespace dhc {
                      */
                     scanstate state;
                 protected:
-                private:
-                    unsigned int length;
-                    UChar32 *source;
 
-                    void initialize(icu::UnicodeString);
+                    /**
+                     * Allow child classes to modify the line number
+                     * @return current line number
+                     */
+                    unsigned int &state_line_number();
+
+                    /**
+                     * Allow child classes to modify the column number
+                     * @return current column number
+                     */
+                    unsigned int &state_column();
+
+                    /**
+                     * Allow child classes to modify the index
+                     * @return current index
+                     */
+                    unsigned int &state_index();
+                private:
            };
         }
     }

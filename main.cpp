@@ -17,6 +17,9 @@ void print_indent(int indent)
 
 void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent, dhc::lexer::lexer &lex)
 {
+    if (root->type == static_cast<int>(dhc::lexer::type::WHITESPACE))
+        return;
+
     auto tree = root->children();
     print_indent(indent);
     std::string flat;
