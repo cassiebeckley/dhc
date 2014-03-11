@@ -36,9 +36,3 @@ bool dhc::graft::scanner::character::finished()
 {
     return state_index() >= length;
 }
-
-void dhc::graft::scanner::character::newline()
-{
-    state_line_number()++;
-    state_column() = 0;
-}

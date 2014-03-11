@@ -44,11 +44,6 @@ namespace dhc {
                      */
                     virtual bool finished();
 
-                    /**
-                     * \brief Increment the line number.
-                     */
-                    virtual void newline();
-
                 protected:
                 private:
                     unsigned int length;

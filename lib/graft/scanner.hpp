@@ -55,7 +55,7 @@ namespace dhc {
                     /**
                      * \brief Increment the line number.
                      */
-                    virtual void newline()=0;
+                    void newline();
 
                     /**
                      * @return The line number.

@@ -1,5 +1,11 @@
 #include "scanner.hpp"
 
+void dhc::graft::scanner::scanner::newline()
+{
+    state_line_number()++;
+    state_column() = 0;
+}
+
 unsigned int &dhc::graft::scanner::scanner::state_line_number()
 {
     return state.line_number;
