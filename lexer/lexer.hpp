@@ -14,12 +14,12 @@
 #include <graft/pattern/repetition.hpp>
 #include <graft/pattern/string.hpp>
 
-#include "digit.hpp"
-#include "qualified.hpp"
-#include "integer.hpp"
-#include "lit_float.hpp"
-#include "lit_char.hpp"
-#include "lit_string.hpp"
+#include "match/digit.hpp"
+#include "match/qualified.hpp"
+#include "match/integer.hpp"
+#include "match/lit_float.hpp"
+#include "match/lit_char.hpp"
+#include "match/lit_string.hpp"
 
 #include <memory>
 #include <sstream>

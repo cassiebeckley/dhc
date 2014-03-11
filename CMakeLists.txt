@@ -57,12 +57,12 @@ add_library (graft
 add_executable(dhc
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/digit.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/integer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/qualified.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lit_char.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lit_string.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lit_float.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/digit.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/integer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/qualified.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/lit_char.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/lit_string.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/lit_float.cpp
 )
 
 target_link_libraries(dhc
