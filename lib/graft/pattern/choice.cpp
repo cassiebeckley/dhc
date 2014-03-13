@@ -31,3 +31,8 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::choice::findmatch
 
     return longest;
 }
+
+void dhc::graft::pattern::choice::add_pattern(std::shared_ptr<pattern> patt)
+{
+    pat.push_back(patt);
+}

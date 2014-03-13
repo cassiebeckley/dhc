@@ -48,6 +48,7 @@ add_library (graft
     ${GRAFT_LIB_SRC}/pattern/exclude.cpp
     ${GRAFT_LIB_SRC}/pattern/repetition.cpp
     ${GRAFT_LIB_SRC}/pattern/string.cpp
+    ${GRAFT_LIB_SRC}/pattern/type.cpp
     ${GRAFT_LIB_SRC}/match/character.cpp
     ${GRAFT_LIB_SRC}/match/sequence.cpp
     ${GRAFT_LIB_SRC}/match/string.cpp
@@ -63,6 +64,7 @@ add_executable(dhc
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/lit_char.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/lit_string.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/lit_float.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
 )
 
 target_link_libraries(dhc

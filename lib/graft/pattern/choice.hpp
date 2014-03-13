@@ -30,6 +30,17 @@ namespace dhc {
                      */
                     choice(std::vector<std::shared_ptr<pattern>>&& p, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(p) {}
 
+                    /**
+                     * \brief Add a pattern to the list of patterns.
+                     *
+                     * This just adds the pattern to the end of pat.
+                     * It's needed because a compound pattern containing
+                     * a pointer to itself must first be created and
+                     * then added to itself.
+                     *
+                     * @param pat the pattern to add.
+                     */
+                    void add_pattern(std::shared_ptr<pattern> pat);
                 protected:
                     virtual std::shared_ptr<match::match> findmatch(scanner::scanner& s);
 

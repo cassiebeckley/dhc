@@ -5,7 +5,12 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
     if (s.finished())
         return nullptr;
 
-    return program->find(s);
+    auto m = program->find(s);
+
+    if (m->type == static_cast<int>(type::WHITESPACE))
+        return next();
+
+    return m;
 }
 
 bool dhc::lexer::lexer::finished()

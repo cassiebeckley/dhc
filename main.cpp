@@ -1,4 +1,4 @@
-#include "lexer/lexer.hpp"
+#include "parser/parser.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -15,7 +15,7 @@ void print_indent(int indent)
     std::cout << "* ";
 }
 
-void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent, dhc::lexer::lexer &lex)
+void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent)
 {
     if (root->type == static_cast<int>(dhc::lexer::type::WHITESPACE))
         return;
@@ -24,7 +24,7 @@ void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent, dhc
     print_indent(indent);
     std::string flat;
     root->flatten().toUTF8String(flat);
-    std::cout << '"' << flat << "\": " << lex.typenames[root->type] << std::endl;
+    std::cout << '"' << flat << '"' << std::endl;
     for (auto it = tree.begin(); it != tree.end(); ++it)
     {
         std::vector<std::shared_ptr<dhc::graft::match::match>> c = (*it)->children();
@@ -45,7 +45,7 @@ void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent, dhc
         }
         else
         {
-            print_tree((*it), indent + 4, lex);
+            print_tree((*it), indent + 4);
         }
     }
 }
@@ -71,16 +71,16 @@ int main(int argc, char** argv)
         icu::UnicodeString source(utf16);
         source.append("\n");
 
-        dhc::lexer::lexer lex(source);
+        dhc::parser::parser p(source);
 
-        while (!lex.finished()) {
-            dhc::lexer::match_ptr token (lex.next());
+        while (!p.finished()) {
+            dhc::lexer::match_ptr token (p.next());
 
             if (token) {
-                print_tree(token, 0, lex);
+                print_tree(token, 0);
             } else {
-                std::cerr << lex.error(filename) << std::endl;
-                return -1;
+                std::cerr << p.error(filename) << std::endl;
+                break;
             }
         }
     }
