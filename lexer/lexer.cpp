@@ -9,7 +9,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
 
     if (m->type == static_cast<int>(type::WHITESPACE))
     {
-        return nullptr;
+        return next();
     }
 
     return m;
