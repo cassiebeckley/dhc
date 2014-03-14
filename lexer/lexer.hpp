@@ -68,27 +68,16 @@ namespace dhc {
                     // TODO: get rid of this mebbe?
                     using namespace graft::pattern;
 
-                    typenames[static_cast<int>(type::NONE)] = "none";
-                    typenames[static_cast<int>(type::WHITESPACE)] = "whitespace";
-                    typenames[static_cast<int>(type::QVARID)] = "qvarid";
-                    typenames[static_cast<int>(type::QCONID)] = "qconid";
-                    typenames[static_cast<int>(type::QVARSYM)] = "qvarsym";
-                    typenames[static_cast<int>(type::QCONSYM)] = "qconsym";
-                    typenames[static_cast<int>(type::LITERAL)] = "literal";
-                    typenames[static_cast<int>(type::SPECIAL)] = "special";
-                    typenames[static_cast<int>(type::RESERVEDOP)] = "reservedop";
-                    typenames[static_cast<int>(type::RESERVEDID)] = "reservedid";
-
                     match_func digit_h = [](match_ptr m) {
                         UChar32 c = m->flatten()[0];
                         int32_t d = u_charDigitValue(c);
                         return std::make_shared<dhc::lexer::digit>(m->column, m->type, c, d);
                     };
 
-                    digit = std::make_shared<property>("[:Nd:]", -1, digit_h);
-                    octit = std::make_shared<property>("[0-7]", -1, digit_h);
+                    auto digit = std::make_shared<property>("[:Nd:]", -1, digit_h);
+                    auto octit = std::make_shared<property>("[0-7]", -1, digit_h);
 
-                    hexit = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto hexit = std::make_shared<choice>(std::vector<pattern_ptr> {
                         digit,
                         std::make_shared<property>("[A-F]", -1, [] (match_ptr m) {
                             char c = m->flatten()[0];
@@ -100,9 +89,9 @@ namespace dhc {
                         })
                     });
 
-                    special = std::make_shared<property>("[\\(\\),;\\[\\]`\\{\\}]", static_cast<int>(type::SPECIAL));
+                    auto special = std::make_shared<property>("[\\(\\),;\\[\\]`\\{\\}]", static_cast<int>(type::SPECIAL));
 
-                    symbol = std::make_shared<exclude>(
+                    auto symbol = std::make_shared<exclude>(
                         std::make_shared<property>("[[:Punctuation:][:Symbol:]]"),
                         std::make_shared<choice>(std::vector<pattern_ptr> {
                             special,
@@ -110,10 +99,10 @@ namespace dhc {
                         })
                     );
 
-                    large = std::make_shared<property>("[[:Lu:][:Lt:]]");
-                    small = std::make_shared<property>("[[:Ll:]_]");
+                    auto large = std::make_shared<property>("[[:Lu:][:Lt:]]");
+                    auto small = std::make_shared<property>("[[:Ll:]_]");
 
-                    graphic = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto graphic = std::make_shared<choice>(std::vector<pattern_ptr> {
                         small,
                         large,
                         symbol,
@@ -123,23 +112,23 @@ namespace dhc {
                         std::make_shared<character>('\'')
                     });
 
-                    carriage_return = std::make_shared<character>('\r');
-                    linefeed = std::make_shared<character>('\n');
-                    vertab = std::make_shared<character>('\v');
-                    formfeed = std::make_shared<character>('\f');
-                    space = std::make_shared<character>(' ');
-                    tab = std::make_shared<character>('\t', -1, [&] (match_ptr m) {
+                    auto carriage_return = std::make_shared<character>('\r');
+                    auto linefeed = std::make_shared<character>('\n');
+                    auto vertab = std::make_shared<character>('\v');
+                    auto formfeed = std::make_shared<character>('\f');
+                    auto space = std::make_shared<character>(' ');
+                    auto tab = std::make_shared<character>('\t', -1, [&] (match_ptr m) {
                         s.tab();
                         return m;
                     });
 
-                    any = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto any = std::make_shared<choice>(std::vector<pattern_ptr> {
                         graphic,
                         space,
                         tab
                     });
 
-                    newline = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto newline = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             carriage_return,
                             linefeed
@@ -152,33 +141,33 @@ namespace dhc {
                         return m;
                     });
 
-                    uniWhite = std::make_shared<property>("[:White_Space:]");
+                    auto uniWhite = std::make_shared<property>("[:White_Space:]");
 
-                    whitechar = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto whitechar = std::make_shared<choice>(std::vector<pattern_ptr> {
                         uniWhite
                     });
 
-                    opencom = std::make_shared<string>("{-");
-                    closecom = std::make_shared<string>("-}");
+                    auto opencom = std::make_shared<string>("{-");
+                    auto closecom = std::make_shared<string>("-}");
 
-                    dashes = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto dashes = std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<string>("--"),
                         std::make_shared<repetition>(std::make_shared<character>('-'))
                     });
 
-                    ANY = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto ANY = std::make_shared<choice>(std::vector<pattern_ptr> {
                         graphic,
                         whitechar
                     });
 
-                    ANY_seq = std::make_shared<repetition>(
+                    auto ANY_seq = std::make_shared<repetition>(
                         std::make_shared<exclude>(ANY, std::make_shared<choice>(std::vector<pattern_ptr> {
                             opencom,
                             closecom
                         }))
                     );
 
-                    comment = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto comment = std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<choice>(std::vector<pattern_ptr> {
                             std::make_shared<compound>(std::vector<pattern_ptr> {
                                 dashes,
@@ -195,28 +184,26 @@ namespace dhc {
                         }),
                     });
 
-                    std::shared_ptr<compound> ncm = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto ncomment = std::make_shared<compound>(std::vector<pattern_ptr> {
                         opencom,
                         ANY_seq
                     });
 
-                    ncm->add_pattern(std::make_shared<repetition>(
+                    ncomment->add_pattern(std::make_shared<repetition>(
                         std::make_shared<compound>(std::vector<pattern_ptr> {
-                            ncm,
+                            ncomment,
                             ANY_seq
                         })
                     ));
-                    ncm->add_pattern(closecom);
+                    ncomment->add_pattern(closecom);
 
-                    ncomment = ncm;
-
-                    whitestuff = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto whitestuff = std::make_shared<choice>(std::vector<pattern_ptr> {
                         whitechar,
                         comment,
                         ncomment
                     });
 
-                    whitespace = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto whitespace = std::make_shared<compound>(std::vector<pattern_ptr> {
                         whitestuff,
                         std::make_shared<repetition>(whitestuff)
                     }, static_cast<int>(type::WHITESPACE));
@@ -242,22 +229,22 @@ namespace dhc {
                         };
                     };
 
-                    decimal = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto decimal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         digit,
                         std::make_shared<repetition>(digit)
                     }, -1, from_base(10));
 
-                    octal = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto octal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         octit,
                         std::make_shared<repetition>(octit)
                     }, -1, from_base(8));
 
-                    hexadecimal = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto hexadecimal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         hexit,
                         std::make_shared<repetition>(hexit)
                     }, -1, from_base(16));
 
-                    integer = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto integer = std::make_shared<choice>(std::vector<pattern_ptr> {
                         decimal,
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<compound>(std::vector<pattern_ptr> {
@@ -293,7 +280,7 @@ namespace dhc {
                         })
                     });
 
-                    exponent = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto exponent = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<choice>(std::vector<pattern_ptr> {
                                 std::make_shared<character>('e'),
@@ -328,7 +315,7 @@ namespace dhc {
                         }),
                     });
 
-                    floating = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto floating = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             decimal,
                             std::make_shared<character>('.'),
@@ -364,7 +351,7 @@ namespace dhc {
                         })
                     });
 
-                    charesc = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto charesc = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<character>('a'),
                         std::make_shared<character>('b'),
                         std::make_shared<character>('f'),
@@ -378,7 +365,7 @@ namespace dhc {
                         std::make_shared<character>('&')
                     });
 
-                    cntrl = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto cntrl = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<property>("[A-Z]"),
                         std::make_shared<character>('@'),
                         std::make_shared<character>('['),
@@ -388,7 +375,7 @@ namespace dhc {
                         std::make_shared<character>('_')
                     });
 
-                    ascii = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto ascii = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<character>('^'),
                             cntrl
@@ -429,7 +416,7 @@ namespace dhc {
                         std::make_shared<string>("DEL")
                     });
 
-                    escape = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto escape = std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<character>('\\'),
                         std::make_shared<choice>(std::vector<pattern_ptr> {
                             charesc,
@@ -446,7 +433,7 @@ namespace dhc {
                         })
                     });
 
-                    character_literal = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto character_literal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<character>('\''),
                         std::make_shared<choice>(std::vector<pattern_ptr> {
                             std::make_shared<exclude>(graphic, std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -463,14 +450,14 @@ namespace dhc {
                         return std::make_shared<lit_char>(m->column, m->type, middle);
                     });
 
-                    gap = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto gap = std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<character>('\\'),
                         whitechar,
                         std::make_shared<repetition>(whitechar),
                         std::make_shared<character>('\\')
                     });
 
-                    string_literal = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto string_literal = std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<character>('"'),
                         std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
                             std::make_shared<exclude>(graphic, std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -494,14 +481,14 @@ namespace dhc {
                         return m->children()[1];
                     });
 
-                    literal = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto literal = std::make_shared<choice>(std::vector<pattern_ptr> {
                         integer,
                         floating,
                         character_literal,
                         string_literal
                     }, static_cast<int>(type::LITERAL));
 
-                    reservedid = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto reservedid = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<string>("case"),
                         std::make_shared<string>("class"),
                         std::make_shared<string>("data"),
@@ -531,7 +518,7 @@ namespace dhc {
                         return std::make_shared<graft::match::string>(m->column, m->type, m->flatten());
                     };
 
-                    varid = std::make_shared<exclude>(
+                    auto varid = std::make_shared<exclude>(
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             small,
                             std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -544,7 +531,7 @@ namespace dhc {
                         ), reservedid
                     );
 
-                    conid = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto conid = std::make_shared<compound>(std::vector<pattern_ptr> {
                         large,
                         std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
                             small,
@@ -554,7 +541,7 @@ namespace dhc {
                         }))
                     }, -1, flatten);
 
-                    reservedop = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto reservedop = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<string>(".."),
                         std::make_shared<character>(':'),
                         std::make_shared<string>("::"),
@@ -568,7 +555,7 @@ namespace dhc {
                         std::make_shared<string>("=>")
                     }, static_cast<int>(type::RESERVEDOP));
 
-                    varsym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto varsym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<exclude>(symbol, std::make_shared<character>(':')),
                         std::make_shared<repetition>(symbol)
                     }, -1, flatten 
@@ -577,12 +564,12 @@ namespace dhc {
                         dashes
                     }));
 
-                    consym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto consym = std::make_shared<exclude>(std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<character>(':'),
                         std::make_shared<repetition>(symbol)
                     }, -1, flatten), reservedop);
 
-                    modid = std::make_shared<compound>(std::vector<pattern_ptr> {
+                    auto modid = std::make_shared<compound>(std::vector<pattern_ptr> {
                         conid,
                         std::make_shared<repetition>(
                             std::make_shared<compound>(
@@ -618,7 +605,7 @@ namespace dhc {
                         return std::make_shared<qualified>(m->column, m->type, mods);
                     };
 
-                    qvarid = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto qvarid = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             modid,
                             std::make_shared<character>('.'),
@@ -627,11 +614,11 @@ namespace dhc {
                         varid
                     }, static_cast<int>(type::QVARID));
 
-                    qconid = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto qconid = std::make_shared<choice>(std::vector<pattern_ptr> {
                         modid
                     }, static_cast<int>(type::QCONID));
 
-                    qvarsym = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto qvarsym = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             modid,
                             std::make_shared<character>('.'),
@@ -640,7 +627,7 @@ namespace dhc {
                         varsym
                     }, static_cast<int>(type::QVARSYM));
 
-                    qconsym = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto qconsym = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             modid,
                             std::make_shared<character>('.'),
@@ -649,7 +636,7 @@ namespace dhc {
                         consym
                     }, static_cast<int>(type::QCONSYM));
 
-                    lexeme = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto lexeme = std::make_shared<choice>(std::vector<pattern_ptr> {
                         qvarid,
                         qconid,
                         qvarsym,
@@ -688,64 +675,7 @@ namespace dhc {
                  */
                 std::string error(std::string filename);
 
-                /**
-                 * \brief Maps each token type to a string representing it.
-                 */
-                std::unordered_map<int, std::string> typenames;
             private:
-                pattern_ptr digit;
-                pattern_ptr octit;
-                pattern_ptr hexit;
-                pattern_ptr symbol;
-                pattern_ptr large;
-                pattern_ptr small;
-                pattern_ptr special;
-                pattern_ptr graphic;
-                pattern_ptr carriage_return;
-                pattern_ptr linefeed;
-                pattern_ptr vertab;
-                pattern_ptr formfeed;
-                pattern_ptr space;
-                pattern_ptr tab;
-                pattern_ptr any;
-                pattern_ptr newline;
-                pattern_ptr uniWhite;
-                pattern_ptr whitechar;
-                pattern_ptr opencom;
-                pattern_ptr closecom;
-                pattern_ptr dashes;
-                pattern_ptr ANY;
-                pattern_ptr ANY_seq;
-                pattern_ptr comment;
-                pattern_ptr ncomment;
-                pattern_ptr whitestuff;
-                pattern_ptr whitespace;
-                pattern_ptr decimal;
-                pattern_ptr octal;
-                pattern_ptr hexadecimal;
-                pattern_ptr integer;
-                pattern_ptr exponent;
-                pattern_ptr floating;
-                pattern_ptr charesc;
-                pattern_ptr cntrl;
-                pattern_ptr ascii;
-                pattern_ptr escape;
-                pattern_ptr character_literal;
-                pattern_ptr gap;
-                pattern_ptr string_literal;
-                pattern_ptr literal;
-                pattern_ptr reservedid;
-                pattern_ptr varid;
-                pattern_ptr conid;
-                pattern_ptr reservedop;
-                pattern_ptr varsym;
-                pattern_ptr consym;
-                pattern_ptr modid;
-                pattern_ptr qvarid;
-                pattern_ptr qconid;
-                pattern_ptr qvarsym;
-                pattern_ptr qconsym;
-                pattern_ptr lexeme;
                 pattern_ptr program;
 
                 graft::scanner::character s;
