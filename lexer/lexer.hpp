@@ -25,6 +25,8 @@
 #include <memory>
 #include <sstream>
 #include <unordered_map>
+#include <stack>
+#include <queue>
 
 #include <unicode/unistr.h>
 
@@ -46,7 +48,10 @@ namespace dhc {
             LITERAL,
             SPECIAL,
             RESERVEDOP,
-            RESERVEDID
+            RESERVEDID,
+
+            CURLY,
+            ANGLE
         };
 
         /**
@@ -63,7 +68,7 @@ namespace dhc {
                  * 2010 specification.
                  * @param source the source code to analyze
                  */
-                lexer(icu::UnicodeString source) : s(source)
+                lexer(icu::UnicodeString source) : s(source), beginning(true), expecting(false), current_line(0)
                 {
                     // TODO: get rid of this mebbe?
                     using namespace graft::pattern;
@@ -144,6 +149,8 @@ namespace dhc {
                     auto uniWhite = std::make_shared<property>("[:White_Space:]");
 
                     auto whitechar = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        newline,
+                        tab,
                         uniWhite
                     });
 
@@ -679,6 +686,10 @@ namespace dhc {
                 pattern_ptr program;
 
                 graft::scanner::character s;
+                bool beginning;
+                bool expecting;
+                unsigned int current_line;
+                std::queue<match_ptr> tokens;
         };
 
     }
