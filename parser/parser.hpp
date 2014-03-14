@@ -361,13 +361,16 @@ namespace dhc {
                     }));
 
                     auto rhs = std::make_shared<choice>(std::vector<pattern_ptr> {
-                        std::make_shared<choice>(std::vector<pattern_ptr> {
-                            std::make_shared<compound>(std::vector<pattern_ptr> {
-                                exp,
-                                std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "where"),
-                                decls
-                            }),
-                            exp
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "="),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    exp,
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "where"),
+                                    decls
+                                }),
+                                exp
+                            })
                         }),
                         std::make_shared<choice>(std::vector<pattern_ptr> {
                             std::make_shared<compound>(std::vector<pattern_ptr> {
@@ -550,7 +553,7 @@ namespace dhc {
                         std::make_shared<compound>(std::vector<pattern_ptr>{
                             decl,
                             std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
-                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
                                 decl
                             })),
                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
@@ -690,7 +693,542 @@ namespace dhc {
 
                     exp->add_pattern(infixexp);
 
-                    final = decl;
+                    auto simpletype = std::make_shared<compound> (std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::QCONID)),
+                        std::make_shared<repetition>(std::make_shared<type>(static_cast<int>(lexer::type::QVARID)))
+                    });
+
+                    auto fielddecl = std::make_shared<compound> (std::vector<pattern_ptr> {
+                        vars,
+                        std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "::"),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            h_type,
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<type>(static_cast<int>(lexer::type::QVARSYM), "!"),
+                                // should just be varsym
+                                // might not matter in this case
+                                // since flatten must == "!"
+                                atype
+                            })
+                        })
+                    });
+
+                    auto constr_inner = std::make_shared<choice> (std::vector<pattern_ptr> {
+                        btype,
+                        std::make_shared<compound> (std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARSYM), "!"),
+                            atype
+                        })
+                    });
+
+                    auto constr = std::make_shared<choice> (std::vector<pattern_ptr> {
+                        std::make_shared<compound> (std::vector<pattern_ptr> {
+                            qcon, // TODO: should be con
+                            std::make_shared<repetition> (std::make_shared<choice> (std::vector<pattern_ptr> {
+                                std::make_shared<compound> (std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::QVARSYM), "!"),
+                                    atype
+                                }),
+                                atype
+                            })),
+                        }),
+                        std::make_shared<compound> (std::vector<pattern_ptr> {
+                            constr_inner,
+                            qconop, // TODO: should just be conop
+                            constr_inner
+                        }),
+                        std::make_shared<compound> (std::vector<pattern_ptr> {
+                            qcon, // TODO: should be con
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "{"),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound> (std::vector<pattern_ptr> {
+                                    fielddecl,
+                                    std::make_shared<repetition>(std::make_shared<compound> (std::vector<pattern_ptr> {
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                        fielddecl
+                                    })),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                            })
+                        })
+                    });
+
+                    auto constrs = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        constr,
+                        std::make_shared<repetition>(std::make_shared<compound> (std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "|"),
+                            constr
+                        }))
+                    });
+
+                    auto dclass = std::make_shared<type>(static_cast<int>(lexer::type::QCONID));
+
+                    auto deriving = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "deriving"),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            dclass,
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<compound>(std::vector<pattern_ptr> {
+                                        dclass,
+                                        std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                            dclass
+                                        }))
+                                    }),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                })
+                            })
+                        })
+                    });
+
+                    auto cdecl = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        gendecl,
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                funlhs,
+                                qvar // TODO: should just be var
+                            }),
+                            rhs
+                        })
+                    });
+
+                    auto cdecls = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "{"),
+                        std::make_shared<choice>(std::vector<pattern_ptr>{
+                            std::make_shared<compound>(std::vector<pattern_ptr>{
+                                cdecl,
+                                std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
+                                    cdecl
+                                })),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                            }),
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                        })
+                    });
+
+                    auto newconstr = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            qcon, // TODO: should be con
+                            atype
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            qcon, // TODO: should be con
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "{"),
+                            qvar, // TODO: should be var
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "::"),
+                            h_type,
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                        })
+                    });
+
+                    auto simpleclass = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::QCONID)),
+                        std::make_shared<type>(static_cast<int>(lexer::type::QVARID)) // TODO: should just be varid
+                    });
+
+                    auto scontext = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        simpleclass,
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    simpleclass,
+                                    std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                        simpleclass
+                                    }))
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                            })
+                        })
+                    });
+
+                    auto inst = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        gtycon,
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                            gtycon,
+                            std::make_shared<repetition>(std::make_shared<type>(static_cast<int>(lexer::type::QVARID))), // TODO: should be varid
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARID)), // TODO: should be varid
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARID)), // TODO: should be varid
+                            std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                std::make_shared<type>(static_cast<int>(lexer::type::QVARID)), // TODO: should be varid
+                            })),
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "["),
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARID)), // TODO: should be varid
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "]")
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARID)), // TODO: should be varid
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "->"),
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARID)), // TODO: should be varid
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                        }),
+
+                    });
+
+                    auto idecl = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            funlhs,
+                            qvar // TODO: should just be var
+                        }),
+                        rhs
+                    });
+
+                    auto idecls = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "{"),
+                        std::make_shared<choice>(std::vector<pattern_ptr>{
+                            std::make_shared<compound>(std::vector<pattern_ptr>{
+                                idecl,
+                                std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<compound>(std::vector<pattern_ptr> {
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
+                                        idecl
+                                    }),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
+                                })),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                            }),
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                        })
+                    });
+
+                    // TODO: fdecl here
+
+                    auto simpletype_plus_constrs = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            simpletype,
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "="),
+                            constrs,
+                            deriving
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            simpletype,
+                            deriving
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            simpletype,
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "="),
+                            constrs,
+                        }),
+                        simpletype
+                    });
+
+                    auto topdecl = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "type"),
+                            simpletype,
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "="),
+                            h_type
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "data"),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    context,
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "=>"),
+                                    simpletype_plus_constrs
+                                }),
+                                simpletype_plus_constrs
+                            })
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "newtype"),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    context,
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "=>"),
+                                    simpletype
+                                }),
+                                simpletype
+                            }),
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "="),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    newconstr,
+                                    deriving
+                                }),
+                                newconstr
+                            })
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "class"),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    scontext,
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "=>"),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::QCONID)), // TODO: should be conid
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::QCONID)), // TODO: should be conid
+                            }),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::QVARID)), // TODO: should be varid
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "where"),
+                                    cdecls
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::QVARID)) // TODO: should be varid
+                            })
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "instance"),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    scontext,
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "=>"),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::QCONID)),
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::QCONID)),
+                            }),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    inst,
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "where"),
+                                    idecls
+                                }),
+                                inst
+                            })
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "default"),
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    h_type,
+                                    std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                        h_type
+                                    })),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")"),
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                            }),
+                        }),
+                        /* TODO: implement FFI, fdecl */
+                        decl
+                    });
+
+                    auto topdecls = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        topdecl,
+                        std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                            topdecl
+                        }))
+                    });
+
+                    auto cname = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        qvar, // TODO: should be var
+                        qcon // TODO: should be con
+                    });
+
+                    auto import = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        qvar, // TODO: should be var
+                        std::make_shared<type>(static_cast<int>(lexer::type::QCONID)), // TODO: should be conid
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::QCONID)), // TODO: should be conid
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), ".."),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                }),
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                                    std::make_shared<choice>(std::vector<pattern_ptr> {
+                                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                                            cname,
+                                            std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                                cname
+                                            })),
+                                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                        }),
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                    }),
+                                })
+                            })
+                        }),
+                    });
+
+                    auto impspec_inner = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                import,
+                                std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                    import
+                                })),
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<compound>(std::vector<pattern_ptr> {
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                    }),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                })
+                            }),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                            })
+                        })
+                    });
+
+                    auto impspec = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        impspec_inner,
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARID), "hiding"),
+                            impspec_inner
+                        })
+                    });
+
+                    auto impdecl_inner = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::QVARID), "qualified"),
+                            std::make_shared<type>(static_cast<int>(lexer::type::QCONID))
+                        }),
+                        std::make_shared<type>(static_cast<int>(lexer::type::QCONID))
+                    });
+
+                    auto impdecl = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "import"),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                impdecl_inner,
+                                std::make_shared<type>(static_cast<int>(lexer::type::QVARID), "as"),
+                                std::make_shared<type>(static_cast<int>(lexer::type::QCONID))
+                            }),
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                impdecl_inner,
+                                impspec
+                            }),
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                impdecl_inner,
+                                std::make_shared<type>(static_cast<int>(lexer::type::QVARID), "as"),
+                                std::make_shared<type>(static_cast<int>(lexer::type::QCONID)),
+                                impspec
+                            }),
+
+                            impdecl_inner
+                        })
+                    });
+
+                    auto impdecls = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        impdecl,
+                        std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
+                                impdecl
+                            }),
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";")
+                        }))
+                    });
+
+                    auto body = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "{"),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                impdecls,
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
+                                topdecls
+                            }),
+                            impdecls,
+                            topdecls
+                        }),
+                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}"),
+                    });
+
+                    auto h_export = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        qvar,
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::QCONID)), // TODO: should be conid
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), ".."),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                }),
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                                    std::make_shared<choice>(std::vector<pattern_ptr> {
+                                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                                            cname,
+                                            std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                                cname
+                                            })),
+                                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                        }),
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                                    }),
+                                })
+                            })
+                        }),
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "module"),
+                            std::make_shared<type>(static_cast<int>(lexer::type::QCONID))
+                        })
+                    });
+
+                    auto exports = std::make_shared<compound>(std::vector<pattern_ptr> {
+                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
+                        std::make_shared<choice>(std::vector<pattern_ptr> {
+                            std::make_shared<compound>(std::vector<pattern_ptr> {
+                                h_export,
+                                std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                    h_export
+                                })),
+                                std::make_shared<choice>(std::vector<pattern_ptr> {
+                                    std::make_shared<compound>(std::vector<pattern_ptr> {
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")"),
+                                    }),
+                                    std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")"),
+                                })
+                            }),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                            })
+                        })
+                    });
+
+                    auto module = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "module"),
+                            std::make_shared<choice>(std::vector<pattern_ptr> {
+                                std::make_shared<compound>(std::vector<pattern_ptr> {
+                                    std::make_shared<type>(static_cast<int>(lexer::type::QCONID)),
+                                    exports
+                                }),
+                                std::make_shared<type>(static_cast<int>(lexer::type::QCONID))
+                            }),
+                            std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDID), "where"),
+                            body
+                        }),
+                        body
+                    });
+
+
+                    final = body;
                 }
 
                 /**

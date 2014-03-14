@@ -73,14 +73,13 @@ int main(int argc, char** argv)
 
         dhc::parser::parser p(source);
 
-        while (!p.finished()) {
+        if (!p.finished()) {
             dhc::lexer::match_ptr token (p.next());
 
             if (token) {
                 print_tree(token, 0);
             } else {
                 std::cerr << p.error(filename) << std::endl;
-                break;
             }
         }
     }
