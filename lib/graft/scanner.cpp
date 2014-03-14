@@ -6,6 +6,11 @@ void dhc::graft::scanner::scanner::newline()
     state_column() = 0;
 }
 
+void dhc::graft::scanner::scanner::tab()
+{
+    state().column = ((state().column == 0 ? 1 : state().column / 8) + 1) * 8;
+}
+
 unsigned int &dhc::graft::scanner::scanner::state_line_number()
 {
     return state().line_number;

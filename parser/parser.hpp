@@ -11,6 +11,7 @@
 #include <graft/pattern/repetition.hpp>
 
 #include <memory>
+#include <stack>
 
 #include "../lexer/lexer.hpp"
 
@@ -1256,6 +1257,7 @@ namespace dhc {
                 pattern_ptr final;
 
                 lexer::lexer lex;
+                std::stack<int> context;
         };
 
     }

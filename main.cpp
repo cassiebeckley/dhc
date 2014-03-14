@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include <unicode/unistr.h>
+#include <unicode/ucsdet.h>
 
 void print_indent(int indent)
 {
@@ -52,35 +53,71 @@ void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent)
 
 int main(int argc, char** argv)
 {
-    while (true)
+    UErrorCode e = U_ZERO_ERROR;
+    std::string filename = argc > 1 ? argv[1] : "main.hs";
+
+    std::ifstream file (filename, std::ios::in | std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        std::cerr << "I can't open that file. I hate you too." << std::endl;
+        return 1;
+    }
+
+    std::string utf8;
+    utf8.reserve(file.tellg());
+
+    file.seekg(0, std::ios::beg);
+    utf8.assign((std::istreambuf_iterator<char>(file)),
+                 std::istreambuf_iterator<char>());
+
+    file.close();
+
+    UCharsetDetector *ucd = ucsdet_open(&e);
+    ucsdet_setText(ucd, utf8.c_str(), utf8.size(), &e);
+    const UCharsetMatch *ucm = ucsdet_detect(ucd, &e);
+    if (U_FAILURE(e))
     {
-        UErrorCode e = U_ZERO_ERROR;
-        std::string filename = argc > 1 ? argv[1] : "main";
+        std::cerr << "Charset detection error: " << u_errorName(e) << std::endl;
+        return e;
+    }
 
-        std::cout << "> ";
-        char utf8[512];
-        std::cin.getline(utf8, 512);
+    std::cout << "Charset detected: " << ucsdet_getName(ucm, &e) << " confidence: " << ucsdet_getConfidence(ucm, &e) << std::endl;
+    if (U_FAILURE(e))
+    {
+        std::cerr << "Charset detection error: " << u_errorName(e) << std::endl;
+        return e;
+    }
 
-        UChar utf16[512];
-        u_strFromUTF8(utf16, sizeof(utf16), NULL, utf8, -1, &e);
-        if (U_FAILURE(e))
-        {
-            std::cerr << "error converting to UTF16: " << u_errorName(e) << std::endl;
-        }
+    UChar *buf = new UChar[utf8.size()];
 
-        icu::UnicodeString source(utf16);
-        source.append("\n");
+    int32_t out = ucsdet_getUChars(ucm, buf, utf8.size(), &e);
+    if (U_FAILURE(e))
+    {
+        std::cerr << "Charset conversion error: " << u_errorName(e) << std::endl;
+        return e;
+    }
 
-        dhc::parser::parser p(source);
+    buf[out] = 0;
 
-        if (!p.finished()) {
-            dhc::lexer::match_ptr token (p.next());
+    ucsdet_close(ucd);
 
-            if (token) {
-                print_tree(token, 0);
-            } else {
-                std::cerr << p.error(filename) << std::endl;
-            }
+    icu::UnicodeString source(buf);
+    delete [] buf;
+
+    source.append("\n");
+
+    std::string heh;
+    source.toUTF8String(heh);
+    std::cout << "Read:" << std::endl << heh << std::endl;
+
+    dhc::parser::parser p(source);
+
+    if (!p.finished()) {
+        dhc::lexer::match_ptr token (p.next());
+
+        if (token) {
+            print_tree(token, 0);
+        } else {
+            std::cerr << p.error(filename) << std::endl;
         }
     }
 

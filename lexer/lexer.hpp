@@ -128,7 +128,10 @@ namespace dhc {
                     vertab = std::make_shared<character>('\v');
                     formfeed = std::make_shared<character>('\f');
                     space = std::make_shared<character>(' ');
-                    tab = std::make_shared<character>('\t');
+                    tab = std::make_shared<character>('\t', -1, [&] (match_ptr m) {
+                        s.tab();
+                        return m;
+                    });
 
                     any = std::make_shared<choice>(std::vector<pattern_ptr> {
                         graphic,

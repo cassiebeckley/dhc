@@ -26,7 +26,9 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::character::next()
 {
     if (!finished())
     {
-        return std::make_shared<match::character>(state_column()++, -1, source[state_index()++]);
+        UChar32 c = source[state_index()++];
+        if (c != 0xfeff)
+            return std::make_shared<match::character>(state_column()++, -1, c);
     }
 
     return nullptr;

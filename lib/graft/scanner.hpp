@@ -59,6 +59,11 @@ namespace dhc {
                     void newline();
 
                     /**
+                     * \brief Increment the column to the next tab stop.
+                     */
+                    void tab();
+
+                    /**
                      * @return The line number.
                      */
                     unsigned int lineno();

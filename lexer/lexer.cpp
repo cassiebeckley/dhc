@@ -8,7 +8,9 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
     auto m = program->find(s);
 
     if (m->type == static_cast<int>(type::WHITESPACE))
-        return next();
+    {
+        return nullptr;
+    }
 
     return m;
 }

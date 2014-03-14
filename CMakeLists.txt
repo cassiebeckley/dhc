@@ -67,7 +67,11 @@ add_executable(dhc
     ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
 )
 
+message("ICU: " ${ICU_LIBRARIES})
+
 target_link_libraries(dhc
     graft
     ${ICU_LIBRARIES}
+    # TODO: remove, not cross-platform
+    ${ICU_ROOT}/lib/icuin.dll.a
 )
