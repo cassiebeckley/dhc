@@ -58,6 +58,7 @@ add_library (graft
 add_executable(dhc
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/lexer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lexer/layout.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/digit.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/integer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/qualified.cpp

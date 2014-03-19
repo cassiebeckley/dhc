@@ -61,7 +61,13 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
 
 bool dhc::lexer::lexer::finished()
 {
-    return s.finished();
+    auto m = next();
+    if (m != nullptr)
+    {
+        tokens.push(m);
+    }
+
+    return s.finished() || tokens.empty();
 }
 
 dhc::graft::scanner::scanstate &dhc::lexer::lexer::state()
