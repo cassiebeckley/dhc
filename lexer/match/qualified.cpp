@@ -39,7 +39,7 @@ std::vector<std::shared_ptr<dhc::graft::match::match>> dhc::lexer::qualified::ch
 
     for (auto it = modules.begin(); it != modules.end(); ++it)
     {
-        children.push_back(std::make_shared<graft::match::string>(column, type, *it));
+        children.push_back(std::make_shared<graft::match::string>(type, *it));
     }
 
     return children;

@@ -17,11 +17,9 @@ namespace dhc {
                 public:
                     /**
                      * \brief Creates a match.
-                     * @param column The column of the source the match
-                     *               begins on.
                      * @param type An integer representing the token type.
                      */
-                    match(unsigned int column, int type) : column(column), type(type) {}
+                    match(int type) : type(type) {}
                     /**
                      * \brief Returns the length of the match.
                      * @return The number of characters matched.
@@ -42,11 +40,6 @@ namespace dhc {
                      * @return A vector containing this node's children.
                      */
                     virtual std::vector<std::shared_ptr<match>> children() = 0;
-
-                    /**
-                     * \brief The column in the source where the match begins
-                     */
-                    const unsigned int column;
 
                     /**
                      * \brief The token type of the match.

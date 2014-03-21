@@ -4,7 +4,7 @@
 
 unsigned int dhc::lexer::lit_string::length()
 {
-    return data.size();
+    return data.size() + 2; // + 2 because of the two quotes
 }
 
 icu::UnicodeString dhc::lexer::lit_string::flatten()

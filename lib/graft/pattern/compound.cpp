@@ -3,8 +3,7 @@
 
 std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::findmatch(scanner::scanner& s)
 {
-    scanner::scanstate old_state = s.state();
-    int column = s.charno();
+    int old_state = s.index;
 
     std::vector<std::shared_ptr<match::match>> matches;
 
@@ -12,14 +11,14 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::compound::findmat
         std::shared_ptr<match::match> current = (*it)->find(s);
 
         if (!current) {
-            s.state() = old_state;
+            s.index = old_state;
             return nullptr;
         } else {
             matches.push_back(current);
         }
     }
 
-    return std::shared_ptr<match::match>(new match::sequence(column, type, matches));
+    return std::shared_ptr<match::match>(new match::sequence(type, matches));
 }
 
 void dhc::graft::pattern::compound::add_pattern(std::shared_ptr<pattern> patt)

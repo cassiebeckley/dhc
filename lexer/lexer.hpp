@@ -68,7 +68,7 @@ namespace dhc {
                  * 2010 specification.
                  * @param source the source code to analyze
                  */
-                lexer(icu::UnicodeString source) : s(source), beginning(true), expecting(false), current_line(0)
+                lexer(icu::UnicodeString source) : s(source), column(0), line_number(0), beginning(true), expecting(false), current_line(0), previous_index(0)
                 {
                     // TODO: get rid of this mebbe?
                     using namespace graft::pattern;
@@ -76,7 +76,7 @@ namespace dhc {
                     match_func digit_h = [](match_ptr m) {
                         UChar32 c = m->flatten()[0];
                         int32_t d = u_charDigitValue(c);
-                        return std::make_shared<dhc::lexer::digit>(m->column, m->type, c, d);
+                        return std::make_shared<dhc::lexer::digit>(m->type, c, d);
                     };
 
                     auto digit = std::make_shared<property>("[:Nd:]", -1, digit_h);
@@ -86,11 +86,11 @@ namespace dhc {
                         digit,
                         std::make_shared<property>("[A-F]", -1, [] (match_ptr m) {
                             char c = m->flatten()[0];
-                            return std::make_shared<dhc::lexer::digit>(m->column, m->type, c, c - 'A');
+                            return std::make_shared<dhc::lexer::digit>(m->type, c, c - 'A');
                         }),
                         std::make_shared<property>("[a-f]", -1, [] (match_ptr m) {
                             char c = m->flatten()[0];
-                            return std::make_shared<dhc::lexer::digit>(m->column, m->type, c, c - 'a');
+                            return std::make_shared<dhc::lexer::digit>(m->type, c, c - 'a');
                         })
                     });
 
@@ -123,7 +123,9 @@ namespace dhc {
                     auto formfeed = std::make_shared<character>('\f');
                     auto space = std::make_shared<character>(' ');
                     auto tab = std::make_shared<character>('\t', -1, [&] (match_ptr m) {
-                        s.tab();
+                        column += s.index - previous_index;
+                        previous_index = s.index;
+                        column = ((column == 0 ? 0 : column / 8) + 1) * 8;
                         return m;
                     });
 
@@ -142,7 +144,9 @@ namespace dhc {
                         linefeed,
                         formfeed
                     }, -1, [&] (match_ptr m) {
-                        s.newline();
+                        column = 0;
+                        previous_index = s.index;
+                        line_number++;
                         return m;
                     });
 
@@ -232,7 +236,7 @@ namespace dhc {
                                 dec += c->d;
                             }
 
-                            return std::make_shared<dhc::lexer::integer>(m->column, m->type, m->length(), dec);
+                            return std::make_shared<dhc::lexer::integer>(m->type, m->length(), dec);
                         };
                     };
 
@@ -305,7 +309,7 @@ namespace dhc {
                             auto value = d->data;
                             if (sign->data == '-')
                                 value = -value;
-                            return std::make_shared<dhc::lexer::integer>(m->column, m->type, m->length(), value);
+                            return std::make_shared<dhc::lexer::integer>(m->type, m->length(), value);
                         }),
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -317,7 +321,7 @@ namespace dhc {
                             auto children = m->children();
                             std::shared_ptr<dhc::lexer::integer> d = std::dynamic_pointer_cast<dhc::lexer::integer>(children[1]);
                             auto value = d->data;
-                            auto a = std::make_shared<dhc::lexer::integer>(m->column, m->type, m->length(), value);
+                            auto a = std::make_shared<dhc::lexer::integer>(m->type, m->length(), value);
                             return a;
                         }),
                     });
@@ -331,7 +335,7 @@ namespace dhc {
                             auto children = m->children();
                             std::shared_ptr<dhc::lexer::integer> in = std::dynamic_pointer_cast<dhc::lexer::integer>(children[0]);
                             std::shared_ptr<dhc::lexer::integer> fr = std::dynamic_pointer_cast<dhc::lexer::integer>(children[2]);
-                            return std::make_shared<dhc::lexer::lit_float>(m->column, m->type, m->length(), in->data, fr->data, 1);
+                            return std::make_shared<dhc::lexer::lit_float>(m->type, m->length(), in->data, fr->data, 1);
                         }),
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             decimal,
@@ -343,7 +347,7 @@ namespace dhc {
                             std::shared_ptr<dhc::lexer::integer> in = std::dynamic_pointer_cast<dhc::lexer::integer>(children[0]);
                             std::shared_ptr<dhc::lexer::integer> fr = std::dynamic_pointer_cast<dhc::lexer::integer>(children[2]);
                             std::shared_ptr<dhc::lexer::integer> ex = std::dynamic_pointer_cast<dhc::lexer::integer>(children[3]);
-                            return std::make_shared<dhc::lexer::lit_float>(m->column, m->type, m->length(), in->data, fr->data, ex->data);
+                            return std::make_shared<dhc::lexer::lit_float>(m->type, m->length(), in->data, fr->data, ex->data);
 
                         }),
                         std::make_shared<compound>(std::vector<pattern_ptr> {
@@ -353,7 +357,7 @@ namespace dhc {
                             auto children = m->children();
                             auto in = std::dynamic_pointer_cast<dhc::lexer::integer>(children[0]);
                             auto ex = std::dynamic_pointer_cast<dhc::lexer::integer>(children[1]);
-                            return std::make_shared<dhc::lexer::lit_float>(m->column, m->type, m->length(), in->data, 0, ex->data);
+                            return std::make_shared<dhc::lexer::lit_float>(m->type, m->length(), in->data, 0, ex->data);
 
                         })
                     });
@@ -454,7 +458,7 @@ namespace dhc {
                     }, -1, [] (match_ptr m) {
                         auto children = m->children();
                         auto middle = children[1]->flatten();
-                        return std::make_shared<lit_char>(m->column, m->type, middle);
+                        return std::make_shared<lit_char>(m->type, middle);
                     });
 
                     auto gap = std::make_shared<compound>(std::vector<pattern_ptr> {
@@ -479,9 +483,9 @@ namespace dhc {
                             std::vector<std::shared_ptr<lit_char>> chars;
                             for (auto it = children.begin(); it != children.end(); ++it)
                             {
-                                chars.push_back(std::make_shared<lit_char>((*it)->column, (*it)->type, (*it)->flatten()));
+                                chars.push_back(std::make_shared<lit_char>((*it)->type, (*it)->flatten()));
                             }
-                            return std::make_shared<lit_string>(m->column, m->type, chars);
+                            return std::make_shared<lit_string>(m->type, chars);
                         }),
                         std::make_shared<character>('"')
                     }, -1, [] (match_ptr m) {
@@ -522,7 +526,7 @@ namespace dhc {
                     }, static_cast<int>(type::RESERVEDID)); 
 
                     match_func flatten = [] (match_ptr m) {
-                        return std::make_shared<graft::match::string>(m->column, m->type, m->flatten());
+                        return std::make_shared<graft::match::string>(m->type, m->flatten());
                     };
 
                     auto varid = std::make_shared<exclude>(
@@ -593,7 +597,7 @@ namespace dhc {
                             {
                                 res.push_back((*it)->flatten());
                             }
-                            return std::make_shared<qualified>(m->column, m->type, res);
+                            return std::make_shared<qualified>(m->type, res);
                         })
                     }, -1, [] (match_ptr m) {
                         auto children = m->children();
@@ -601,7 +605,7 @@ namespace dhc {
                         auto second = std::dynamic_pointer_cast<qualified>(children[1]);
                         auto mods = second->modules;
                         mods.insert(mods.begin(), conid);
-                        return std::make_shared<qualified>(m->column, m->type, mods);
+                        return std::make_shared<qualified>(m->type, mods);
                     });
 
                     match_func qualify = [](match_ptr m) {
@@ -609,7 +613,7 @@ namespace dhc {
                         auto mods = std::dynamic_pointer_cast<qualified>(children[0])->modules;
                         icu::UnicodeString id = children[2]->flatten();
                         mods.push_back(id);
-                        return std::make_shared<qualified>(m->column, m->type, mods);
+                        return std::make_shared<qualified>(m->type, mods);
                     };
 
                     auto qvarid = std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -654,23 +658,21 @@ namespace dhc {
                         reservedid
                     }, -1);
 
-                    program = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto program = std::make_shared<choice>(std::vector<pattern_ptr> {
                         lexeme,
                         whitespace
                     });
+
+                    match_ptr m;
+                    while ((m = generate_next(program)) != nullptr)
+                    {
+                        final_tokens.push_back(m);
+                    }
                 }
 
-                /**
-                 * \brief Get the next token.
-                 *
-                 * Returns the next token from the source code.
-                 * @return The match object representing the lexeme found.
-                 *         nullptr is returned if an error has occurred.
-                 */
                 virtual match_ptr next();
 
                 virtual bool finished();
-                virtual graft::scanner::scanstate &state();
 
                 /**
                  * \brief Returns an error message.
@@ -683,13 +685,19 @@ namespace dhc {
                 std::string error(std::string filename);
 
             private:
-                pattern_ptr program;
+                match_ptr generate_next(pattern_ptr p);
 
                 graft::scanner::character s;
+                unsigned int column;
+                unsigned int previous_column;
+                unsigned int line_number;
                 bool beginning;
                 bool expecting;
                 unsigned int current_line;
+                unsigned int previous_index;
                 std::queue<match_ptr> tokens;
+
+                std::vector<match_ptr> final_tokens;
         };
 
     }

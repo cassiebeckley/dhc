@@ -25,11 +25,9 @@ namespace dhc {
                     virtual ~character();
                     virtual std::shared_ptr<match::match> next();
                     virtual bool finished();
-                    virtual scanstate &state();
 
                 protected:
                 private:
-                    scanstate s;
                     unsigned int length;
                     UChar32 *source;
            };

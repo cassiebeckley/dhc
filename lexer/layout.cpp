@@ -2,6 +2,41 @@
 
 std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 {
+    if (!finished())
+    {
+        if (index + 1 > max_index)
+            max_index = index;
+
+        return final_tokens[index++];
+    }
+    else
+        return nullptr;
+}
+
+unsigned int dhc::lexer::layout::reset()
+{
+    std::string str;
+    final_tokens[max_index]->flatten().toUTF8String(str);
+    std::cout << "Inserting '}' before \"" << str << "\", max_index: " << max_index << std::endl;
+
+    index = 0;
+
+    auto it = final_tokens.insert(final_tokens.begin() + max_index, std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '}'));
+
+    for (++it; it != final_tokens.end(); ++it)
+    {
+        if ((*it)->flatten() == "}")
+        {
+            final_tokens.erase(it);
+            return max_index;
+        }
+    }
+
+    return false;
+}
+
+std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::generate_next()
+{
     if (!tokens.empty())
     {
         auto m = tokens.front();
@@ -18,13 +53,13 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 
         if (top == n)
         {
-            return std::make_shared<graft::match::character>(top, static_cast<int>(type::SPECIAL), ';');
+            return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), ';');
         }
         else if (n < top)
         {
             context.pop();
             angle_tokens.push(n);
-            return std::make_shared<graft::match::character>(n, static_cast<int>(type::SPECIAL), '}');
+            return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '}');
         }
     }
 
@@ -33,9 +68,8 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 
         if (!context.empty())
         {
-            int n = context.top();
             context.pop();
-            return std::make_shared<graft::match::character>(n, static_cast<int>(type::SPECIAL), '}');
+            return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '}');
         }
         else
             return nullptr;
@@ -50,10 +84,10 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
         if (!context.empty())
         {
             angle_tokens.push(n);
-            return next();
+            return generate_next();
         }
 
-        m = next();
+        m = generate_next();
     }
     else if (m->type == static_cast<int>(type::CURLY))
     {
@@ -63,7 +97,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
         if (context.empty())
         {
             context.push(n);
-            return std::make_shared<graft::match::character>(n, static_cast<int>(type::SPECIAL), '{');
+            return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '{');
         }
         else
         {
@@ -72,17 +106,17 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
             if (n > top)
             {
                 context.push(n);
-                return std::make_shared<graft::match::character>(n, static_cast<int>(type::SPECIAL), '{');
+                return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '{');
             }
             else
             {
-                tokens.push(std::make_shared<graft::match::character>(n, static_cast<int>(type::SPECIAL), '}'));
+                tokens.push(std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '}'));
                 angle_tokens.push(n);
-                return std::make_shared<graft::match::character>(n, static_cast<int>(type::SPECIAL), '{');
+                return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '{');
             }
         }
 
-        m = next();
+        m = generate_next();
     }
     else if (m->type == static_cast<int>(type::SPECIAL))
     {
@@ -109,10 +143,5 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 
 bool dhc::lexer::layout::finished()
 {
-    return lex.finished() && context.empty();
-}
-
-dhc::graft::scanner::scanstate &dhc::lexer::layout::state()
-{
-    return lex.state();
+    return index >= final_tokens.size();
 }

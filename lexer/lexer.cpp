@@ -2,6 +2,14 @@
 
 std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
 {
+    if (!finished())
+        return final_tokens[index++];
+    else
+        return nullptr;
+}
+
+std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::generate_next(pattern_ptr program)
+{
     if (!tokens.empty())
     {
         match_ptr m = tokens.front();
@@ -10,24 +18,31 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
     }
 
     if (s.finished())
+    {
         return nullptr;
+    }
+
+    previous_column = column;
 
     auto m = program->find(s);
     auto str = m->flatten();
 
+    column += s.index - previous_index;
+    previous_index = s.index;
+
     if (m->type == static_cast<int>(type::WHITESPACE))
     {
-        return next();
+        return generate_next(program);
     }
     else if (beginning)
     {
         beginning = false;
         if (str != "{" && str != "module")
         {
-            unsigned int n = m->column + 1;
+            unsigned int n = previous_column + 1;
             tokens.push(m);
-            current_line = state_line_number();
-            return std::make_shared<integer>(m->column, static_cast<int>(type::CURLY), 1, n);
+            current_line = line_number;
+            return std::make_shared<integer>(static_cast<int>(type::CURLY), 1, n);
         }
     }
     else if (expecting)
@@ -35,10 +50,10 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
         expecting = false;
         if (str != "{")
         {
-            unsigned int n = m->column + 1;
+            unsigned int n = previous_column + 1;
             tokens.push(m);
-            current_line = state_line_number();
-            return std::make_shared<integer>(m->column, static_cast<int>(type::CURLY), 1, n);
+            current_line = line_number;
+            return std::make_shared<integer>(static_cast<int>(type::CURLY), 1, n);
         }
     }
     else if(m->type == static_cast<int>(type::RESERVEDID) && (str == "let" || str == "where" || str == "do" || str == "of"))
@@ -46,14 +61,14 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
         expecting = true;
     }
 
-    if (state_line_number() > current_line)
+    if (line_number > current_line)
     {
-        current_line = s.lineno();
+        current_line = line_number;
 
-        unsigned int n = m->column + 1;
+        unsigned int n = previous_column + 1;
 
         tokens.push(m);
-        return std::make_shared<integer>(m->column, static_cast<int>(type::ANGLE), 1, n);
+        return std::make_shared<integer>(static_cast<int>(type::ANGLE), 1, n);
     }
 
     return m;
@@ -61,23 +76,13 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::lexer::next()
 
 bool dhc::lexer::lexer::finished()
 {
-    auto m = next();
-    if (m != nullptr)
-    {
-        tokens.push(m);
-    }
-
-    return s.finished() || tokens.empty();
-}
-
-dhc::graft::scanner::scanstate &dhc::lexer::lexer::state()
-{
-    return s.state();
+    //std::cout << "Index: " << index << " size: " << final_tokens.size() << std::endl;
+    return index >= final_tokens.size();
 }
 
 std::string dhc::lexer::lexer::error(std::string filename)
 {
     std::stringstream ss;
-    ss << filename << ':' << s.lineno() << ':' << s.charno() << ": Lexical error" << std::endl;
+    ss << filename << ':' << line_number << ':' << column << ": Lexical error" << std::endl;
     return ss.str();
 }

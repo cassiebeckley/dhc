@@ -8,29 +8,17 @@ namespace dhc {
     namespace graft {
         namespace scanner {
 
-            class scanner;
-
-            /**
-             * \brief A struct to hold a scanner's state.
-             */
-            class scanstate {
-                public:
-                    scanstate() : line_number(0), column(0), index(0) {}
-                private:
-                    friend scanner;
-                    unsigned int line_number;
-                    unsigned int column;
-                    unsigned int index;
-            };
-
-
-
             /**
              * \brief scanner provides an interface to keep track of
              *        the state of a source string
              */
             class scanner {
                 public:
+                    /**
+                     * Initialize the scanner
+                     */
+                    scanner() : index(0) {}
+
                     /**
                      * \brief Free memory allocated by the scanner.
                      */
@@ -39,10 +27,10 @@ namespace dhc {
                     /**
                      * \brief Returns the next character in the source string.
                      *
-                     * Also modifies the scanner state. Match objects
+                     * Also modifies the scanner state. Pattern objects
                      * must restore the state if they do not find a match.
                      *
-                     * @return a match::character containing the next character.
+                     * @return a match_ptr containing the match
                      */
                     virtual std::shared_ptr<match::match> next()=0;
 
@@ -54,54 +42,11 @@ namespace dhc {
                     virtual bool finished()=0;
 
                     /**
-                     * \brief Increment the line number.
+                     * \brief The index.
                      */
-                    void newline();
-
-                    /**
-                     * \brief Increment the column to the next tab stop.
-                     */
-                    void tab();
-
-                    /**
-                     * @return The line number.
-                     */
-                    unsigned int lineno();
-
-                    /**
-                     * @return The column number.
-                     */
-                    unsigned int charno();
-
-                    /**
-                     * @return The index.
-                     */
-                    unsigned int index();
-
-                    /**
-                     * \brief Get the current state of the scanner.
-                     */
-                    virtual scanstate &state()=0;
+                    unsigned int index;
 
                 protected:
-
-                    /**
-                     * Allow child classes to modify the line number
-                     * @return current line number
-                     */
-                    unsigned int &state_line_number();
-
-                    /**
-                     * Allow child classes to modify the column number
-                     * @return current column number
-                     */
-                    unsigned int &state_column();
-
-                    /**
-                     * Allow child classes to modify the index
-                     * @return current index
-                     */
-                    unsigned int &state_index();
                 private:
            };
         }

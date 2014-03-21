@@ -1,4 +1,5 @@
 #include "parser/parser.hpp"
+#include "lexer/layout.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -25,7 +26,7 @@ void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent)
     print_indent(indent);
     std::string flat;
     root->flatten().toUTF8String(flat);
-    std::cout << '"' << flat << '"' << std::endl;
+    std::cout << '"' << flat << "\"" << std::endl;
     for (auto it = tree.begin(); it != tree.end(); ++it)
     {
         std::vector<std::shared_ptr<dhc::graft::match::match>> c = (*it)->children();
@@ -42,7 +43,7 @@ void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent)
                 pos += 2;
             }
 
-            std::cout << '"' << flat << '\"' << std::endl;
+            std::cout << '"' << flat << "\"" << ' ' << std::endl;
         }
         else
         {
@@ -72,6 +73,8 @@ int main(int argc, char** argv)
     file.close();
 
     UCharsetDetector *ucd = ucsdet_open(&e);
+
+    ucsdet_setDeclaredEncoding(ucd, "UTF-8", -1, &e);
     ucsdet_setText(ucd, utf8.c_str(), utf8.size(), &e);
     const UCharsetMatch *ucm = ucsdet_detect(ucd, &e);
     if (U_FAILURE(e))
@@ -109,7 +112,25 @@ int main(int argc, char** argv)
     source.toUTF8String(heh);
     std::cout << "Read:" << std::endl << heh << std::endl;
 
+    dhc::lexer::layout l(source);
+
+    while (!l.finished()) {
+        dhc::lexer::match_ptr token (l.next());
+
+        if (token) {
+            std::string flat;
+            token->flatten().toUTF8String(flat);
+            std::cout << flat << ' ';
+        } else {
+            std::cerr << filename << std::endl;
+        }
+    }
+
+    std::cout << std::endl;
+
     dhc::parser::parser p(source);
+
+    std::cout << "Created parser" << std::endl;
 
     if (!p.finished()) {
         dhc::lexer::match_ptr token (p.next());

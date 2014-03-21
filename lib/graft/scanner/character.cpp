@@ -18,6 +18,8 @@ dhc::graft::scanner::character::character(icu::UnicodeString src)
     }
 }
 
+
+// TODO: perhaps just use a vector for this?
 dhc::graft::scanner::character::~character()
 {
     delete [] source;
@@ -27,10 +29,10 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::character::next()
 {
     if (!finished())
     {
-        UChar32 c = source[state_index()++];
+        UChar32 c = source[index++];
         // std::cout << "U+" << std::setw(4) << std::setfill('0') << std::hex << c << std::endl;
         if (c != 0xfeff)
-            return std::make_shared<match::character>(state_column()++, -1, c);
+            return std::make_shared<match::character>(-1, c);
         else
             return next();
     }
@@ -40,10 +42,5 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::character::next()
 
 bool dhc::graft::scanner::character::finished()
 {
-    return state_index() >= length;
-}
-
-dhc::graft::scanner::scanstate &dhc::graft::scanner::character::state()
-{
-    return s;
+    return index >= length;
 }

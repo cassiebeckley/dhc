@@ -17,12 +17,10 @@ namespace dhc {
                 public:
                     /**
                      * \brief Creates a string match.
-                     * @param column The column of the source the match
-                     *               begins on.
                      * @param type An integer representing the token type.
                      * @param data The matched string.
                      */
-                    string(unsigned int column, int type, icu::UnicodeString data) : match(column, type), data(data) {}
+                    string(int type, icu::UnicodeString data) : match(type), data(data) {}
                     virtual unsigned int length();
                     virtual icu::UnicodeString flatten();
                     virtual std::vector<std::shared_ptr<match>> children();

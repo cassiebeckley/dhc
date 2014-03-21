@@ -13,13 +13,11 @@ namespace dhc {
             public:
                 /**
                  * \brief Creates a digit match.
-                 * @param column The column of the source the match
-                 *               begins on.
                  * @param type An integer representing the token type.
                  * @param data The matched character.
                  * @param d The matched digit.
                  */
-                digit (unsigned int column, int type, UChar32 data, int d) : match(column, type), data(data), d(d) {}
+                digit (int type, UChar32 data, int d) : match(type), data(data), d(d) {}
 
                 virtual unsigned int length();
                 virtual icu::UnicodeString flatten();

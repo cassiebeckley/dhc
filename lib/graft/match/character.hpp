@@ -15,12 +15,10 @@ namespace dhc {
                 public:
                     /**
                      * \brief Creates a character match.
-                     * @param column The column of the source the match
-                     *               begins on.
                      * @param type An integer representing the token type.
                      * @param data The matched character.
                      */
-                    character(unsigned int column, int type, UChar32 data) : match(column, type), data(data) {}
+                    character(int type, UChar32 data) : match(type), data(data) {}
 
                     virtual unsigned int length();
                     virtual icu::UnicodeString flatten();

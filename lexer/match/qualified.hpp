@@ -13,12 +13,10 @@ namespace dhc {
             public:
                 /**
                  * \brief Creates a qualified match.
-                 * @param column The column of the source the match
-                 *               begins on.
                  * @param type An integer representing the token type.
                  * @param modules The modules.
                  */
-                qualified (unsigned int column, int type, std::vector<icu::UnicodeString> modules) : match(column, type), modules(modules) {}
+                qualified (int type, std::vector<icu::UnicodeString> modules) : match(type), modules(modules) {}
 
                 virtual unsigned int length();
                 virtual icu::UnicodeString flatten();

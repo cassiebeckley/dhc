@@ -5,7 +5,7 @@
 
 std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::type::findmatch(scanner::scanner& s)
 {
-    auto state = s.state();
+    auto state = s.index;
 
     try
     {
@@ -19,7 +19,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::pattern::type::findmatch(s
         // ignore and return nullptr
     }
 
-    s.state() = state;
+    s.index = state;
 
     return nullptr;
 }

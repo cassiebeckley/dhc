@@ -13,13 +13,11 @@ namespace dhc {
             public:
                 /**
                  * \brief Creates a char match.
-                 * @param column The column of the source the match
-                 *               begins on.
                  * @param type An char representing the token type.
                  * @param data The matched char (string since escape
                  *             sequences can be multiple characters)
                  */
-                lit_char (unsigned int column, int type, icu::UnicodeString data) : literal(column, type, literal_type::CHAR), data(data) {}
+                lit_char (int type, icu::UnicodeString data) : literal(type, literal_type::CHAR), data(data) {}
 
                 virtual unsigned int length();
                 virtual icu::UnicodeString flatten();

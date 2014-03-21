@@ -13,7 +13,7 @@
 #include <memory>
 #include <stack>
 
-#include "../lexer/lexer.hpp"
+#include "../lexer/layout.hpp"
 
 namespace dhc {
     namespace parser {
@@ -34,7 +34,7 @@ namespace dhc {
                  * 2010 specification.
                  * @param source the source code to analyze
                  */
-                parser(icu::UnicodeString source) : lex(source)
+                parser(icu::UnicodeString source) : source(source), lay(source)
                 {
                     // TODO: get rid of this mebbe?
                     using namespace graft::pattern;
@@ -1026,7 +1026,7 @@ namespace dhc {
                     auto topdecls = std::make_shared<compound>(std::vector<pattern_ptr> {
                         topdecl,
                         std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
-                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
                             topdecl
                         }))
                     });
@@ -1133,12 +1133,9 @@ namespace dhc {
 
                     auto impdecls = std::make_shared<compound>(std::vector<pattern_ptr> {
                         impdecl,
-                        std::make_shared<repetition>(std::make_shared<choice>(std::vector<pattern_ptr> {
-                            std::make_shared<compound>(std::vector<pattern_ptr> {
-                                std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
-                                impdecl
-                            }),
-                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";")
+                        std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
+                            impdecl
                         }))
                     });
 
@@ -1158,6 +1155,7 @@ namespace dhc {
 
                     auto h_export = std::make_shared<choice>(std::vector<pattern_ptr> {
                         qvar,
+                        std::make_shared<type>(static_cast<int>(lexer::type::QCONID)),
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<type>(static_cast<int>(lexer::type::QCONID)), // TODO: should be conid
                             std::make_shared<choice>(std::vector<pattern_ptr> {
@@ -1228,8 +1226,7 @@ namespace dhc {
                         body
                     });
 
-
-                    final = body;
+                    final = module;
                 }
 
                 /**
@@ -1241,6 +1238,9 @@ namespace dhc {
                  */
                 match_ptr next();
 
+                /**
+                 * @return Whether or not end of input has been reached.
+                 */
                 bool finished();
 
                 /**
@@ -1256,7 +1256,8 @@ namespace dhc {
             private:
                 pattern_ptr final;
 
-                lexer::lexer lex;
+                icu::UnicodeString source;
+                lexer::layout lay;
                 std::stack<int> context;
         };
 

@@ -13,15 +13,13 @@ namespace dhc {
             public:
                 /**
                  * \brief Creates a lit_float match.
-                 * @param column The column of the source the match
-                 *               begins on.
                  * @param type An lit_float representing the token type.
                  * @param length The original matched length.
                  * @param integral The integer part of the float.
                  * @param fractional The fractional part of the float.
                  * @param exponent The exponential part of the float.
                  */
-                lit_float (unsigned int column, int type, int length, int64_t integral, int64_t fractional, int64_t exponent) : literal(column, type, literal_type::FLOAT), len(length), integral(integral), fractional(fractional), exponent(exponent) {}
+                lit_float (int type, int length, int64_t integral, int64_t fractional, int64_t exponent) : literal(type, literal_type::FLOAT), len(length), integral(integral), fractional(fractional), exponent(exponent) {}
 
                 virtual unsigned int length();
                 virtual icu::UnicodeString flatten();
