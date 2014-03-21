@@ -1,5 +1,7 @@
 #include "layout.hpp"
 
+#include <iostream>
+
 std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 {
     if (!finished())

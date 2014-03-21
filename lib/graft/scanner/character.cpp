@@ -1,10 +1,6 @@
 #include "character.hpp"
 #include "../match/character.hpp"
 
-// TODO: remove these both
-#include <iostream>
-#include <iomanip>
-
 dhc::graft::scanner::character::character(icu::UnicodeString src)
 {
     length = src.countChar32();
@@ -14,7 +10,7 @@ dhc::graft::scanner::character::character(icu::UnicodeString src)
 
     if (U_FAILURE(e))
     {
-        std::cerr << "scanner::character error: " << u_errorName(e) << std::endl;
+        //std::cerr << "scanner::character error: " << u_errorName(e) << std::endl;
     }
 }
 

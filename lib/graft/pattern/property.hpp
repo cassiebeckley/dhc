@@ -7,9 +7,6 @@
 #include <unicode/unistr.h>
 #include <unicode/uniset.h>
 
-// TODO: remove
-#include <iostream>
-
 namespace dhc {
     namespace graft {
         namespace pattern {
@@ -38,7 +35,7 @@ namespace dhc {
                         {
                             // ignore, perhaps? :|
                             // an exception might be nice
-                            std::cerr << "Error: " << u_errorName(e) << ", couldn't create Unicode set" << std::endl;
+                            //std::cerr << "Error: " << u_errorName(e) << ", couldn't create Unicode set" << std::endl;
                         }
                     }
 

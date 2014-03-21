@@ -127,7 +127,7 @@ namespace dhc {
                         exp
                     });
 
-                    auto aexp = std::make_shared<choice>(std::vector<pattern_ptr> {
+                    auto aexp_inner = std::make_shared<choice>(std::vector<pattern_ptr> {
                         qvar,
                         gcon,
                         std::make_shared<type>(static_cast<int>(lexer::type::LITERAL)),
@@ -215,11 +215,9 @@ namespace dhc {
                         })
                     });
 
-                    /* TODO: fix
-                     * too much lookahead :/
-                    aexp->add_pattern(std::make_shared<compound>
-                        (std::vector<pattern_ptr> {
-                            std::make_shared<exclude>(aexp, qcon),
+                    auto aexp = std::make_shared<choice>(std::vector<pattern_ptr> {
+                        std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<exclude>(aexp_inner, qcon),
                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "{"),
                             fbind,
                             std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
@@ -227,8 +225,9 @@ namespace dhc {
                                 fbind
                             })),
                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
-                        })
-                    );*/
+                        }),
+                        aexp_inner
+                    });
 
                     auto fexp = std::make_shared<repetition>(aexp);
 
@@ -777,7 +776,8 @@ namespace dhc {
                                         std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
                                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
                                             dclass
-                                        }))
+                                        })),
+                                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
                                     }),
                                     std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
                                 })

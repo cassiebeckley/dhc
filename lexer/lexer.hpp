@@ -269,14 +269,7 @@ namespace dhc {
                         }, -1, [] (match_ptr m) {
                             return m->children()[1];
                         }),
-                        // TODO:
-                        // Hm? Double check below
-                        // Find out if it's weird stuff
-                        // or if it can be removed
-                        //
-                        // sidenote: what was I even thinking
-                        // when I wrote the above? The below
-                        // is necessary for hexadecimal lexing
+                        // The below is necessary for hexadecimal lexing
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<compound>(std::vector<pattern_ptr> {
                                 std::make_shared<character>('0'),
