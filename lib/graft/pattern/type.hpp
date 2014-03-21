@@ -22,7 +22,16 @@ namespace dhc {
                      * @param callback a callback to perform additional
                      *                 processing on the match returned
                      */
-                    type(int pat, icu::UnicodeString str = "", int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(pat), str(str) {}
+                    type(int pat, icu::UnicodeString str, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(pat), str(str) {}
+
+                    /**
+                     * \brief Create a type pattern.
+                     * @param pat the match type to match.
+                     * @param type the type of the pattern.
+                     * @param callback a callback to perform additional
+                     *                 processing on the match returned
+                     */
+                    type(int pat, int type = -1, match_func callback = nullptr) : pattern(type, callback), pat(pat), str("") {}
 
                 protected:
                     virtual std::shared_ptr<graft::match::match> findmatch(scanner::scanner& s);
