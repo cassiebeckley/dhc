@@ -30,6 +30,8 @@
 
 #include <unicode/unistr.h>
 
+#include <iostream>
+
 namespace dhc {
     namespace lexer {
         typedef std::shared_ptr<graft::pattern::pattern> pattern_ptr;
@@ -72,6 +74,8 @@ namespace dhc {
                 {
                     // TODO: get rid of this mebbe?
                     using namespace graft::pattern;
+
+                    std::cout << "lexer::lexer" << std::endl;
 
                     match_func digit_h = [](match_ptr m) {
                         UChar32 c = m->flatten()[0];
@@ -661,6 +665,7 @@ namespace dhc {
                     {
                         final_tokens.push_back(m);
                     }
+                    std::cout << "Finished creating lexer" << std::endl;
                 }
 
                 virtual match_ptr next();

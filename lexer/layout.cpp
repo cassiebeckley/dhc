@@ -1,6 +1,7 @@
 #include "layout.hpp"
 
 #include <iostream>
+#include <unicode/ustream.h>
 
 std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 {
@@ -17,9 +18,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 
 unsigned int dhc::lexer::layout::reset()
 {
-    std::string str;
-    final_tokens[max_index]->flatten().toUTF8String(str);
-    std::cout << "Inserting '}' before \"" << str << "\", max_index: " << max_index << std::endl;
+    std::cout << "Inserting '}' before \"" << final_tokens[max_index]->flatten() << "\", max_index: " << max_index << std::endl;
 
     index = 0;
 

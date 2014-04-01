@@ -26,11 +26,14 @@ std::shared_ptr<dhc::graft::match::match> dhc::graft::scanner::character::next()
     if (!finished())
     {
         UChar32 c = source[index++];
-        // std::cout << "U+" << std::setw(4) << std::setfill('0') << std::hex << c << std::endl;
         if (c != 0xfeff)
+        {
             return std::make_shared<match::character>(-1, c);
+        }
         else
+        {
             return next();
+        }
     }
 
     return nullptr;

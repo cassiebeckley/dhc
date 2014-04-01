@@ -75,4 +75,5 @@ target_link_libraries(dhc
     ${ICU_LIBRARIES}
     # TODO: remove, not cross-platform
     ${ICU_ROOT}/lib/icuin.dll.a
+    ${ICU_ROOT}/lib/icuio.dll.a
 )

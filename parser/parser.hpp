@@ -46,7 +46,7 @@ namespace dhc {
                     auto exp = std::make_shared<choice>(std::vector<pattern_ptr>{});
                     auto pat = std::make_shared<choice>(std::vector<pattern_ptr> {});
                     auto infixexp = std::make_shared<choice>(std::vector<pattern_ptr> {});
-                    auto decls = std::make_shared<compound>(std::vector<pattern_ptr>{});
+                    auto decls = std::make_shared<compound>(std::vector<pattern_ptr>{}, -1, [] (match_ptr m) {return m->children()[1];});
                     auto h_type = std::make_shared<choice>(std::vector<pattern_ptr>{});
                     auto qvar = std::make_shared<choice>(std::vector<pattern_ptr> {
                         std::make_shared<type>(static_cast<int>(lexer::type::QVARID)),
@@ -650,10 +650,15 @@ namespace dhc {
                             std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
                                 std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ";"),
                                 decl
-                            })),
+                            }, -1, [] (match_ptr m) {return m->children()[1];})),
                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                        }, -1, [] (match_ptr m) {
+                            auto children = m->children();
+                            auto second = children[1]->children();
+                            second.insert(second.begin(), children[0]);
+                            return std::make_shared<graft::match::sequence>(-1, second);
                         }),
-                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}")
+                        std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "}", -1, [] (match_ptr) {return std::make_shared<graft::match::sequence>(-1, std::vector<match_ptr>());})
                     }));
 
                     auto gdpat = std::make_shared<compound>(std::vector<pattern_ptr> {

@@ -7,6 +7,7 @@
 
 #include <unicode/unistr.h>
 #include <unicode/ucsdet.h>
+#include <unicode/ustream.h>
 
 void print_indent(int indent)
 {
@@ -24,9 +25,7 @@ void print_tree(std::shared_ptr<dhc::graft::match::match> &root, int indent)
 
     auto tree = root->children();
     print_indent(indent);
-    std::string flat;
-    root->flatten().toUTF8String(flat);
-    std::cout << '"' << flat << "\"" << std::endl;
+    std::cout << '"' << root->flatten() << "\"" << std::endl;
     for (auto it = tree.begin(); it != tree.end(); ++it)
     {
         std::vector<std::shared_ptr<dhc::graft::match::match>> c = (*it)->children();
@@ -63,11 +62,11 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    std::string utf8;
-    utf8.reserve(file.tellg());
+    std::string raw;
+    raw.reserve(file.tellg());
 
     file.seekg(0, std::ios::beg);
-    utf8.assign((std::istreambuf_iterator<char>(file)),
+    raw.assign((std::istreambuf_iterator<char>(file)),
                  std::istreambuf_iterator<char>());
 
     file.close();
@@ -75,7 +74,7 @@ int main(int argc, char** argv)
     UCharsetDetector *ucd = ucsdet_open(&e);
 
     ucsdet_setDeclaredEncoding(ucd, "UTF-8", -1, &e);
-    ucsdet_setText(ucd, utf8.c_str(), utf8.size(), &e);
+    ucsdet_setText(ucd, raw.c_str(), raw.size(), &e);
     const UCharsetMatch *ucm = ucsdet_detect(ucd, &e);
     if (U_FAILURE(e))
     {
@@ -89,28 +88,25 @@ int main(int argc, char** argv)
         std::cerr << "Charset detection error: " << u_errorName(e) << std::endl;
         return e;
     }
+    
+    UChar *buf = new UChar[raw.size() + 1];
 
-    UChar *buf = new UChar[utf8.size()];
-
-    int32_t out = ucsdet_getUChars(ucm, buf, utf8.size(), &e);
+    int out = ucsdet_getUChars(ucm, buf, raw.size(), &e);
     if (U_FAILURE(e))
     {
         std::cerr << "Charset conversion error: " << u_errorName(e) << std::endl;
         return e;
     }
 
-    buf[out] = 0;
-
     ucsdet_close(ucd);
+
+    buf[out] = 0;
 
     icu::UnicodeString source(buf);
     delete [] buf;
 
     source.append("\n");
-
-    std::string heh;
-    source.toUTF8String(heh);
-    std::cout << "Read:" << std::endl << heh << std::endl;
+    std::cout << "Read:" << std::endl << source << std::endl;
 
     dhc::lexer::layout l(source);
 
@@ -118,9 +114,7 @@ int main(int argc, char** argv)
         dhc::lexer::match_ptr token (l.next());
 
         if (token) {
-            std::string flat;
-            token->flatten().toUTF8String(flat);
-            std::cout << flat << ' ';
+            std::cout << token->flatten() << ' ';
         } else {
             std::cerr << filename << std::endl;
         }
