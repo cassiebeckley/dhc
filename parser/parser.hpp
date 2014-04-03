@@ -441,7 +441,11 @@ namespace dhc {
 
                     auto guards = std::make_shared<compound>(std::vector<pattern_ptr> {
                         std::make_shared<type>(static_cast<int>(lexer::type::RESERVEDOP), "|"),
-                        std::make_shared<repetition>(guard)
+                        guard,
+                        std::make_shared<repetition>(std::make_shared<compound>(std::vector<pattern_ptr> {
+                            std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ","),
+                            guard
+                        }))
                     });
 
                     auto gdrhs = std::make_shared<compound>(std::vector<pattern_ptr>{});
