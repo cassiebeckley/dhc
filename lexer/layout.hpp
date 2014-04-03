@@ -8,6 +8,10 @@
 
 #include <unicode/unistr.h>
 
+
+// TODO: remove
+#include <iostream>
+
 namespace dhc {
     namespace lexer {
         typedef std::shared_ptr<graft::pattern::pattern> pattern_ptr;

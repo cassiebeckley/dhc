@@ -3,6 +3,10 @@
 #include <iostream>
 #include <unicode/ustream.h>
 
+
+// TODO: remove
+#include <iostream>
+
 std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::next()
 {
     if (!finished())
@@ -94,9 +98,11 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::generate_next()
     {
         auto curly = std::static_pointer_cast<integer>(m);
         int n = curly->data;
+        std::cout << '{' << n << '}' << std::endl;
 
         if (context.empty())
         {
+            std::cout << "context is empty, pushing " << n << std::endl;
             context.push(n);
             return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '{');
         }
@@ -106,6 +112,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::generate_next()
 
             if (n > top)
             {
+                std::cout << "innermost context is " << top << ", pushing " << n << std::endl;
                 context.push(n);
                 return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '{');
             }
@@ -124,6 +131,7 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::generate_next()
         icu::UnicodeString str = m->flatten();
         if (str == "}")
         {
+            std::cout << "str is '}', context.top() is " << context.top() << std::endl;
             if (context.top() == 0)
             {
                 context.pop();
@@ -135,8 +143,16 @@ std::shared_ptr<dhc::graft::match::match> dhc::lexer::layout::generate_next()
         }
         else if (str == "{")
         {
+            std::cout << "str is '{', pushing 0" << std::endl;
             context.push(0);
         }
+    }
+    else if (m->type == static_cast<int>(type::RESERVEDID) && m->flatten() == "in" && context.top() != 0)
+    {
+        context.pop();
+        tokens.push(m);
+        std::cout << "returning '}' before \"in\"" << std::endl;
+        return std::make_shared<graft::match::character>(static_cast<int>(type::SPECIAL), '}');
     }
 
     return m;
