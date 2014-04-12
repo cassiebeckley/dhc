@@ -743,7 +743,9 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@ @CMAKE_CURRENT_SOURCE_DIR@/lib/graft @CMAKE_CURRENT_SOURCE_DIR@/lib/graft/match @CMAKE_CURRENT_SOURCE_DIR@/lib/graft/pattern @CMAKE_CURRENT_SOURCE_DIR@/lib/graft/scanner @CMAKE_CURRENT_SOURCE_DIR@/lexer @CMAKE_CURRENT_SOURCE_DIR@/lexer/match @CMAKE_CURRENT_SOURCE_DIR@/parser
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@ @CMAKE_CURRENT_SOURCE_DIR@/lib/graft @CMAKE_CURRENT_SOURCE_DIR@/lib/graft/match @CMAKE_CURRENT_SOURCE_DIR@/lib/graft/pattern @CMAKE_CURRENT_SOURCE_DIR@/lib/graft/scanner @CMAKE_CURRENT_SOURCE_DIR@/lexer @CMAKE_CURRENT_SOURCE_DIR@/lexer/match @CMAKE_CURRENT_SOURCE_DIR@/parser @CMAKE_CURRENT_SOURCE_DIR@/kernel @CMAKE_CURRENT_SOURCE_DIR@/kernel/expression @CMAKE_CURRENT_SOURCE_DIR@/kernel/expression/value
+
+
 
 
 

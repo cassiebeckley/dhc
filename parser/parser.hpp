@@ -205,6 +205,8 @@ namespace dhc {
                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
                             exp,
                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), ")")
+                        }, -1, [] (match_ptr m) {
+                            return m->children()[1];
                         }),
                         std::make_shared<compound>(std::vector<pattern_ptr> {
                             std::make_shared<type>(static_cast<int>(lexer::type::SPECIAL), "("),
@@ -299,7 +301,24 @@ namespace dhc {
                         aexp_inner
                     });
 
-                    auto fexp = std::make_shared<repetition>(aexp);
+                    auto fexp = std::make_shared<repetition>(aexp, -1, [] (match_ptr m) {
+                        auto children = m->children();
+
+                        std::vector<match_ptr> apps;
+
+                        for (auto it = children.begin(); it != children.end(); ++it)
+                        {
+                            apps.push_back(*it);
+                            if (apps.size() == 2)
+                            {
+                                auto app = std::make_shared<graft::match::sequence> (-1, apps);
+                                apps.clear();
+                                apps.push_back(app);
+                            }
+                        }
+
+                        return apps.size() == 1 ? apps[0] : std::make_shared<graft::match::sequence> (-1, apps);
+                    });
 
                     auto apat = std::make_shared<choice>(std::vector<pattern_ptr> {
                         var,
