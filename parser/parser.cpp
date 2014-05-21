@@ -1,7 +1,7 @@
 #include "parser.hpp"
 #include <sstream>
 
-std::shared_ptr<dhc::graft::match::match> dhc::parser::parser::next()
+std::shared_ptr<dhc::graft::match::match> dhc::parser::parser::parse()
 {
     if (lay.finished())
     {

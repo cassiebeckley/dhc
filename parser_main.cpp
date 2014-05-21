@@ -127,7 +127,7 @@ int main(int argc, char** argv)
     std::cout << "Created parser" << std::endl;
 
     if (!p.finished()) {
-        dhc::lexer::match_ptr token (p.next());
+        dhc::lexer::match_ptr token (p.parse());
 
         if (token) {
             print_tree(token, 0);

@@ -1375,13 +1375,13 @@ namespace dhc {
                 }
 
                 /**
-                 * \brief Get the next token.
+                 * \brief Parse the source code
                  *
-                 * Returns the next token from the source code.
+                 * Returns a tree representing the source
                  * @return The match object representing the lexeme found.
                  *         nullptr is returned if an error has occurred.
                  */
-                match_ptr next();
+                match_ptr parse();
 
                 /**
                  * @return Whether or not end of input has been reached.
