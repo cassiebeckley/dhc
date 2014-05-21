@@ -9,6 +9,13 @@ MaybeEnv Variable::test(dhc::kernel::expression::expression_ptr e)
     return MaybeEnv(env);
 }
 
+std::set<icu::UnicodeString> Variable::matches()
+{
+    std::set<icu::UnicodeString> m;
+    m.insert(name);
+    return m;
+}
+
 icu::UnicodeString Variable::str()
 {
     return name;

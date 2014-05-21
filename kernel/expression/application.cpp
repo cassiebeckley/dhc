@@ -3,33 +3,25 @@
 
 using namespace dhc::kernel::expression;
 
-value::Value &Application::evaluate()
+value_ref Application::evaluate() const
 {
-    auto f = static_cast<value::Function&>(function->evaluate());
+    auto f = static_cast<const value::Function&>(function->evaluate());
     auto result = f.apply(argument);
     return result->evaluate();
 }
 
-expression_ptr Application::bind(std::map<icu::UnicodeString, expression_ptr> env)
+void Application::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
 {
-    expression_ptr ftemp = function->bind(env);
-    expression_ptr atemp = argument->bind(env);
-
-    if (ftemp)
-        function = ftemp;
-    if (atemp)
-        argument = atemp;
-
-    return nullptr;
+    function->bind(environment);
+    argument->bind(environment);
 }
 
-
-dhc::kernel::type::Type Application::type()
+dhc::kernel::type::Type Application::type() const
 {
     return type::Type(std::vector<icu::UnicodeString> {});
 }
 
-icu::UnicodeString Application::str()
+icu::UnicodeString Application::str() const
 {
     return "(" + function->str() + " " + argument->str() + ")";
 }

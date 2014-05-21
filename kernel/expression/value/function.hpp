@@ -20,13 +20,13 @@ namespace dhc {
                          * @param e The expression
                          */
                         Function(icu::UnicodeString a, expression_ptr e) : argument(a), exp(e) {}
-                        virtual Value &evaluate();
-                        virtual expression_ptr bind(std::map<icu::UnicodeString, expression_ptr>);
-                        virtual type::Type type();
-                        virtual unsigned int constructor();
-                        virtual dhc::kernel::expression::expression_ptr at(int i);
+                        virtual value_ref evaluate() const;
+                        virtual void bind(std::map<icu::UnicodeString, expression_ptr>) const;
+                        virtual type::Type type() const;
+                        virtual unsigned int constructor() const;
+                        virtual dhc::kernel::expression::expression_ptr at(int i) const;
 
-                        virtual icu::UnicodeString str();
+                        virtual icu::UnicodeString str() const;
 
                         /**
                          * \brief Apply the function

@@ -6,6 +6,7 @@
 #include "maybe.hpp"
 #include <unicode/unistr.h>
 #include <memory>
+#include <set>
 
 namespace dhc {
     namespace kernel {
@@ -25,6 +26,12 @@ namespace dhc {
                      * @return A Maybe, which contains a std::map mapping variables to their bound expressions on success
                      */
                     virtual MaybeEnv test(expression::expression_ptr e) = 0;
+
+                    /**
+                     * @return The variables defined by the pattern
+                     */
+                    virtual std::set<icu::UnicodeString> matches() = 0;
+
                     virtual icu::UnicodeString str() = 0;
 
                 protected:

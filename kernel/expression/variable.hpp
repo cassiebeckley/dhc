@@ -19,14 +19,15 @@ namespace dhc {
                      */
                     Variable(icu::UnicodeString n) : name(n) {}
 
-                    virtual value::Value &evaluate();
-                    virtual expression_ptr bind(std::map<icu::UnicodeString, expression_ptr>);
-                    virtual type::Type type();
-                    virtual icu::UnicodeString str();
+                    virtual value_ref evaluate() const;
+                    virtual void bind(std::map<icu::UnicodeString, expression_ptr>) const;
+                    virtual type::Type type() const;
+                    virtual icu::UnicodeString str() const;
 
                 protected:
                 private:
                     icu::UnicodeString name;
+                    mutable std::map<icu::UnicodeString, expression_ptr> environment;
             };
 
         }

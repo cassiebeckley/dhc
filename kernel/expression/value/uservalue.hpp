@@ -22,13 +22,13 @@ namespace dhc {
                          * @param t The type of the value
                          */
                         UserValue(unsigned int c, std::vector<expression_ptr> f, type::Type t) : ctr(c), fields(f), datatype(t) {}
-                        virtual Value &evaluate();
-                        virtual expression_ptr bind(std::map<icu::UnicodeString, expression_ptr>);
-                        virtual type::Type type();
-                        virtual unsigned int constructor();
-                        virtual dhc::kernel::expression::expression_ptr at(int i);
+                        virtual value_ref evaluate() const;
+                        virtual void bind(std::map<icu::UnicodeString, expression_ptr>) const;
+                        virtual type::Type type() const;
+                        virtual unsigned int constructor() const;
+                        virtual dhc::kernel::expression::expression_ptr at(int i) const;
 
-                        virtual icu::UnicodeString str();
+                        virtual icu::UnicodeString str() const;
 
                     protected:
                     private:

@@ -19,9 +19,14 @@ namespace dhc {
                      * @param p the fields of the constructor
                      * @param t the type of the constructor
                      */
-                    Constructor(unsigned int c, std::vector<std::shared_ptr<dhc::kernel::pattern::Pattern>> p, type::Type t) : constructor(c), fields(p), datatype(t) {}
+                    Constructor(unsigned int c, std::vector<std::shared_ptr<dhc::kernel::pattern::Pattern>> p, type::Type t) : constructor(c), fields(p), datatype(t)
+                    {
+                        matches();
+                    }
 
-                    virtual MaybeEnv test(std::shared_ptr<expression::Expression> e);
+                    virtual MaybeEnv test(expression::expression_ptr e);
+                    virtual std::set<icu::UnicodeString> matches();
+
                     virtual icu::UnicodeString str();
 
                 protected:

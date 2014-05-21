@@ -2,46 +2,44 @@
 
 using namespace dhc::kernel::expression::value;
 
-Value &UserValue::evaluate()
+dhc::kernel::expression::value_ref UserValue::evaluate() const
 {
     return *this;
 }
 
-dhc::kernel::expression::expression_ptr UserValue::bind(std::map<icu::UnicodeString, expression_ptr> env)
+void UserValue::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
 {
     for (auto it = fields.begin(); it != fields.end(); ++it)
     {
-        auto ftemp = (*it)->bind(env);
-        if (ftemp)
-            *it = ftemp;
+        (*it)->bind(environment);
     }
-
-    return nullptr;
 }
 
-
-dhc::kernel::type::Type UserValue::type()
+dhc::kernel::type::Type UserValue::type() const
 {
     return datatype;
 }
 
-unsigned int UserValue::constructor()
+unsigned int UserValue::constructor() const
 {
     return ctr;
 }
 
-dhc::kernel::expression::expression_ptr UserValue::at(int i)
+dhc::kernel::expression::expression_ptr UserValue::at(int i) const
 {
-    return fields.at(i);
+    auto exp = fields.at(i);
+    return exp;
 }
 
-icu::UnicodeString UserValue::str()
+icu::UnicodeString UserValue::str() const
 {
-    icu::UnicodeString v = datatype.constructors[ctr];
+    icu::UnicodeString v = "(" + datatype.constructors[ctr];
     for (auto it = fields.begin(); it != fields.end(); ++it)
     {
         v += " " + (*it)->str();
     }
+
+    v += ")";
 
     return v;
 }

@@ -20,10 +20,10 @@ namespace dhc {
                      * @param f The argument to apply
                      */
                     Application(expression_ptr f, expression_ptr a) : function(f), argument(a) {}
-                    virtual value::Value &evaluate();
-                    virtual expression_ptr bind(std::map<icu::UnicodeString, expression_ptr> env);
-                    virtual type::Type type();
-                    virtual icu::UnicodeString str();
+                    virtual value_ref evaluate() const;
+                    virtual void bind(std::map<icu::UnicodeString, expression_ptr>) const;
+                    virtual type::Type type() const;
+                    virtual icu::UnicodeString str() const;
 
                 protected:
                 private:

@@ -75,6 +75,7 @@ add_executable(dhc
 
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel/pattern/variable.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel/pattern/constructor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/pattern/ignored.cpp
 )
 
 message("ICU: " ${ICU_LIBRARIES})

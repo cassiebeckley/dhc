@@ -19,7 +19,9 @@ namespace dhc {
                      */
                     Variable(icu::UnicodeString n) : name(n) {}
 
-                    virtual MaybeEnv test(std::shared_ptr<expression::Expression> e);
+                    virtual MaybeEnv test(expression::expression_ptr e);
+                    virtual std::set<icu::UnicodeString> matches();
+
                     virtual icu::UnicodeString str();
 
                 protected:

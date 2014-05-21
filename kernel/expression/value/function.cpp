@@ -4,22 +4,17 @@
 
 using namespace dhc::kernel::expression::value;
 
-Value &Function::evaluate()
+dhc::kernel::expression::value_ref Function::evaluate() const
 {
     return *this;
 }
 
-dhc::kernel::expression::expression_ptr Function::bind(std::map<icu::UnicodeString, expression_ptr> env)
+void Function::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
 {
-    expression_ptr etemp = exp->bind(env);
-    if (etemp)
-        exp = etemp;
-
-    return nullptr;
+    exp->bind(environment);
 }
 
-
-dhc::kernel::type::Type Function::type()
+dhc::kernel::type::Type Function::type() const
 {
     return exp->type();
 }
@@ -29,25 +24,23 @@ dhc::kernel::expression::expression_ptr Function::apply(expression_ptr e)
     std::map<icu::UnicodeString, expression_ptr> env;
     env[argument] = e;
 
-    expression_ptr etemp = exp->bind(env);
-    if (etemp)
-        exp = etemp;
+    exp->bind(env);
 
     return exp;
 }
 
-unsigned int Function::constructor()
+unsigned int Function::constructor() const
 {
     // Not really sure what to do here >.>
     return -1;
 }
 
-dhc::kernel::expression::expression_ptr Function::at(int)
+dhc::kernel::expression::expression_ptr Function::at(int) const
 {
     throw std::out_of_range("Can't access fields of function value");
 }
 
-icu::UnicodeString Function::str()
+icu::UnicodeString Function::str() const
 {
     return "(\\" + argument + " -> " + exp->str() + ")";
 }

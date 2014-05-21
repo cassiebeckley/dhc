@@ -18,7 +18,7 @@ namespace dhc {
                          *
                          * @return the constructor
                          */
-                        virtual unsigned int constructor() = 0;
+                        virtual unsigned int constructor() const = 0;
 
                         /**
                          * \brief Access the constructor fields
@@ -26,7 +26,7 @@ namespace dhc {
                          * @param i the field index
                          * @return the expression at index i
                          */
-                        virtual dhc::kernel::expression::expression_ptr at(int i) = 0;
+                        virtual dhc::kernel::expression::expression_ptr at(int i) const = 0;
                 };
 
             }

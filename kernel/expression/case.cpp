@@ -7,7 +7,7 @@
 
 using namespace dhc::kernel::expression;
 
-value::Value &Case::evaluate()
+value_ref Case::evaluate() const
 {
     for (auto it = patterns.begin(); it != patterns.end(); ++it)
     {
@@ -18,10 +18,9 @@ value::Value &Case::evaluate()
         if (succeeded)
         {
             auto vars = succeeded.data;
-            expression_ptr etemp = e->bind(vars);
-            if (etemp)
-                e = etemp;
-            return e->evaluate();
+            e->bind(vars);
+            const value::Value& bleh = e->evaluate();
+            return bleh;
         }
     }
 
@@ -29,29 +28,22 @@ value::Value &Case::evaluate()
     exit(1);
 }
 
-expression_ptr Case::bind(std::map<icu::UnicodeString, expression_ptr> env)
+void Case::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
 {
-    auto exptemp = exp->bind(env);
-    if (exptemp)
-        exp = exptemp;
-
+    exp->bind(environment);
     for (auto it = patterns.begin(); it != patterns.end(); ++it)
     {
-        expression_ptr temp = it->second->bind(env);
-        if (temp)
-            it->second = temp;
+        expression_ptr e = it->second;
+        e->bind(environment);
     }
-
-    return nullptr;
 }
 
-
-dhc::kernel::type::Type Case::type()
+dhc::kernel::type::Type Case::type() const
 {
     return type::Type(std::vector<icu::UnicodeString>{});
 }
 
-icu::UnicodeString Case::str()
+icu::UnicodeString Case::str() const
 {
     auto s = "(case " + exp->str() + " of {";
     for (auto it = patterns.begin(); it != patterns.end(); ++it)

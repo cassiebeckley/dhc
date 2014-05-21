@@ -10,6 +10,7 @@
 #include "kernel/pattern.hpp"
 #include "kernel/pattern/variable.hpp"
 #include "kernel/pattern/constructor.hpp"
+#include "kernel/pattern/ignored.hpp"
 
 #include <iostream>
 #include <unicode/ustream.h>
@@ -18,25 +19,46 @@ int main()
 {
     using namespace dhc::kernel::expression;
     using namespace dhc::kernel::expression::value;
-    std::cout << "Hey." << std::endl;
 
     dhc::kernel::type::Type Three(std::vector<icu::UnicodeString>{"One", "Two", "Three"});
     dhc::kernel::type::Type Bool(std::vector<icu::UnicodeString>{"False", "True"});
+    dhc::kernel::type::Type Maybe(std::vector<icu::UnicodeString>{"Just", "Nothing"});
+    dhc::kernel::type::Type List(std::vector<icu::UnicodeString>{"Cons", "Nil"});
 
-    auto pat1 = std::make_shared<dhc::kernel::pattern::Constructor>(true, std::vector<dhc::kernel::expression::pattern_ptr>{}, Bool);
-    auto pat1exp = std::make_shared<UserValue>(2, std::vector<expression_ptr>{}, Three);
+    std::map<icu::UnicodeString, expression_ptr> env;
 
-    auto pat2 = std::make_shared<dhc::kernel::pattern::Constructor>(false, std::vector<dhc::kernel::expression::pattern_ptr>{}, Bool);
-    auto pat2exp = std::make_shared<UserValue>(0, std::vector<expression_ptr>{}, Three);
+    auto head = std::make_shared<Function>("_a", std::make_shared<Case>(std::make_shared<Variable>("_a"), std::vector<std::pair<pattern_ptr, expression_ptr>>{std::make_pair(std::make_shared<dhc::kernel::pattern::Constructor>(0, std::vector<dhc::kernel::expression::pattern_ptr>{std::make_shared<dhc::kernel::pattern::Variable>("x"), std::make_shared<dhc::kernel::pattern::Ignored>()}, List), std::make_shared<Variable>("x"))}));
 
-    auto c = std::make_shared<Case>(std::make_shared<Variable>("x"), std::vector<std::pair<pattern_ptr, expression_ptr>>{std::make_pair(pat1, pat1exp), std::make_pair(pat2, pat2exp)});
+    env["head"] = head;
 
-    auto f = std::make_shared<Function>("x", c);
+    auto tail = std::make_shared<Function>("_a", std::make_shared<Case>(std::make_shared<Variable>("_a"), std::vector<std::pair<pattern_ptr, expression_ptr>>{std::make_pair(std::make_shared<dhc::kernel::pattern::Constructor>(0, std::vector<dhc::kernel::expression::pattern_ptr>{std::make_shared<dhc::kernel::pattern::Ignored>(), std::make_shared<dhc::kernel::pattern::Variable>("xs")}, List), std::make_shared<Variable>("xs"))}));
 
-    auto a = std::make_shared<Application>(f, std::make_shared<UserValue>(false, std::vector<expression_ptr>{}, Bool));
+    env["tail"] = tail;
 
-    std::cout << a->str() << std::endl;
-    std::cout << a->evaluate().str() << std::endl;
+    auto repeat = std::make_shared<Function>("x", std::make_shared<UserValue>(0, std::vector<expression_ptr>{std::make_shared<Variable>("x"), std::make_shared<Application>(std::make_shared<Variable>("repeat"), std::make_shared<Variable>("x"))}, List));
+
+    env["repeat"] = repeat;
+
+    auto bleh = std::make_shared<UserValue>(0, std::vector<expression_ptr>{std::make_shared<UserValue>(0, std::vector<expression_ptr>{}, Three), std::make_shared<UserValue>(0, std::vector<expression_ptr>{std::make_shared<UserValue>(1, std::vector<expression_ptr>{}, Three), std::make_shared<UserValue>(0, std::vector<expression_ptr>{std::make_shared<UserValue>(2, std::vector<expression_ptr>{}, Three), std::make_shared<UserValue>(1, std::vector<expression_ptr>{}, List)}, List)}, List)}, List);
+
+    env["bleh"] = bleh;
+
+    auto main = std::make_shared<Application>(std::make_shared<Variable>("head"), std::make_shared<Application>(std::make_shared<Variable>("repeat"), std::make_shared<UserValue>(0, std::vector<expression_ptr>{}, Three)));
+
+    env["main"] = main;
+
+    std::cout << """Printing environment""" << std::endl;
+    for (auto it = env.begin(); it != env.end(); ++it)
+    {
+        it->second->bind(env);
+        std::cout << it->first << " = " << it->second->str() << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "Evaluating main" << std::endl;
+
+    std::cout << env["main"]->evaluate().str() << std::endl;
 
     return 0;
 }
