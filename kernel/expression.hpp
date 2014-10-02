@@ -2,64 +2,66 @@
 #define DHC_KERNEL_EXPRESSION_HPP
 
 #include <map>
-#include <unicode/unistr.h>
 #include <memory>
+#include <unicode/unistr.h>
 
-#include "type.hpp"
+#include "expression/application.hpp"
+#include "expression/case.hpp"
 
 namespace dhc {
     namespace kernel {
+
+        namespace type {
+            class Type;
+        }
 
         namespace expression {
 
             namespace value {
                 class Value;
             }
+            
+            class Case;
 
-            class Expression;
+            class Expression
+            {
 
-            typedef std::shared_ptr<const Expression> expression_ptr;
-            typedef const value::Value& value_ref;
-
-            /**
-             * Represents a Haskell expression
-             */
-            class Expression {
                 public:
-                    /**
-                     * \brief Destroy the expression.
-                     */
-                    virtual ~Expression() {}
+                    Expression(Application a) : application(a), expression_type(APPLICATION) {}
+                    Expression(Case c) : caseexp(c), expression_type(CASE) {}
+                    Expression(value::Value v);
+                    Expression(icu::UnicodeString v) : variable(std::make_pair(v, nullptr)), expression_type(VARIABLE) {}
 
-                    /**
-                     * \brief Evaluate the expression.
-                     *
-                     * @return the resulting value
-                     */
-                    virtual value_ref evaluate() const = 0;
-
-                    /**
-                     * \brief Bind an environment to the expression.
-                     *
-                     * @param env The environment.
-                     */
-                    virtual void bind(std::map<icu::UnicodeString, expression_ptr> env) const = 0;
-
-                    /**
-                     * \brief Return the Hindley-Milner type of the expression.
-                     *
-                     * @return the type of the expression
-                     */
-                    virtual type::Type type() const = 0;
+                    Expression(const Expression &other);
 
 
-                    virtual icu::UnicodeString str() const = 0;
+                    // watever
+                    Expression() : variable(std::make_pair("wat", nullptr)), expression_type(VARIABLE) {}
 
-                protected:
+                    ~Expression() {}
+
+                    value::Value evaluate() const;
+                    type::Value type() const;
+                    icu::UnicodeString str() const;
+                    void bind(icu::UnicodeString var, Expression val);
+
                 private:
-                    std::map<icu::UnicodeString, expression_ptr> env;
-            };
+                    union
+                    {
+                        Application application;
+                        Case caseexp;
+                        std::unique_ptr<value::Value> value;
+                        std::pair<icu::UnicodeString, std::unique_ptr<Expression>> variable;
+                    };
 
+                    enum
+                    {
+                        APPLICATION,
+                        CASE,
+                        VALUE,
+                        VARIABLE
+                    } expression_type;
+            };
         }
     }
 }

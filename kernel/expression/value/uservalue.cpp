@@ -1,10 +1,36 @@
 #include "uservalue.hpp"
+#include "../../expression.hpp"
 
 using namespace dhc::kernel::expression::value;
 
-dhc::kernel::expression::value_ref UserValue::evaluate() const
+UserValue::UserValue(unsigned int ctr, std::vector<Expression> fields, type::Value datatype)
 {
-    return *this;
+    this->ctr = ctr;
+
+    for (auto it = fields.begin(); it != fields.end(); ++it)
+    {
+        this->fields.push_back(std::unique_ptr<Expression>(new Expression(*it)));
+    }
+
+    this->datatype = datatype;
+}
+
+UserValue::UserValue(const UserValue &other)
+{
+    this->ctr = other.ctr;
+
+    for (auto it = other.fields.begin(); it != other.fields.end(); ++it)
+    {
+        this->fields.push_back(std::unique_ptr<Expression>(new Expression(**it)));
+    }
+
+    this->datatype = other.datatype;
+}
+
+/*
+dhc::kernel::expression::value_ptr UserValue::evaluate() const
+{
+    return value_ptr(this);
 }
 
 void UserValue::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
@@ -15,7 +41,7 @@ void UserValue::bind(std::map<icu::UnicodeString, expression_ptr> environment) c
     }
 }
 
-dhc::kernel::type::Type UserValue::type() const
+dhc::kernel::expression::type_ptr UserValue::type() const
 {
     return datatype;
 }
@@ -33,7 +59,7 @@ dhc::kernel::expression::expression_ptr UserValue::at(int i) const
 
 icu::UnicodeString UserValue::str() const
 {
-    icu::UnicodeString v = "(" + datatype.constructors[ctr];
+    icu::UnicodeString v = "(" + datatype->constructors[ctr];
     for (auto it = fields.begin(); it != fields.end(); ++it)
     {
         v += " " + (*it)->str();
@@ -43,3 +69,4 @@ icu::UnicodeString UserValue::str() const
 
     return v;
 }
+*/

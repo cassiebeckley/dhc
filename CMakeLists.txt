@@ -67,15 +67,18 @@ add_executable(dhc
     ${CMAKE_CURRENT_SOURCE_DIR}/lexer/match/lit_float.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/expression.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel/expression/application.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel/expression/case.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/expression/variable.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/expression/value.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel/expression/value/function.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/kernel/expression/value/uservalue.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/pattern/variable.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/pattern/constructor.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/pattern/ignored.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/kernel/type.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/ast/module.cpp
 )
 
 message("ICU: " ${ICU_LIBRARIES})

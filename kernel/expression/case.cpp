@@ -1,57 +1,36 @@
 #include "case.hpp"
-#include "../maybe.hpp"
-#include <unicode/unistr.h>
-#include <iostream>
-
-#include <cstdlib>
+#include "../expression.hpp"
 
 using namespace dhc::kernel::expression;
 
-value_ref Case::evaluate() const
+Case::Case(const Case &other)
 {
-    for (auto it = patterns.begin(); it != patterns.end(); ++it)
+    this->exp.reset(new Expression(*(other.exp)));
+
+    for (auto it = other.patterns.begin(); it != other.patterns.end(); ++it)
     {
-        pattern_ptr p = it->first;
-        expression_ptr e = it->second;
-
-        Maybe<std::map<icu::UnicodeString, expression_ptr>> succeeded = p->test(exp);
-        if (succeeded)
-        {
-            auto vars = succeeded.data;
-            e->bind(vars);
-            const value::Value& bleh = e->evaluate();
-            return bleh;
-        }
-    }
-
-    std::cerr << "No patterns matched in case expression. Also, I should probably use proper exceptions here." << std::endl;
-    exit(1);
-}
-
-void Case::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
-{
-    exp->bind(environment);
-    for (auto it = patterns.begin(); it != patterns.end(); ++it)
-    {
-        expression_ptr e = it->second;
-        e->bind(environment);
+        this->patterns.push_back(*it);
     }
 }
 
-dhc::kernel::type::Type Case::type() const
+Case::Case(const Expression &e, const std::vector<std::pair<pattern::Pattern, Expression>> p)
 {
-    return type::Type(std::vector<icu::UnicodeString>{});
+    this->exp.reset(new Expression(e));
+
+    for (auto it = p.begin(); it != p.end(); ++it)
+    {
+        this->patterns.push_back(*it);
+    }
 }
 
-icu::UnicodeString Case::str() const
+Case &Case::operator=(const Case &other)
 {
-    auto s = "(case " + exp->str() + " of {";
-    for (auto it = patterns.begin(); it != patterns.end(); ++it)
+    this->exp.reset(new Expression(*(other.exp)));
+
+    for (auto it = other.patterns.begin(); it != other.patterns.end(); ++it)
     {
-        if (it != patterns.begin())
-            s += "; ";
-        s += (*it).first->str() + " -> " + (*it).second->str();
+        this->patterns.push_back(*it);
     }
-    s += "})";
-    return s;
+
+    return *this;
 }

@@ -1,27 +1,17 @@
 #include "application.hpp"
-#include "value/function.hpp"
+#include "../expression.hpp"
 
 using namespace dhc::kernel::expression;
 
-value_ref Application::evaluate() const
+Application::Application(const Expression &f, const Expression &a)
 {
-    auto f = static_cast<const value::Function&>(function->evaluate());
-    auto result = f.apply(argument);
-    return result->evaluate();
+    function.reset(new Expression(f));
+    argument.reset(new Expression(a));
 }
 
-void Application::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
+Application &Application::operator=(const Application &other)
 {
-    function->bind(environment);
-    argument->bind(environment);
-}
-
-dhc::kernel::type::Type Application::type() const
-{
-    return type::Type(std::vector<icu::UnicodeString> {});
-}
-
-icu::UnicodeString Application::str() const
-{
-    return "(" + function->str() + " " + argument->str() + ")";
+    function.reset(new Expression(*other.function));
+    argument.reset(new Expression(*other.argument));
+    return *this;
 }

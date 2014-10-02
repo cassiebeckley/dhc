@@ -1,8 +1,6 @@
 #ifndef DHC_KERNEL_MAYBE_HPP
 #define DHC_KERNEL_MAYBE_HPP
 
-#include "expression.hpp"
-
 namespace dhc {
     namespace kernel {
 

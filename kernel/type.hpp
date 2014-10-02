@@ -3,6 +3,8 @@
 
 #include <unicode/unistr.h> 
 #include <vector>
+#include "typeerror.hpp"
+#include "type/value.hpp"
 
 namespace dhc {
     namespace kernel {
@@ -13,7 +15,20 @@ namespace dhc {
              */
             class Type {
                 public:
-                    Type(std::vector<icu::UnicodeString> cs) : constructors(cs) {}
+                    Type(Value v) : value(v), type_type(VALUE) {}
+                    Type(const Type &other)
+                    {
+                        switch (other.type_type)
+                        {
+                            case VALUE:
+                                this->type_type = VALUE;
+                                this->value = value;
+                                break;
+                        }
+                    }
+
+                    ~Type() {}
+
                     /**
                      * \brief Evaluate the type.
                      *
@@ -21,10 +36,19 @@ namespace dhc {
                      */
                     //virtual TypeValue evaluate() = 0;
 
-                    const std::vector<icu::UnicodeString> constructors;
+                    icu::UnicodeString str() const;
 
                 protected:
                 private:
+                    union
+                    {
+                        Value value;
+                    };
+
+                    enum
+                    {
+                        VALUE
+                    } type_type;
             };
 
         }

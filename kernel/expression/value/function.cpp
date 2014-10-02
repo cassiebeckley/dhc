@@ -1,12 +1,34 @@
 #include "function.hpp"
+#include "../../type.hpp"
+#include "../../expression.hpp"
 
 #include <cstdlib>
 
 using namespace dhc::kernel::expression::value;
 
-dhc::kernel::expression::value_ref Function::evaluate() const
+Function::Function(icu::UnicodeString a, const expression::Expression &e)
 {
+    argument = a;
+    exp.reset(new expression::Expression(e));
+}
+
+Function::Function(Function &other)
+{
+    this->argument = other.argument;
+    this->exp.reset(*(other.exp));
+}
+
+Function &Function::operator=(const Function &other)
+{
+    argument = other.argument;
+    exp.reset(new expression::Expression(other.exp));
     return *this;
+}
+
+/*
+dhc::kernel::expression::value_ptr Function::evaluate() const
+{
+    return value_ptr(this);
 }
 
 void Function::bind(std::map<icu::UnicodeString, expression_ptr> environment) const
@@ -14,12 +36,12 @@ void Function::bind(std::map<icu::UnicodeString, expression_ptr> environment) co
     exp->bind(environment);
 }
 
-dhc::kernel::type::Type Function::type() const
+dhc::kernel::expression::type_ptr Function::type() const
 {
     return exp->type();
 }
 
-dhc::kernel::expression::expression_ptr Function::apply(expression_ptr e)
+dhc::kernel::expression::expression_ptr Function::apply(expression_ptr e) const
 {
     std::map<icu::UnicodeString, expression_ptr> env;
     env[argument] = e;
@@ -44,3 +66,4 @@ icu::UnicodeString Function::str() const
 {
     return "(\\" + argument + " -> " + exp->str() + ")";
 }
+*/

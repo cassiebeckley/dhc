@@ -1,41 +1,57 @@
 #ifndef DHC_KERNEL_PATTERN_HPP
 #define DHC_KERNEL_PATTERN_HPP
 
-#include "expression.hpp"
-#include "expression/value.hpp"
 #include "maybe.hpp"
 #include <unicode/unistr.h>
-#include <memory>
-#include <set>
+#include <map>
+
+#include "pattern/constructor.hpp"
 
 namespace dhc {
     namespace kernel {
+        namespace expression {
+            class Expression;
+        }
+
         namespace pattern {
 
-            typedef dhc::kernel::Maybe<std::map<icu::UnicodeString, dhc::kernel::expression::expression_ptr>> MaybeEnv;
+            typedef dhc::kernel::Maybe<std::map<icu::UnicodeString, expression::Expression>> MaybeEnv;
 
             /**
              * Represents a Haskell pattern
              */
-            class Pattern {
+            class Pattern
+            {
                 public:
+                    Pattern(Constructor c) : constructor(c), pattern_type(CONSTRUCTOR) {}
+                    Pattern(icu::UnicodeString v) : variable(v), pattern_type(VARIABLE) {}
+                    Pattern() : pattern_type(IGNORED) {}
+
+                    Pattern(const Pattern &other);
+
+                    ~Pattern() {}
                     /**
                      * \brief Test if an expression matches the pattern
                      *
                      * @param e The expression to test
                      * @return A Maybe, which contains a std::map mapping variables to their bound expressions on success
                      */
-                    virtual MaybeEnv test(expression::expression_ptr e) = 0;
+                    MaybeEnv test(const expression::Expression &e) const;
 
-                    /**
-                     * @return The variables defined by the pattern
-                     */
-                    virtual std::set<icu::UnicodeString> matches() = 0;
-
-                    virtual icu::UnicodeString str() = 0;
-
-                protected:
+                    icu::UnicodeString str() const;
                 private:
+                    union
+                    {
+                        Constructor constructor;
+                        icu::UnicodeString variable;
+                    };
+
+                    enum
+                    {
+                        CONSTRUCTOR,
+                        VARIABLE,
+                        IGNORED
+                    } pattern_type;
             };
         }
     }
